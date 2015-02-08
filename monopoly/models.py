@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+class Effect(models.Model):
+	type = models.CharField(max_length=128, unique=True)
+	param = models.IntegerField(default=0)
