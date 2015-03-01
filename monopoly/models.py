@@ -61,3 +61,11 @@ class Effect(models.Model):
 
     def __str__(self):
         return unicode(pprint(vars(self)))
+
+class Special(models.Model):
+    square = models.OneToOneField(Square)
+    effect = models.ForeignKey(Effect)
+
+    def __str__(self):
+        return unicode(pprint(vars(self)))
+
