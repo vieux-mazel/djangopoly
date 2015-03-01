@@ -65,7 +65,7 @@ class Effect(models.Model):
 
 class Special(models.Model):
     square = models.OneToOneField(Square)
-    effect = models.ForeignKey(Effect)
+    effect = models.ForeignKey(Effect, null=True)
 
     def __str__(self):
         return unicode(pprint(vars(self)))
