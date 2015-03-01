@@ -1,3 +1,5 @@
+# Describes the game board and all properties on it
+
 properties = [
     {
         'type': 'property',
