@@ -10,7 +10,8 @@ class Game(models.Model):
         return unicode(pprint(vars(self)))
 
 class Square(models.Model):
-    position = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
+    position = models.IntegerField(default=0)
     game = models.ForeignKey(Game)
     title = models.CharField(default="Square", max_length=255)
 
@@ -22,7 +23,7 @@ class Player(models.Model):
     game = models.ForeignKey(Game)
     name = models.CharField(default="Player", max_length=255)
     money = models.IntegerField(default=0)
-    position = models.ForeignKey(Square)
+    square = models.ForeignKey(Square)
     plays_in_turns = models.IntegerField(default=0)
 
     def __str__(self):
