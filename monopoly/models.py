@@ -30,7 +30,7 @@ class Player(models.Model):
 
 class Property(models.Model):
     square = models.OneToOneField(Square)
-    owned_by = models.ForeignKey(Player)
+    owned_by = models.ForeignKey(Player, null=True)
     price = models.IntegerField(default=0)
     tax_site = models.IntegerField(default=0)
     tax_1house = models.IntegerField(default=0)
@@ -46,7 +46,7 @@ class Property(models.Model):
 
 class Utility(models.Model):
     square = models.OneToOneField(Square)
-    owned_by = models.ForeignKey(Player)
+    owned_by = models.ForeignKey(Player, null=True)
     price = models.IntegerField(default=0)
     mortgage_price = models.IntegerField(default=0)
     is_mortgaged = models.BooleanField(default=False)
