@@ -128,3 +128,12 @@ def end_turn(request, id):
         p.save()
 
     return HttpResponse(SUCCESS)
+
+def game_state(request):
+    try:
+        player = Player.objects.get(session_id=request.session.session_key)
+    except Player.DoesNotExist:
+        return HttpResponse(FAILURE)
+
+    game = player.game
+    return HttpResponse(json.dumps(game))
