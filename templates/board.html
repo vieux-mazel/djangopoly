@@ -6,6 +6,18 @@
 
 {% block body_block %}
     
-    <img src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
+    <!--
+    <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
+    -->
+
+    {% if massive_json %}
+    	<div id="board">
+  		{% for e in massive_json %}
+ 		    {{ e }}
+		{% endfor %}
+		</div>
+	{% else %}
+    	There is no massive json
+	{% endif %}
 
 {% endblock %}
