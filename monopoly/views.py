@@ -60,3 +60,20 @@ def new_game(request, private):
 
     # After creating the game, redirect to game view
     return redirect(game, id=newGame.id)
+
+### API
+# All requests return an empty string upon failure.
+# On success, they return "ok" for content-empty responses
+# or the requested contents otherwise.
+
+# Start a new game
+def start_game(request, id):
+    game = Game.objects.get(id=id)
+    if game is None:
+        return HttpResponse('')
+    if game.in_progress is True:
+        return HttpResponse('')
+    
+    game.in_progress = True
+    game.save()
+    return HttpResponse('ok')
