@@ -128,4 +128,3 @@ def end_turn(request, id):
         p.save()
 
     return HttpResponse(SUCCESS)
-
