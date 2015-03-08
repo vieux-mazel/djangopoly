@@ -24,6 +24,9 @@ def game(request, id):
         player = Player.objects.get(session_id=session_id)
     except Player.DoesNotExist:
         player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0))
+        # If there are other players that have already joined, adjust plays_in_turns
+        if len(Player.objects.filter(game=game)) > 0:
+            player.plays_in_turns = Player.objects.filter(game=game).order_by('-plays_in_turns')[0].plays_in_turns + 1
         player.save()
 
     # This player exists, but she's playing another game.
