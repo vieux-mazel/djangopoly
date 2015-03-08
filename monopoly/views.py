@@ -34,7 +34,7 @@ def game(request, id):
         return redirect('index')
     
     print player
-    return HttpResponse(str(game.id) + ' ' + str(game.private))
+    return render(request, 'board.html')
 
 # Create a new game
 # Can be private or public, depends on URL invocation
