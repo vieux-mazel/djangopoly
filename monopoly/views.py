@@ -12,15 +12,18 @@ def index(request):
 def game(request, id):
     game = Game.objects.get(id=id)
     
-    request.session['has_session'] = True
+    request.session['has_session'] = True # To ensure there is a session key
     session_id = request.session.session_key
     
+    # Try to find the player with this Session ID
+    # If there isn't one, create her.
     try:
         player = Player.objects.get(session_id=session_id)
     except Player.DoesNotExist:
         player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0))
         player.save()
 
+    # This player exists, but she's playing another game.
     if player.game != game:
         return redirect('index')
     
