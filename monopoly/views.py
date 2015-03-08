@@ -14,6 +14,8 @@ def game(request, id):
     
     request.session['has_session'] = True # To ensure there is a session key
     session_id = request.session.session_key
+    if session_id is None:
+        return redirect('index') # There's no session. Incognito mode?
     
     # Try to find the player with this Session ID
     # If there isn't one, create her.
