@@ -22,7 +22,7 @@ class Player(models.Model):
     session_id = models.CharField(primary_key=True, max_length=32)
     game = models.ForeignKey(Game)
     name = models.CharField(default="Player", max_length=255)
-    money = models.IntegerField(default=0)
+    money = models.IntegerField(default=1500)
     square = models.ForeignKey(Square)
     plays_in_turns = models.IntegerField(default=0)
 
