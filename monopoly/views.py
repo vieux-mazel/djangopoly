@@ -112,7 +112,7 @@ def roll_dice(request):
         }))
 
 # End a turn, and adjust plays_in_turns for every player
-def end_turn(request, id):
+def end_turn(request):
     try:
         player = Player.objects.get(session_id=request.session.session_key)
     except Player.DoesNotExist:
