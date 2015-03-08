@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+import json
 
 from monopoly.models import Game, Square, Property, Utility, Special, Player
 from board import board
@@ -66,8 +67,8 @@ def new_game(request, private):
 # On success, they return "ok" for content-empty responses
 # or the requested contents otherwise.
 
-FAILURE = ''
-SUCCESS = 'ok'
+FAILURE = json.dumps({'success': False})
+SUCCESS = json.dumps({'success': True})
 
 # Start a new game
 def start_game(request, id):
@@ -82,3 +83,27 @@ def start_game(request, id):
     game.in_progress = True
     game.save()
     return HttpResponse(SUCCESS)
+
+def roll_dice(request):
+    try:
+        player = Player.objects.get(session_id=request.session.session_key)
+    except Player.DoesNotExist:
+        return HttpResponse(FAILURE)
+
+    # Roll two dice - will be random at some point
+    dice1 = 2;
+    dice2 = 4;
+
+    # Calculate new player position
+    new_position = (player.square.position + dice1 + dice2) % 40
+    player.square = Square.objects.get(game=player.game, position=new_position)
+
+    player.save()
+    return HttpResponse(json.dumps(
+        {
+            'success': True,
+            'dice1': dice1,
+            'dice2': dice2,
+            'square': player.square.position
+        }))
+
