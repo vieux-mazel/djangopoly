@@ -210,4 +210,3 @@ specials = [
 ]
 
 board = properties + utilities + specials
-print board

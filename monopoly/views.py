@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from monopoly.models import Game, Square, Property, Utility, Special
+from monopoly.models import Game, Square, Property, Utility, Special, Player
 from board import board
 
 # Placeholder index page
@@ -11,7 +11,20 @@ def index(request):
 # Displays the game
 def game(request, id):
     game = Game.objects.get(id=id)
+    
+    request.session['has_session'] = True
+    session_id = request.session.session_key
+    
+    try:
+        player = Player.objects.get(session_id=session_id)
+    except Player.DoesNotExist:
+        player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0))
+        player.save()
 
+    if player.game != game:
+        return redirect('index')
+    
+    print player
     return HttpResponse(str(game.id) + ' ' + str(game.private))
 
 # Create a new game
