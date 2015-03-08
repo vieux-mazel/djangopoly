@@ -58,3 +58,5 @@ target/
 
 # vim swap
 *.swp
+
+fetch.bat
