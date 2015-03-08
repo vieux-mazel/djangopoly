@@ -110,24 +110,22 @@ def roll_dice(request):
             'square': player.square.position
         }))
 
+# End a turn, and adjust plays_in_turns for every player
 def end_turn(request, id):
     try:
         player = Player.objects.get(session_id=request.session.session_key)
     except Player.DoesNotExist:
         return HttpResponse(FAILURE)
 
+    # Get all players in this game, subtract one from plays_in_turns
+    # (when it gets negative it resets to the maximum)
     players = player.game.player_set.all()
     turns = []
     for p in players:
         p.plays_in_turns -= 1
         if p.plays_in_turns < 0:
             p.plays_in_turns = len(players) - 1
-        
-        turns.append(p.plays_in_turns)
         p.save()
 
-    return HttpResponse(json.dumps(
-        {
-            'turns': turns,
-            'success': True,
-        }))
+    return HttpResponse(SUCCESS)
+
