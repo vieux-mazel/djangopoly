@@ -11,13 +11,21 @@
     -->
 
     {% if massive_json %}
-    	<div id="board">
+    	<div id="board"><div class="content">
   		{% for e in massive_json %}
  		    {{ e }}
 		{% endfor %}
-		</div>
+		</div></div>
 	{% else %}
-    	There is no massive json
+    	<div id="board">
+    		<div class="roww bottom"></div>
+    		<div class="roww left"></div>
+    		<div class="roww top"></div>
+    		<div class="roww right"></div>
+    	</div>
 	{% endif %}
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="{% static 'board.js' %}"></script>
 
 {% endblock %}
