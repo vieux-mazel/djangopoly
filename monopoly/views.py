@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.core import serializers
 import json
 
 from monopoly.models import Game, Square, Property, Utility, Special, Player
@@ -129,11 +130,24 @@ def end_turn(request, id):
 
     return HttpResponse(SUCCESS)
 
-def game_state(request):
+# Return JSON containing all of the game's state
+def game_state(request, id):
+    # Find the game for which the state is requested
     try:
-        player = Player.objects.get(session_id=request.session.session_key)
-    except Player.DoesNotExist:
+        game = Game.objects.get(id=id)
+    except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
-    game = player.game
-    return HttpResponse(json.dumps(game))
+    # Use Django's serializer
+    state = serializers.serialize("json",
+        list(Game.objects.filter(id=id)) +
+        list(Player.objects.filter(game=game)) +
+        list(Square.objects.filter(game=game)) +
+        list(Property.objects.filter(square__game=game)) +
+        list(Utility.objects.filter(square__game=game)) +
+        list(Special.objects.filter(square__game=game))
+
+    )
+
+    # Echo the JSON as the response's body
+    return HttpResponse(state)
