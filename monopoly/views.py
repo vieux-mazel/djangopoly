@@ -94,6 +94,10 @@ def roll_dice(request):
     except Player.DoesNotExist:
         return HttpResponse(FAILURE)
 
+    # Check that it is this player's turn
+    if player.plays_in_turns != 0:
+        return HttpResponse(FAILURE)
+
     # Roll two dice - will be random at some point
     dice1 = 2;
     dice2 = 4;
@@ -112,10 +116,14 @@ def roll_dice(request):
         }))
 
 # End a turn, and adjust plays_in_turns for every player
-def end_turn(request, id):
+def end_turn(request):
     try:
         player = Player.objects.get(session_id=request.session.session_key)
     except Player.DoesNotExist:
+        return HttpResponse(FAILURE)
+
+    # Check that it is this player's turn
+    if player.plays_in_turns != 0:
         return HttpResponse(FAILURE)
 
     # Get all players in this game, subtract one from plays_in_turns
