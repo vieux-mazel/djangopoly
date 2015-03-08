@@ -66,14 +66,19 @@ def new_game(request, private):
 # On success, they return "ok" for content-empty responses
 # or the requested contents otherwise.
 
+FAILURE = ''
+SUCCESS = 'ok'
+
 # Start a new game
 def start_game(request, id):
-    game = Game.objects.get(id=id)
-    if game is None:
-        return HttpResponse('')
+    try:
+        game = Game.objects.get(id=id)
+    except Game.DoesNotExist:
+        return HttpResponse(FAILURE)
+
     if game.in_progress is True:
-        return HttpResponse('')
+        return HttpResponse(FAILURE)
     
     game.in_progress = True
     game.save()
-    return HttpResponse('ok')
+    return HttpResponse(SUCCESS)
