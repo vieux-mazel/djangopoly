@@ -1,115 +1,172 @@
 # Describes the game board and all properties on it
 
+streets = [
+    {
+        'type': 'street',
+        'color': 'brown'
+    },
+    {
+        'type': 'street',
+        'color': 'light_blue'
+    },
+    {
+        'type': 'street',
+        'color': 'purple'
+    },
+    {
+        'type': 'street',
+        'color': 'orange'
+    },
+    {
+        'type': 'street',
+        'color': 'red'
+    },
+    {
+        'type': 'street',
+        'color': 'yellow'
+    },
+    {
+        'type': 'street',
+        'color': 'green'
+    },
+    {
+        'type': 'street',
+        'color': 'blue'
+    },
+]
+
 properties = [
     {
         'type': 'property',
         'position': 1,
-        'title': 'Old Kent Toad'
+        'title': 'Old Kent Toad',
+        'street': 'brown'
     },
     {
         'type': 'property',
         'position': 3,
-        'title': 'Whitechapel Road'
+        'title': 'Whitechapel Road',
+        'street': 'brown'
     },
     {
         'type': 'property',
         'position': 6,
-        'title': 'The Angel Inslington'
+        'title': 'The Angel Inslington',
+        'street': 'light_blue'
     },
     {
         'type': 'property',
         'position': 8,
-        'title': 'Euston Road'
+        'title': 'Euston Road',
+        'street': 'light_blue'
     },
     {
         'type': 'property',
         'position': 9,
-        'title': 'Penton View Road'
+        'title': 'Penton View Road',
+        'street': 'light_blue'
     },
     {
         'type': 'property',
         'position': 11,
-        'title': 'Pall Mall'
+        'title': 'Pall Mall',
+        'street': 'purple'
     },
     {
         'type': 'property',
         'position': 13,
-        'title': 'White Hall'
+        'title': 'White Hall',
+        'street': 'purple'
     },
     {
         'type': 'property',
         'position': 14,
-        'title': 'Norton Avenue'
+        'title': 'Norton Avenue',
+        'street': 'purple'
     },
     {
         'type': 'property',
         'position': 16,
-        'title': 'Bow Street'
+        'title': 'Bow Street',
+        'street': 'orange'
     },
     {
         'type': 'property',
         'position': 18,
-        'title': 'Marlboro Street'
+        'title': 'Marlboro Street',
+        'street': 'orange'
     },
     {
         'type': 'property',
         'position': 19,
-        'title': 'Vine Street'
+        'title': 'Vine Street',
+        'street': 'orange'
     },
     {
         'type': 'property',
         'position': 21,
-        'title': 'Strand'
+        'title': 'Strand',
+        'street': 'red'
     },
     {
         'type': 'property',
         'position': 23,
-        'title': 'Fleet Street'
+        'title': 'Fleet Street',
+        'street': 'red'
     },
     {
         'type': 'property',
         'position': 24,
-        'title': 'Trafalgar Square'
+        'title': 'Trafalgar Square',
+        'street': 'red'
     },
     {
         'type': 'property',
         'position': 26,
-        'title': 'Lester Square'
+        'title': 'Lester Square',
+        'street': 'yellow'
     },
     {
         'type': 'property',
         'position': 27,
-        'title': 'Coventry Street'
+        'title': 'Coventry Street',
+        'street': 'yellow'
     },
     {
         'type': 'property',
         'position': 29,
-        'title': 'Picadilly'
+        'title': 'Picadilly',
+        'street': 'yellow'
     },
     {
         'type': 'property',
         'position': 31,
-        'title': 'Regent Street'
+        'title': 'Regent Street',
+        'street': 'green'
     },
     {
         'type': 'property',
         'position': 32,
-        'title': 'Oxford Street'
+        'title': 'Oxford Street',
+        'street': 'green'
     },
     {
         'type': 'property',
         'position': 34,
-        'title': 'Bond Street'
+        'title': 'Bond Street',
+        'street': 'green'
     },
     {
         'type': 'property',
         'position': 37,
-        'title': 'Park Lane'
+        'title': 'Park Lane',
+        'street': 'blue'
     },
     {
         'type': 'property',
         'position': 39,
-        'title': 'Mayfair'
+        'title': 'Mayfair',
+        'street': 'blue'
     }
 ]
 
@@ -209,4 +266,4 @@ specials = [
     }
 ]
 
-board = properties + utilities + specials
+squares = properties + utilities + specials

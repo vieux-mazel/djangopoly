@@ -33,9 +33,17 @@ class Player(models.Model):
         return "Session ID: {0}\nGame ID: {1}\nName: {2}\nMoney: {3}\nSquare: {4}\nPlays in turns: {5}".format(
             self.session_id, self.game.id, self.name, self.money, self.square.position, self.plays_in_turns)
 
+class Street(models.Model):
+    color = models.CharField(primary_key=True, max_length=16)
+    game = models.ForeignKey(Game)
+
+    def __str__(self):
+        return "Game ID: {0}\nColor: {1}".format(
+            self.game.id, self.color)
 
 class Property(models.Model):
     square = models.OneToOneField(Square)
+    street = models.ForeignKey(Street)
     owned_by = models.ForeignKey(Player, null=True)
     price = models.IntegerField(default=0)
     tax_site = models.IntegerField(default=0)
@@ -48,8 +56,8 @@ class Property(models.Model):
     is_mortgaged = models.BooleanField(default=False)
 
     def __str__(self):
-        return "Square: {0}\nOwned by: {1}\nIs mortgaged: {2}".format(
-            self.square.position, (self.owned_by.session_id if self.owned_by is not None else "Nobody"), self.is_mortgaged)
+        return "Square: {0}\nOwned by: {1}\nStreet: {2}\nIs mortgaged: {3}".format(
+            self.square.position, (self.owned_by.session_id if self.owned_by is not None else "Nobody"), self.street.color, self.is_mortgaged)
 
 class Utility(models.Model):
     square = models.OneToOneField(Square)

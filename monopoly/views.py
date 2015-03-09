@@ -3,8 +3,9 @@ from django.http import HttpResponse
 from django.core import serializers
 import json
 
-from monopoly.models import Game, Square, Property, Utility, Special, Player
-from board import board
+from monopoly.models import Game, Square, Property, Utility, Special, Player, Street
+
+import board
 
 # Placeholder index page
 def index(request):
@@ -45,14 +46,19 @@ def new_game(request, private):
     newGame.save()
 
     # Create game board
+
+    # Streets
+    for x in board.streets:
+        street = Street(color=x['color'], game=newGame)
+        street.save()
+
     # 40 squares that are either properties, utilities, or "specials"
-    # Listed in board.py
-    squares = []
-    for x in sorted(board, key=lambda k: k['position']):
+    for x in sorted(board.squares, key=lambda k: k['position']):
         square = Square(position=x['position'], game=newGame)
         identity = None # Identity of the square (property/utility/special)
         if x['type'] == 'property':
             identity = Property()
+            identity.street = Street.objects.get(color=x['street']) 
         elif x['type'] == 'utility':
             identity = Utility()
         elif x['type'] == 'special':
@@ -61,7 +67,6 @@ def new_game(request, private):
         square.save()
         identity.square = square
         identity.save()
-        squares.append(square)
 
     # After creating the game, redirect to game view
     return redirect(game, id=newGame.id)
