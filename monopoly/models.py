@@ -1,5 +1,6 @@
 from django.db import models
 from pprint import pprint
+import json
 
 class Game(models.Model):
     id = models.AutoField(primary_key=True)
@@ -7,7 +8,8 @@ class Game(models.Model):
     in_progress = models.BooleanField(default=False)
 
     def __str__(self):
-        return unicode(pprint(vars(self)))
+        return "ID: {0}\nPrivate: {1}\nIn progress: {2}".format(
+                self.id, self.private, self.in_progress)
 
 class Square(models.Model):
     id = models.AutoField(primary_key=True)
@@ -16,7 +18,8 @@ class Square(models.Model):
     title = models.CharField(default="Square", max_length=255)
 
     def __str__(self):
-        return unicode(pprint(vars(self)))
+        return "Game ID: {0}\nPosition: {1}\nTitle: {2}".format(
+                self.game.id, self.position, self.title)
 
 class Player(models.Model):
     session_id = models.CharField(primary_key=True, max_length=32)
@@ -27,7 +30,9 @@ class Player(models.Model):
     plays_in_turns = models.IntegerField(default=0)
 
     def __str__(self):
-        return unicode(pprint(vars(self)))
+        return "Session ID: {0}\nGame ID: {1}\nName: {2}\nMoney: {3}\nSquare: {4}\nPlays in turns: {5}".format(
+            self.session_id, self.game.id, self.name, self.money, self.square.position, self.plays_in_turns)
+
 
 class Property(models.Model):
     square = models.OneToOneField(Square)
@@ -43,7 +48,8 @@ class Property(models.Model):
     is_mortgaged = models.BooleanField(default=False)
 
     def __str__(self):
-        return unicode(pprint(vars(self)))
+        return "Square: {0}\nOwned by: {1}\nIs mortgaged: {2}".format(
+            self.square.position, (self.owned_by.session_id if self.owned_by is not None else "Nobody"), self.is_mortgaged)
 
 class Utility(models.Model):
     square = models.OneToOneField(Square)
@@ -54,19 +60,22 @@ class Utility(models.Model):
     tax_site = models.IntegerField(default=0)
 
     def __str__(self):
-        return unicode(pprint(vars(self)))
+        return "Square: {0}\nOwned by: {1}\nIs mortgaged: {2}".format(
+            self.square.position, (self.owned_by.session_id if self.owned_by is not None else "Nobody"), self.is_mortgaged)
 
 class Effect(models.Model):
     type = models.CharField(max_length=128, unique=True)
     param = models.IntegerField(default=0)
 
     def __str__(self):
-        return unicode(pprint(vars(self)))
+        return "Type: {0}\nParam: {1}".format(
+            self.type, self.param)
 
 class Special(models.Model):
     square = models.OneToOneField(Square)
     effect = models.ForeignKey(Effect, null=True)
 
     def __str__(self):
-        return unicode(pprint(vars(self)))
+        return "Square: {0}\nEffect: {1}".format(
+            self.square.position, (self.effect.type if self.effect is not None else "None"))
 
