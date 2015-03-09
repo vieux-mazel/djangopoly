@@ -6,6 +6,7 @@ import json
 from monopoly.models import Game, Square, Property, Utility, Special, Player, Street
 
 import board
+import rules
 
 # Placeholder index page
 def index(request):
@@ -104,12 +105,10 @@ def roll_dice(request):
         return HttpResponse(FAILURE)
 
     # Roll two dice - will be random at some point
-    dice1 = 2;
-    dice2 = 4;
+    (dice1, dice2) = rules.roll_dice();
 
-    # Calculate new player position
-    new_position = (player.square.position + dice1 + dice2) % 40
-    player.square = Square.objects.get(game=player.game, position=new_position)
+    # Handle player movement
+    rules.move_player(player, (dice1, dice2))
 
     player.save()
     return HttpResponse(json.dumps(
