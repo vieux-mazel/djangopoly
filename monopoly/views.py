@@ -133,11 +133,8 @@ def end_turn(request):
     # Get all players in this game, subtract one from plays_in_turns
     # (when it gets negative it resets to the maximum)
     players = player.game.player_set.all()
-    turns = []
     for p in players:
-        p.plays_in_turns -= 1
-        if p.plays_in_turns < 0:
-            p.plays_in_turns = len(players) - 1
+        p.plays_in_turns = (p.plays_in_turns - 1) % len(players)
         p.save()
 
     return HttpResponse(SUCCESS)
