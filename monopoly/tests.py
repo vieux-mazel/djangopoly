@@ -16,23 +16,23 @@ class TestGameCreation(TestCase):
         self.client = Client()
 
     def test_game_creation_public(self):
-        response = self.client.get('/new_game/public', follow=True)
+        self.client.get('/new_game/public', follow=True)
         self.assertFalse(Game.objects.all()[0].private)
 
     def test_game_creation_private(self):
-        response = self.client.get('/new_game/private', follow=True)
+        self.client.get('/new_game/private', follow=True)
         self.assertTrue(Game.objects.all()[0].private)
 
     def test_game_creation(self):
-        response = self.client.get('/new_game/public', follow=True)
+        self.client.get('/new_game/public', follow=True)
         self.assertEquals(Game.objects.all().count(), 1) # One game created
         game = Game.objects.all()[0]
         self.assertEquals(game.square_set.count(), 40) # There should be 40 squares in the game
 
     def test_game_start(self):
-        response = self.client.get('/new_game/public', follow=True)
+        self.client.get('/new_game/public', follow=True)
         game = Game.objects.all()[0]
-        response = self.client.get('/game/{0}/start/'.format(game.id))
+        self.client.get('/game/{0}/start/'.format(game.id))
         self.assertTrue(Game.objects.all()[0].in_progress)
 
 class TestGameJoin(TestCase):
