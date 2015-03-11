@@ -32,6 +32,7 @@ class TestGameCreation(TestCase):
 class TestGameJoin(TestCase):
     def setUp(self):
         Client().get('/new_game/public', follow=True)
+        Client().get('/new_game/public', follow=True)
         self.game1 = Game.objects.all()[0]
         self.game2 = Game.objects.all()[1]
         self.clients = []
