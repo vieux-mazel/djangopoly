@@ -67,3 +67,21 @@ class TestGameJoin(TestCase):
         response = client.get('/game/{0}/'.format(self.game2.id), follow=True)
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
 
+class TestGameplay(TestCase):
+    def setUp(self):
+        Client().get('/new_game/public', follow=True)
+        self.game = Game.objects.all()[0]
+        self.game.player_set.all().delete() # Remove the anonymous player that just created the game
+        self.clients = []
+        for i in range(4):
+            client = Client()
+            client.get('/game/{0}/'.format(self.game.id), follow=True)
+            self.clients.append(client)
+
+    def test_turns(self):
+        for client in self.clients:
+            player = Player.objects.get(session_id=client.session.session_key)
+            self.assertEquals(player.plays_in_turns, 0)
+            client.get('/game/end_turn/')
+    
+
