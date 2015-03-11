@@ -87,6 +87,24 @@ def new_game(request, private):
 FAILURE = json.dumps({'success': False})
 SUCCESS = json.dumps({'success': True})
 
+# Player exists and can play decorator
+def player_can_play(f):
+    def wrap(request, *args, **kwargs):
+        # Check that the player exists
+        try:
+            player = Player.objects.get(session_id=request.session.session_key)
+        except Player.DoesNotExist:
+            return HttpResponse(FAILURE)
+        # Check that it is this player's turn
+        if player.plays_in_turns != 0:
+            return HttpResponse(FAILURE)
+        return f(request, *args, **kwargs)
+
+    # Black magic
+    wrap.__doc__ = f.__doc__
+    wrap.__name__ = f.__name__
+    return wrap
+
 # Start a new game
 def start_game(request, id):
     try:
@@ -101,6 +119,7 @@ def start_game(request, id):
     game.save()
     return HttpResponse(SUCCESS)
 
+@player_can_play
 def roll_dice(request):
     try:
         player = Player.objects.get(session_id=request.session.session_key)
@@ -127,6 +146,7 @@ def roll_dice(request):
         }))
 
 # End a turn, and adjust plays_in_turns for every player
+@player_can_play
 def end_turn(request):
     try:
         player = Player.objects.get(session_id=request.session.session_key)
@@ -147,6 +167,7 @@ def end_turn(request):
     return HttpResponse(SUCCESS)
 
 # Buying a property or utility
+@player_can_play
 def buy(request, position):
     try:
         player = Player.objects.get(session_id=request.session.session_key)
