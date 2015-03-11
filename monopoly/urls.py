@@ -9,5 +9,6 @@ urlpatterns = patterns('',
         url(r'^game/buy/(?P<position>[\w\-]+)/$', views.buy, name='buy'),
         url(r'^game/(?P<id>[\w\-]+)/$', views.game, name='game'),
         url(r'^game/(?P<id>[\w\-]+)/start/$', views.start_game, name='start_game'),
+        url(r'^game/(?P<id>[\w\-]+)/join/$', views.join_game, name='join_game'),
         url(r'^game/(?P<id>[\w\-]+)/state/$', views.game_state, name='game_state'),
 )

@@ -12,14 +12,29 @@ import rules
 def index(request):
     return HttpResponse('Hello')
 
+# Establishes a Session ID if one hasn't been established
+#
+# Because Django is magic, it doesn't create a session until AFTER
+# a view has returned. If the 'game' view doesn't discover a session id
+# it will redirect to 'join_game'. 'join_game' should discover the session id
+# created by returning from 'game' and continue on rendering the game.
+# If it doesn't discover anything, then the browser doesn't support sessions.
+def join_game(request, id):
+    session_id = request.session.session_key
+
+    if session_id is None:
+        return redirect('index') # There's no session. Incognito mode?
+
+    return redirect('game', id)
+
 # Displays the game
 def game(request, id):
     game = Game.objects.get(id=id)
     
-    request.session['has_session'] = True # To ensure there is a session key
     session_id = request.session.session_key
+
     if session_id is None:
-        return redirect('index') # There's no session. Incognito mode?
+        return redirect('join_game', id)
     
     # Try to find the player with this Session ID
     # If there isn't one, create her.
