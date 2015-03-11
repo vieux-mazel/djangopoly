@@ -41,154 +41,176 @@ properties = [
         'position': 1,
         'title': 'Old Kent Toad',
         'street': 'brown',
-        'tax_site': 2
+        'tax_site': 2,
+        'price': 60
     },
     {
         'type': 'property',
         'position': 3,
         'title': 'Whitechapel Road',
         'street': 'brown',
-        'tax_site': 4
+        'tax_site': 4,
+        'price': 60
     },
     {
         'type': 'property',
         'position': 6,
         'title': 'The Angel Inslington',
         'street': 'light_blue',
-        'tax_site': 6
+        'tax_site': 6,
+        'price': 100
     },
     {
         'type': 'property',
         'position': 8,
         'title': 'Euston Road',
         'street': 'light_blue',
-        'tax_site': 6
+        'tax_site': 6,
+        'price': 100
     },
     {
         'type': 'property',
         'position': 9,
         'title': 'Penton View Road',
         'street': 'light_blue',
-        'tax_site': 8
+        'tax_site': 8,
+        'price': 100
     },
     {
         'type': 'property',
         'position': 11,
         'title': 'Pall Mall',
         'street': 'purple',
-        'tax_site': 10
+        'tax_site': 10,
+        'price': 140
     },
     {
         'type': 'property',
         'position': 13,
         'title': 'White Hall',
         'street': 'purple',
-        'tax_site': 10
+        'tax_site': 10,
+        'price': 140
     },
     {
         'type': 'property',
         'position': 14,
         'title': 'Norton Avenue',
         'street': 'purple',
-        'tax_site': 10
+        'tax_site': 10,
+        'price': 160
     },
     {
         'type': 'property',
         'position': 16,
         'title': 'Bow Street',
         'street': 'orange',
-        'tax_site': 14
+        'tax_site': 14,
+        'price': 180
     },
     {
         'type': 'property',
         'position': 18,
         'title': 'Marlboro Street',
         'street': 'orange',
-        'tax_site': 14
+        'tax_site': 14,
+        'price': 180
     },
     {
         'type': 'property',
         'position': 19,
         'title': 'Vine Street',
         'street': 'orange',
-        'tax_site': 16
+        'tax_site': 16,
+        'price': 200
     },
     {
         'type': 'property',
         'position': 21,
         'title': 'Strand',
         'street': 'red',
-        'tax_site': 16
+        'tax_site': 16,
+        'price': 220
     },
     {
         'type': 'property',
         'position': 23,
         'title': 'Fleet Street',
         'street': 'red',
-        'tax_site': 18
+        'tax_site': 18,
+        'price': 220
     },
     {
         'type': 'property',
         'position': 24,
         'title': 'Trafalgar Square',
         'street': 'red',
-        'tax_site': 20
+        'tax_site': 20,
+        'price': 240
     },
     {
         'type': 'property',
         'position': 26,
         'title': 'Lester Square',
         'street': 'yellow',
-        'tax_site': 22
+        'tax_site': 22,
+        'price': 260
     },
     {
         'type': 'property',
         'position': 27,
         'title': 'Coventry Street',
         'street': 'yellow',
-        'tax_site': 22
+        'tax_site': 22,
+        'price': 260
     },
     {
         'type': 'property',
         'position': 29,
         'title': 'Picadilly',
         'street': 'yellow',
-        'tax_site': 24
+        'tax_site': 24,
+        'price': 280
     },
     {
         'type': 'property',
         'position': 31,
         'title': 'Regent Street',
         'street': 'green',
-        'tax_site': 24
+        'tax_site': 24,
+        'price': 300
     },
     {
         'type': 'property',
         'position': 32,
         'title': 'Oxford Street',
         'street': 'green',
-        'tax_site': 26
+        'tax_site': 26,
+        'price': 300
     },
     {
         'type': 'property',
         'position': 34,
         'title': 'Bond Street',
         'street': 'green',
-        'tax_site': 28
+        'tax_site': 28,
+        'price': 320
     },
     {
         'type': 'property',
         'position': 37,
         'title': 'Park Lane',
         'street': 'blue',
-        'tax_site': 35
+        'tax_site': 35,
+        'price': 350
     },
     {
         'type': 'property',
         'position': 39,
         'title': 'Mayfair',
         'street': 'blue',
-        'tax_site': 50
+        'tax_site': 50,
+        'price': 400
     }
 ]
 

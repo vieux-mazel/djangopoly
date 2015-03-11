@@ -66,6 +66,41 @@ def move_player(player, dice):
     else:
         assert False, "Identity of a square is not Special, Property or Utility."
 
+# Buys a square on behalf of player
+# Returns True upon success and False upon failure
+def buy(player, square):
+    # Determine identity of square
+    identity = None
+    try:
+        identity = square.special
+    except ObjectDoesNotExist:
+        pass
+    try:
+        identity = square.property
+    except ObjectDoesNotExist:
+        pass
+    try:
+        identity = square.utility
+    except ObjectDoesNotExist:
+        pass
+    assert identity is not None, "Couldn't determine square identity."
+
+    if isinstance(identity, Special): # The square is special, so it can't be bought
+        return False
+    
+    if identity.owned_by != None: # The square is owned by someone else
+        return False
+
+    if player.money < identity.price: # The player doesn't have enough money to buy the square
+        return False
+
+    # Do the transaction
+    take_money(player, identity.price)
+    identity.owned_by = player
+    identity.save()
+    # It has succeeded
+    return True
+
 # Apply an effect to a player
 def apply_effect(player, effect):
     # Give money to a player

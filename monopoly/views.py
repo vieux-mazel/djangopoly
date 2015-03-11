@@ -63,6 +63,7 @@ def new_game(request, private):
             identity = Property()
             identity.street = Street.objects.get(color=x['street']) 
             identity.tax_site = x['tax_site']
+            identity.price = x['price']
         elif x['type'] == 'utility':
             identity = Utility()
         elif x['type'] == 'special':
@@ -145,6 +146,30 @@ def end_turn(request):
 
     return HttpResponse(SUCCESS)
 
+# Buying a property or utility
+def buy(request, position):
+    try:
+        player = Player.objects.get(session_id=request.session.session_key)
+    except Player.DoesNotExist:
+        return HttpResponse(FAILURE)
+
+    # Check that it is this player's turn
+    if player.plays_in_turns != 0:
+        return HttpResponse(FAILURE)
+
+    # Find the square at that position
+    try:
+        square = Square.objects.get(game=player.game, position=position)
+    except Square.DoesNotExist:
+        return HttpResponse(FAILURE)
+
+    # Check if the square can be bought
+    if not rules.buy(player, square):
+        return HttpResponse(FAILURE)
+
+    # Buying has succeeded
+    return HttpResponse(SUCCESS)
+
 # Return JSON containing all of the game's state
 def game_state(request, id):
     # Find the game for which the state is requested
@@ -166,3 +191,4 @@ def game_state(request, id):
 
     # Echo the JSON as the response's body
     return HttpResponse(state)
+
