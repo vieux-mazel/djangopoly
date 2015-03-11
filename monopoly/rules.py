@@ -14,6 +14,7 @@ def move_player(player, dice):
     assert len(dice) == 2, "Unexpected number of dice rolls. Should be exactly two." 
     new_position = (player.square.position + dice[0] + dice[1]) % len(squares)
     player.square = Square.objects.get(game=player.game, position=new_position)
+    player.save()
 
     # Determine identity of square
     identity = None
@@ -97,4 +98,5 @@ def pay_rent(payer, payee, cash):
 def go_to_jail(player):
     player.square = Square.objects.get(game=player.game, position=10) # Hardcoded jail position, probably shouldn't be like that
     # Should also prevent the player from moving subsequent turns
+    player.save()
 
