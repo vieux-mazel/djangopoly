@@ -207,62 +207,122 @@ specials = [
     {
         'type': 'special',
         'position': 0,
-        'title': 'Go'
+        'title': 'Go',
+        'effect':
+            {
+                'type': 'give_money',
+                'param': 200
+            }
     },
     {
         'type': 'special',
         'position': 2,
-        'title': 'Community Chest'
+        'title': 'Community Chest',
+        'effect':
+            {
+                'type': 'community_chest',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 4,
-        'title': 'Income Tax'
+        'title': 'Income Tax',
+        'effect':
+            {
+                'type': 'income_tax',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 7,
-        'title': 'Chance'
+        'title': 'Chance',
+        'effect':
+            {
+                'type': 'chance',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 10,
-        'title': 'Jail'
+        'title': 'Jail',
+        'effect':
+            {
+                'type': 'jail',
+                'param': None,
+            }
     },
     {
         'type': 'special',
         'position': 17,
-        'title': 'Community Chest'
+        'title': 'Community Chest',
+        'effect':
+            {
+                'type': 'community_chest',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 20,
-        'title': 'Free Parking'
+        'title': 'Free Parking',
+        'effect':
+            {
+                'type': 'free_parking',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 22,
-        'title': 'Chance'
+        'title': 'Chance',
+        'effect':
+            {
+                'type': 'chance',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 30,
-        'title': 'Go to Jail'
+        'title': 'Go to Jail',
+        'effect':
+            {
+                'type': 'go_to_jail',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 33,
-        'title': 'Community Chest'
+        'title': 'Community Chest',
+        'effect':
+            {
+                'type': 'community_chest',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 36,
-        'title': 'Chance'
+        'title': 'Chance',
+        'effect':
+            {
+                'type': 'chance',
+                'param': None
+            }
     },
     {
         'type': 'special',
         'position': 38,
-        'title': 'Supertax'
+        'title': 'Supertax',
+        'effect':
+            {
+                'type': 'supertax',
+                'param': None
+            }
     }
 ]
 

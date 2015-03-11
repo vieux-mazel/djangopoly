@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.core import serializers
 import json
 
-from monopoly.models import Game, Square, Property, Utility, Special, Player, Street
+from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect
 
 import board
 import rules
@@ -56,6 +56,8 @@ def new_game(request, private):
     # 40 squares that are either properties, utilities, or "specials"
     for x in sorted(board.squares, key=lambda k: k['position']):
         square = Square(position=x['position'], game=newGame)
+
+        # Create square identity
         identity = None # Identity of the square (property/utility/special)
         if x['type'] == 'property':
             identity = Property()
@@ -64,6 +66,9 @@ def new_game(request, private):
             identity = Utility()
         elif x['type'] == 'special':
             identity = Special()
+            identity.effect, created = Effect.objects.get_or_create(type=x['effect']['type'], param=x['effect']['param'])
+        assert identity is not None, "A square MUST have an identity that is Property, Utility or Special."
+
         square.title = x['title']
         square.save()
         identity.square = square
