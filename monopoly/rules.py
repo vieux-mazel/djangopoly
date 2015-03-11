@@ -35,8 +35,32 @@ def move_player(player, dice):
     if isinstance(identity, Special):
         assert identity.effect is not None, "A special square doesn't have an effect"
         apply_effect(player, identity.effect)
+
     elif isinstance(identity, Property):
-        pass
+        property = identity
+
+        # At this point, the property is certainly owned by someone
+        print property.owned_by
+        assert property.owned_by is None or isinstance(property.owned_by, Player), "The property is owned by a non-Player object?"
+        assert property.owned_by is None or Player.objects.filter(session_id=property.owned_by.session_id, game=player.game).exists(), "The property is owned by an invalid player or someone from another game."
+
+        # The property is not owned by anyone. Nothing
+        # special happens, although the player can buy it.
+        if property.owned_by is None:
+            pass
+        # The player has landed on his own property,
+        # nothing special happens
+        elif property.owned_by == player:
+            pass
+        # The player has landed on another player's
+        # mortgaged property, nothing special happens.
+        elif property.owned_by != player and property.is_mortgaged:
+            pass
+        # The player has landed on another player's
+        # unmortgaged property, and should pay rent.
+        elif property.owned_by != player and not property.is_mortgaged:
+            pay_rent(player, property.owned_by, property.tax_site)
+
     elif isinstance(identity, Utility):
         pass
     else:
@@ -59,11 +83,17 @@ def give_money(player, cash):
     assert isinstance(cash, int), "Cash is not an integer."
     assert cash > 0, "Can't give non-positive cash to a player."
     player.money = player.money + cash
+    player.save()
 
 def take_money(player, cash):
     assert isinstance(cash, int), "Cash is not an integer."
     assert cash > 0, "Can't take non-positive cash from a player."
     player.money = (player.money - cash) if (player.money - cash > 0) else 0
+    player.save()
+
+def pay_rent(payer, payee, cash):
+    take_money(payer, cash)
+    give_money(payee, cash)
 
 def go_to_jail(player):
     player.square = Square.objects.get(game=player.game, position=10) # Hardcoded jail position, probably shouldn't be like that

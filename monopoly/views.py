@@ -62,6 +62,7 @@ def new_game(request, private):
         if x['type'] == 'property':
             identity = Property()
             identity.street = Street.objects.get(color=x['street']) 
+            identity.tax_site = x['tax_site']
         elif x['type'] == 'utility':
             identity = Utility()
         elif x['type'] == 'special':
