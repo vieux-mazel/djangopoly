@@ -32,7 +32,6 @@ class TestGameCreation(TestCase):
 class TestGameJoin(TestCase):
     def setUp(self):
         Client().get('/new_game/public', follow=True)
-        Client().get('/new_game/public', follow=True)
         self.game1 = Game.objects.all()[0]
         self.game2 = Game.objects.all()[1]
         self.clients = []
@@ -42,13 +41,11 @@ class TestGameJoin(TestCase):
     def test_join_game(self):
         client = self.clients[0]
         client.get('/game/{0}/'.format(self.game1.id), follow=True)
-        client.get('/game/{0}/'.format(self.game1.id), follow=True)
         player = Player.objects.get(session_id=client.session.session_key)
         self.assertEquals(player.game, self.game1)
 
     def test_turn_initialisation(self):
         for client in self.clients:
-            client.get('/game/{0}/'.format(self.game1.id), follow=True)
             client.get('/game/{0}/'.format(self.game1.id), follow=True)
         
         expected_plays_in_turns = 1
@@ -60,8 +57,6 @@ class TestGameJoin(TestCase):
     def test_join_different_game(self):
         client = self.clients[0]
         client.get('/game/{0}/'.format(self.game1.id), follow=True)
-        client.get('/game/{0}/'.format(self.game1.id), follow=True)
-        response = client.get('/game/{0}/'.format(self.game2.id), follow=True)
         response = client.get('/game/{0}/'.format(self.game2.id), follow=True)
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
 
