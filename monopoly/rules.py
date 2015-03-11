@@ -40,7 +40,6 @@ def move_player(player, dice):
         property = identity
 
         # At this point, the property is certainly owned by someone
-        print property.owned_by
         assert property.owned_by is None or isinstance(property.owned_by, Player), "The property is owned by a non-Player object?"
         assert property.owned_by is None or Player.objects.filter(session_id=property.owned_by.session_id, game=player.game).exists(), "The property is owned by an invalid player or someone from another game."
 
