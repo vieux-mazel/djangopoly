@@ -36,7 +36,6 @@ def game(request, id):
     if player.game != game:
         return redirect('index')
     
-    print player
     return render(request, 'board.html')
 
 # Create a new game
