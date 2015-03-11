@@ -89,3 +89,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (STATIC_PATH,)
+
+# Change default session behaviour
+SESSION_SAVE_EVERY_REQUEST = True
+
