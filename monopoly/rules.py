@@ -16,21 +16,7 @@ def move_player(player, dice):
     player.square = Square.objects.get(game=player.game, position=new_position)
     player.save()
 
-    # Determine identity of square
-    identity = None
-    try:
-        identity = player.square.special
-    except ObjectDoesNotExist:
-        pass
-    try:
-        identity = player.square.property
-    except ObjectDoesNotExist:
-        pass
-    try:
-        identity = player.square.utility
-    except ObjectDoesNotExist:
-        pass
-    assert identity is not None, "Couldn't determine square identity."
+    identity = identify_square(player.square)
 
     # Handle different types of squares
     if isinstance(identity, Special):
@@ -69,21 +55,8 @@ def move_player(player, dice):
 # Buys a square on behalf of player
 # Returns True upon success and False upon failure
 def buy(player, square):
-    # Determine identity of square
-    identity = None
-    try:
-        identity = square.special
-    except ObjectDoesNotExist:
-        pass
-    try:
-        identity = square.property
-    except ObjectDoesNotExist:
-        pass
-    try:
-        identity = square.utility
-    except ObjectDoesNotExist:
-        pass
-    assert identity is not None, "Couldn't determine square identity."
+
+    identity = identify_square(square)
 
     if isinstance(identity, Special): # The square is special, so it can't be bought
         return False
@@ -135,3 +108,20 @@ def go_to_jail(player):
     # Should also prevent the player from moving subsequent turns
     player.save()
 
+# Determine identity of square
+def identify_square(square):
+    identity = None
+    try:
+        identity = square.special
+    except ObjectDoesNotExist:
+        pass
+    try:
+        identity = square.property
+    except ObjectDoesNotExist:
+        pass
+    try:
+        identity = square.utility
+    except ObjectDoesNotExist:
+        pass
+    assert identity is not None, "Couldn't determine square identity."
+    return identity
