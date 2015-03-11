@@ -121,14 +121,7 @@ def start_game(request, id):
 
 @player_can_play
 def roll_dice(request):
-    try:
-        player = Player.objects.get(session_id=request.session.session_key)
-    except Player.DoesNotExist:
-        return HttpResponse(FAILURE)
-
-    # Check that it is this player's turn
-    if player.plays_in_turns != 0:
-        return HttpResponse(FAILURE)
+    player = Player.objects.get(session_id=request.session.session_key)
 
     # Roll two dice - will be random at some point
     (dice1, dice2) = rules.roll_dice();
@@ -148,14 +141,7 @@ def roll_dice(request):
 # End a turn, and adjust plays_in_turns for every player
 @player_can_play
 def end_turn(request):
-    try:
-        player = Player.objects.get(session_id=request.session.session_key)
-    except Player.DoesNotExist:
-        return HttpResponse(FAILURE)
-
-    # Check that it is this player's turn
-    if player.plays_in_turns != 0:
-        return HttpResponse(FAILURE)
+    player = Player.objects.get(session_id=request.session.session_key)
 
     # Get all players in this game, subtract one from plays_in_turns
     # (when it gets negative it resets to the maximum)
@@ -169,14 +155,7 @@ def end_turn(request):
 # Buying a property or utility
 @player_can_play
 def buy(request, position):
-    try:
-        player = Player.objects.get(session_id=request.session.session_key)
-    except Player.DoesNotExist:
-        return HttpResponse(FAILURE)
-
-    # Check that it is this player's turn
-    if player.plays_in_turns != 0:
-        return HttpResponse(FAILURE)
+    player = Player.objects.get(session_id=request.session.session_key)
 
     # Find the square at that position
     try:
