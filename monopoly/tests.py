@@ -3,6 +3,8 @@
 from django.test import TestCase, Client
 from monopoly.models import *
 
+import json
+
 class TestIndex(TestCase):
     def setUp(self):
         self.client = Client()
@@ -83,5 +85,46 @@ class TestGameplay(TestCase):
             player = Player.objects.get(session_id=client.session.session_key)
             self.assertEquals(player.plays_in_turns, 0)
             client.get('/game/end_turn/')
+
+    def test_end_turn_when_not_your_turn(self):
+        client = self.clients[1]
+        player = Player.objects.get(session_id=client.session.session_key)
+        turn = json.loads(client.get('/game/end_turn/').content)
+        self.assertFalse(turn["success"])
     
+    def test_roll_when_your_turn(self):
+        client = self.clients[0]
+        player = Player.objects.get(session_id=client.session.session_key)
+        roll = json.loads(client.get('/game/roll/').content)
+        self.assertTrue(roll["success"])
+
+    def test_roll_when_not_your_turn(self):
+        client = self.clients[1]
+        player = Player.objects.get(session_id=client.session.session_key)
+        roll = json.loads(client.get('/game/roll/').content)
+        self.assertFalse(roll["success"])
+
+    def test_buy_when_not_your_turn(self):
+        client = self.clients[1]
+        player = Player.objects.get(session_id=client.session.session_key)
+        buy = json.loads(client.get('/game/buy/1/').content)
+        self.assertFalse(buy["success"])
+
+    def test_buy_property(self):
+        client = self.clients[0]
+        player = Player.objects.get(session_id=client.session.session_key)
+        buy = json.loads(client.get('/game/buy/1/').content)
+        self.assertTrue(buy["success"])
+
+    def test_buy_utility(self):
+        client = self.clients[0]
+        player = Player.objects.get(session_id=client.session.session_key)
+        buy = json.loads(client.get('/game/buy/5/').content)
+        self.assertTrue(buy["success"])
+
+    def test_buy_special(self):
+        client = self.clients[0]
+        player = Player.objects.get(session_id=client.session.session_key)
+        buy = json.loads(client.get('/game/buy/0/').content)
+        self.assertFalse(buy["success"])
 
