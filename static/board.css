@@ -1,50 +1,53 @@
 body {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 html, body {
-	height: 100%;
+    height: 100%;
 }
 
 .container-fluid,
 .row,
 .row > div {
-	height: 100%;
+    height: 100%;
 }
 
 #board {
-	position: relative;
-	height: 100%;
-	margin: 0 auto;
-	background: silver;
+    position: relative;
+    height: 100%;
+    margin: 0 auto;
+    background: silver;
 }
 
 .square {
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 
-	border: 1px solid black;
-	display: inline-block;
-	height: 14%;
-	background: red;
-	position: absolute;
+    border: 1px solid black;
+    display: inline-block;
+    height: 14%;
+    background: red;
+    position: absolute;
+}
+
+.square:after {
+    content: 'Test title';
 }
 
 .big {
-	width: 14%;
+    width: 14%;
 }
-
 .small {
-	width: 8%;
+    width: 8%;
 }
+.top { top: 0; }
+.right { right: 0; }
+.bottom { bottom: 0; }
+.left { left: 0; }
 
 .small.left,
 .small.right {
-	width: 14%;
-	height: 8%;
-}
-
-.roww {
-
+    width: 14%;
+    height: 8%;
 }

@@ -5,83 +5,62 @@
   $.getJSON('http://localhost:8000/game/1/state/', function(state) {
     //console.log(state);
 
-    var e, squares = [];
-    for (i in state) {
+    var i, e, squares = [];
+    for (i = 0; i < state.length; i++) {
       e = state[i];
       if (e.model === 'monopoly.square') {
         squares.push(e);
       }
     }
 
-    
-    var left = 0;
-    var right = 0;
-    var top = 0;
-    var bottom = 0;
-    var left = 0;
-
     var size1 = 14;
     var size2 = 8;
 
-    for (i in squares) {
-      var classes = 'square ';
-      var styles = '';
+    var classes, styles, distance;
+
+    for (i = 0; i < squares.length; i++) {
+      classes = ['square'];
+      styles = [];
      
-
-      if (i == 0 || i == 10 || i == 20 || i == 30) {
-        classes += 'big ';
+      if (i % 10 === 0) {
+        distance = 0;
+        classes.push('big');
       } else {
-        classes += 'small ';
+        classes.push('small');
       }
-      
+
       if (i < 10) {
-        
-        styles += 'bottom: 0;';
-        styles += 'right: ' + right + '%';
-        
-        if (i == 0) right += size1;
-        else right += size2;
 
-      } else if (i >= 10 && i < 20) {
-
-        classes += 'left ';
-
-        styles += 'left: 0;';
-        styles += 'bottom: ' + bottom + '%';
-
-        if (i == 10) bottom += size1;
-        else bottom += size2;
+        classes.push('bottom');
+        styles.push('right:' + distance + '%');
       
-      } else if (i >= 20 && i < 30) {
+      } else if (i < 20) {
 
-        classes += 'top';
-
-        styles += 'top: 0;';
-        styles += 'left: ' + left + '%';
-
-        if (i == 20) left += size1;
-        else left += size2;
-
+        classes.push('left');
+        styles.push('bottom: ' + distance + '%');      
+      
+      } else if (i < 30) {
+      
+        classes.push('top');
+        styles.push('left: ' + distance + '%');
+      
       } else {
-
-        classes += 'right';
-
-        styles += 'right: 0;'
-        styles += 'top: ' + top + '%';
-
-        if (i == 30) top += size1;
-        else top += size2;
-
+        
+        classes.push('right');
+        styles.push('top: ' + distance + '%');
+      
       }
 
-      $board.append('<div id="square' + i + '" class="' + classes + '" style="' + styles + '"></div>');
+      if (i % 10 === 0) distance += size1;
+      else distance += size2;
+
+      $board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '"></div>');
     }
   });
 
   function resizeBoard() {
     $board.css({width: $board.height()});
   }
-
 
   $(window).on('resize', resizeBoard);
 
