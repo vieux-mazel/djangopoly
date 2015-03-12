@@ -37,11 +37,11 @@ def move_player(player, dice):
         elif identity.owned_by == player:
             pass
         # The player has landed on another player's
-        # mortgaged identity, nothing special happens.
+        # mortgaged property/utility, nothing special happens.
         elif identity.owned_by != player and identity.is_mortgaged:
             pass
         # The player has landed on another player's
-        # unmortgaged identity, and should pay rent.
+        # unmortgaged property/utility, and should pay rent.
         elif identity.owned_by != player and not identity.is_mortgaged:
             pay_rent(player, identity.owned_by, identity.tax_site)
 
