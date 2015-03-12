@@ -1,13 +1,18 @@
-# Game rules
+# Module to model the rules of Monopoly.
+# Consists mainly of functions that model the game flow
+# and reflect any changes to the game state in the database.
+#
+# Ideally, all game logic should be in this module and views.py
+# should refer to it in its API.
+
 from django.core.exceptions import ObjectDoesNotExist
-
 from monopoly.models import Game, Player, Square, Property, Utility, Special
-
 from board import squares, streets
 
 # Rolling dice by Monopoly rules
 def roll_dice():
     return (2, 4)
+
 
 # Handle moving a player to a new square
 def move_player(player, dice):
