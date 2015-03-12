@@ -1,9 +1,14 @@
-# Test views in the Monopoly application
+# Test views and rules in the Monopoly application
 
 from django.test import TestCase, Client
 from monopoly.models import *
+import rules
 
 import json
+
+def get_player(client):
+    assert isinstance(client, Client), "To get a player you need a client"
+    return Player.objects.get(session_id=client.session.session_key)
 
 class TestIndex(TestCase):
     def setUp(self):
@@ -50,7 +55,7 @@ class TestGameJoin(TestCase):
     def test_join_game(self):
         client = self.clients[0]
         client.get('/game/{0}/'.format(self.game1.id), follow=True)
-        player = Player.objects.get(session_id=client.session.session_key)
+        player = get_player(client)
         self.assertEquals(player.game, self.game1)
 
     def test_turn_initialisation(self):
@@ -59,7 +64,7 @@ class TestGameJoin(TestCase):
         
         expected_plays_in_turns = 1
         for client in self.clients:
-            player = Player.objects.get(session_id=client.session.session_key)
+            player = get_player(client)
             self.assertEquals(player.plays_in_turns, expected_plays_in_turns)
             expected_plays_in_turns += 1
         
@@ -82,7 +87,7 @@ class TestGameFlow(TestCase):
 
     def test_turns(self):
         for client in self.clients:
-            player = Player.objects.get(session_id=client.session.session_key)
+            player = get_player(client)
             self.assertEquals(player.plays_in_turns, 0)
             client.get('/game/end_turn/')
 
@@ -137,5 +142,26 @@ class TestBuying(TestGameFlow):
         client1 = self.clients[1]
         client0.get('/game/buy/5/')
         buy = json.loads(client1.get('/game/buy/5/').content)
+        utility = Square.objects.get(game=self.game, position=5)
         self.assertFalse(buy["success"])
 
+class TestPayRent(TestGameFlow):
+    def setUp(self):
+        TestGameFlow.setUp(self)
+
+    def test_pay_rent_your_property(self):
+        self.clients[0].get('/game/buy/1/')
+        player = get_player(self.clients[0])
+        money_before = player.money
+        rules.move_player(player, (0,1))
+        player = get_player(self.clients[0])
+        self.assertEquals(player.money, money_before)
+
+    def test_pay_rent_another_property(self):
+        self.clients[0].get('/game/buy/1/')
+        player = get_player(self.clients[1])
+        money_before = player.money
+        rules.move_player(player, (0,1))
+        property = Square.objects.get(game=self.game, position=1).property
+        player = get_player(self.clients[1])
+        self.assertEquals(player.money, money_before - property.tax_site)
