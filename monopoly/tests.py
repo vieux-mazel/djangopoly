@@ -165,3 +165,21 @@ class TestPayRent(TestGameFlow):
         property = Square.objects.get(game=self.game, position=1).property
         player = get_player(self.clients[1])
         self.assertEquals(player.money, money_before - property.tax_site)
+
+    def test_pay_rent_your_utility(self):
+        self.clients[0].get('/game/buy/5/')
+        player = get_player(self.clients[0])
+        money_before = player.money
+        rules.move_player(player, (0,5))
+        player = get_player(self.clients[0])
+        self.assertEquals(player.money, money_before)
+
+    def test_pay_rent_another_utility(self):
+        self.clients[0].get('/game/buy/5/')
+        player = get_player(self.clients[1])
+        money_before = player.money
+        rules.move_player(player, (0,5))
+        property = Square.objects.get(game=self.game, position=5).property
+        player = get_player(self.clients[1])
+        self.assertEquals(player.money, money_before - property.tax_site)
+
