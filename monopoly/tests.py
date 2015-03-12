@@ -121,3 +121,17 @@ class TestGameplay(TestCase):
         buy = json.loads(client.get('/game/buy/0/').content)
         self.assertFalse(buy["success"])
 
+    def test_buy_property_already_owned(self):
+        client0 = self.clients[0]
+        client1 = self.clients[1]
+        client0.get('/game/buy/1/')
+        buy = json.loads(client1.get('/game/buy/1/').content)
+        self.assertFalse(buy["success"])
+
+    def test_buy_utility_already_owned(self):
+        client0 = self.clients[0]
+        client1 = self.clients[1]
+        client0.get('/game/buy/5/')
+        buy = json.loads(client1.get('/game/buy/5/').content)
+        self.assertFalse(buy["success"])
+
