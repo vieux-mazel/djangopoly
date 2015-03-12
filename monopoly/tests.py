@@ -140,6 +140,11 @@ class TestBuying(TestGameFlow):
         buy = json.loads(self.john.get('/game/buy/0/').content)
         self.assertFalse(buy["success"])
 
+    def test_buy_property_twice(self):
+        self.john.get('/game/buy/1/')
+        buy = json.loads(self.john.get('/game/buy/1/').content)
+        self.assertFalse(buy["success"])
+
     def test_buy_property_already_owned(self):
         self.john.get('/game/buy/1/')
         buy = json.loads(self.mary.get('/game/buy/1/').content)
