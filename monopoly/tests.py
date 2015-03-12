@@ -92,18 +92,15 @@ class TestGameFlow(TestCase):
             client.get('/game/end_turn/')
 
     def test_end_turn_when_not_your_turn(self):
-        client = self.clients[1]
-        turn = json.loads(client.get('/game/end_turn/').content)
+        turn = json.loads(self.clients[1].get('/game/end_turn/').content)
         self.assertFalse(turn["success"])
     
     def test_roll_when_your_turn(self):
-        client = self.clients[0]
-        roll = json.loads(client.get('/game/roll/').content)
+        roll = json.loads(self.clients[0].get('/game/roll/').content)
         self.assertTrue(roll["success"])
 
     def test_roll_when_not_your_turn(self):
-        client = self.clients[1]
-        roll = json.loads(client.get('/game/roll/').content)
+        roll = json.loads(self.clients[1].get('/game/roll/').content)
         self.assertFalse(roll["success"])
 
 class TestBuying(TestGameFlow):
@@ -111,30 +108,24 @@ class TestBuying(TestGameFlow):
         TestGameFlow.setUp(self)
 
     def test_buy_when_not_your_turn(self):
-        client = self.clients[1]
-        buy = json.loads(client.get('/game/buy/1/').content)
+        buy = json.loads(self.clients[1].get('/game/buy/1/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property(self):
-        client = self.clients[0]
-        buy = json.loads(client.get('/game/buy/1/').content)
+        buy = json.loads(self.clients[0].get('/game/buy/1/').content)
         self.assertTrue(buy["success"])
 
     def test_buy_utility(self):
-        client = self.clients[0]
-        buy = json.loads(client.get('/game/buy/5/').content)
+        buy = json.loads(self.clients[0].get('/game/buy/5/').content)
         self.assertTrue(buy["success"])
 
     def test_buy_special(self):
-        client = self.clients[0]
-        buy = json.loads(client.get('/game/buy/0/').content)
+        buy = json.loads(self.clients[0].get('/game/buy/0/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property_already_owned(self):
-        client0 = self.clients[0]
-        client1 = self.clients[1]
-        client0.get('/game/buy/1/')
-        buy = json.loads(client1.get('/game/buy/1/').content)
+        self.clients[0].get('/game/buy/1/')
+        buy = json.loads(self.clients[1].get('/game/buy/1/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_utility_already_owned(self):
@@ -142,7 +133,6 @@ class TestBuying(TestGameFlow):
         client1 = self.clients[1]
         client0.get('/game/buy/5/')
         buy = json.loads(client1.get('/game/buy/5/').content)
-        utility = Square.objects.get(game=self.game, position=5)
         self.assertFalse(buy["success"])
 
 class TestPayRent(TestGameFlow):
@@ -182,4 +172,3 @@ class TestPayRent(TestGameFlow):
         property = Square.objects.get(game=self.game, position=5).property
         player = get_player(self.clients[1])
         self.assertEquals(player.money, money_before - property.tax_site)
-
