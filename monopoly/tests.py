@@ -69,7 +69,7 @@ class TestGameJoin(TestCase):
         response = client.get('/game/{0}/'.format(self.game2.id), follow=True)
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
 
-class TestGameplay(TestCase):
+class TestGameFlow(TestCase):
     def setUp(self):
         Client().get('/new_game/public', follow=True)
         self.game = Game.objects.all()[0]
@@ -100,6 +100,10 @@ class TestGameplay(TestCase):
         client = self.clients[1]
         roll = json.loads(client.get('/game/roll/').content)
         self.assertFalse(roll["success"])
+
+class TestBuying(TestGameFlow):
+    def setUp(self):
+        TestGameFlow.setUp(self)
 
     def test_buy_when_not_your_turn(self):
         client = self.clients[1]
