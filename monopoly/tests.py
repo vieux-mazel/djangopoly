@@ -1,4 +1,8 @@
-# Test views and rules in the Monopoly application
+# A mix of white box and black box tests for testing
+# views in the monopoly application.
+#
+# These are used in conjuction with assertions for things
+# that should never, ever fail in the source code.
 
 from django.test import TestCase, Client
 from monopoly.models import *
@@ -6,9 +10,12 @@ import rules
 
 import json
 
+# Extend Django's Client class to be able to get the Player
+# it corresponds to.
 class Client(Client):
     def player(self):
         return Player.objects.get(session_id=self.session.session_key)
+
 
 class TestIndex(TestCase):
     def setUp(self):
@@ -17,6 +24,7 @@ class TestIndex(TestCase):
     def test_index(self):
         response = self.client.get('/')
         self.assertEquals(response.status_code, 200)
+
 
 class TestGameCreation(TestCase):
     def setUp(self):
@@ -41,6 +49,7 @@ class TestGameCreation(TestCase):
         game = Game.objects.all()[0]
         self.client.get('/game/{0}/start/'.format(game.id))
         self.assertTrue(Game.objects.all()[0].in_progress)
+
 
 class TestGameJoin(TestCase):
     def setUp(self):
@@ -77,6 +86,7 @@ class TestGameJoin(TestCase):
         response = client.get('/game/{0}/'.format(self.game2.id), follow=True)
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
 
+
 class TestGameFlow(TestCase):
     def setUp(self):
         Client().get('/new_game/public', follow=True)
@@ -109,6 +119,7 @@ class TestGameFlow(TestCase):
         roll = json.loads(self.mary.get('/game/roll/').content)
         self.assertFalse(roll["success"])
 
+
 class TestBuying(TestGameFlow):
     def setUp(self):
         TestGameFlow.setUp(self)
@@ -140,6 +151,7 @@ class TestBuying(TestGameFlow):
         client0.get('/game/buy/5/')
         buy = json.loads(client1.get('/game/buy/5/').content)
         self.assertFalse(buy["success"])
+
 
 class TestPayRent(TestGameFlow):
     def setUp(self):
