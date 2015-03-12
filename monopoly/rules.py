@@ -43,7 +43,7 @@ def move_player(player, dice):
         # The player has landed on another player's
         # unmortgaged property/utility, and should pay rent.
         elif identity.owned_by != player and not identity.is_mortgaged:
-            pay_rent(player, identity.owned_by, identity.tax_site)
+            pay_rent(player, identity.owned_by, get_rent(identity))
 
     else:
         assert False, "Identity of a square is not Special, Property or Utility."
@@ -121,3 +121,16 @@ def identify_square(square):
         pass
     assert identity is not None, "Couldn't determine square identity."
     return identity
+
+# Determine how much rent is to be payed on a property/utility
+def get_rent(identity):
+    if isinstance(identity, Property):
+        return identity.tax_site
+    elif isinstance(identity, Utility):
+        if identity.owned_by is None:
+            return identity.tax_site
+        else:
+            return identity.tax_site * identity.owned_by.utility_set.all().count()
+    else:
+        assert False, "Tried to determine rent on a special square"
+
