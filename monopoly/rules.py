@@ -23,32 +23,28 @@ def move_player(player, dice):
         assert identity.effect is not None, "A special square doesn't have an effect"
         apply_effect(player, identity.effect)
 
-    elif isinstance(identity, Property):
-        property = identity
-
+    elif isinstance(identity, Property) or isinstance(identity, Utility):
         # At this point, the property is certainly owned by someone
-        assert property.owned_by is None or isinstance(property.owned_by, Player), "The property is owned by a non-Player object?"
-        assert property.owned_by is None or Player.objects.filter(session_id=property.owned_by.session_id, game=player.game).exists(), "The property is owned by an invalid player or someone from another game."
+        assert identity.owned_by is None or isinstance(identity.owned_by, Player), "The property/utility is owned by a non-Player object?"
+        assert identity.owned_by is None or Player.objects.filter(session_id=identity.owned_by.session_id, game=player.game).exists(), "The property/utility is owned by an invalid player or someone from another game."
 
-        # The property is not owned by anyone. Nothing
+        # The identity is not owned by anyone. Nothing
         # special happens, although the player can buy it.
-        if property.owned_by is None:
+        if identity.owned_by is None:
             pass
-        # The player has landed on his own property,
+        # The player has landed on his own identity,
         # nothing special happens
-        elif property.owned_by == player:
+        elif identity.owned_by == player:
             pass
         # The player has landed on another player's
-        # mortgaged property, nothing special happens.
-        elif property.owned_by != player and property.is_mortgaged:
+        # mortgaged identity, nothing special happens.
+        elif identity.owned_by != player and identity.is_mortgaged:
             pass
         # The player has landed on another player's
-        # unmortgaged property, and should pay rent.
-        elif property.owned_by != player and not property.is_mortgaged:
-            pay_rent(player, property.owned_by, property.tax_site)
+        # unmortgaged identity, and should pay rent.
+        elif identity.owned_by != player and not identity.is_mortgaged:
+            pay_rent(player, identity.owned_by, identity.tax_site)
 
-    elif isinstance(identity, Utility):
-        pass
     else:
         assert False, "Identity of a square is not Special, Property or Utility."
 
