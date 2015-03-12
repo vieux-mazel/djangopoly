@@ -51,9 +51,12 @@ class TestGameJoin(TestCase):
         self.clients = []
         for i in range(4):
             self.clients.append(Client())
+        # Named clients
+        self.john = self.clients[0]
+        self.mary = self.clients[1]
     
     def test_join_game(self):
-        client = self.clients[0]
+        client = self.john
         client.get('/game/{0}/'.format(self.game1.id), follow=True)
         player = client.player()
         self.assertEquals(player.game, self.game1)
@@ -69,7 +72,7 @@ class TestGameJoin(TestCase):
             expected_plays_in_turns += 1
         
     def test_join_different_game(self):
-        client = self.clients[0]
+        client = self.john
         client.get('/game/{0}/'.format(self.game1.id), follow=True)
         response = client.get('/game/{0}/'.format(self.game2.id), follow=True)
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
@@ -84,6 +87,9 @@ class TestGameFlow(TestCase):
             client = Client()
             client.get('/game/{0}/'.format(self.game.id), follow=True)
             self.clients.append(client)
+        # Named clients
+        self.john = self.clients[0]
+        self.mary = self.clients[1]
 
     def test_turns(self):
         for client in self.clients:
@@ -92,15 +98,15 @@ class TestGameFlow(TestCase):
             client.get('/game/end_turn/')
 
     def test_end_turn_when_not_your_turn(self):
-        turn = json.loads(self.clients[1].get('/game/end_turn/').content)
+        turn = json.loads(self.mary.get('/game/end_turn/').content)
         self.assertFalse(turn["success"])
     
     def test_roll_when_your_turn(self):
-        roll = json.loads(self.clients[0].get('/game/roll/').content)
+        roll = json.loads(self.john.get('/game/roll/').content)
         self.assertTrue(roll["success"])
 
     def test_roll_when_not_your_turn(self):
-        roll = json.loads(self.clients[1].get('/game/roll/').content)
+        roll = json.loads(self.mary.get('/game/roll/').content)
         self.assertFalse(roll["success"])
 
 class TestBuying(TestGameFlow):
@@ -108,29 +114,29 @@ class TestBuying(TestGameFlow):
         TestGameFlow.setUp(self)
 
     def test_buy_when_not_your_turn(self):
-        buy = json.loads(self.clients[1].get('/game/buy/1/').content)
+        buy = json.loads(self.mary.get('/game/buy/1/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property(self):
-        buy = json.loads(self.clients[0].get('/game/buy/1/').content)
+        buy = json.loads(self.john.get('/game/buy/1/').content)
         self.assertTrue(buy["success"])
 
     def test_buy_utility(self):
-        buy = json.loads(self.clients[0].get('/game/buy/5/').content)
+        buy = json.loads(self.john.get('/game/buy/5/').content)
         self.assertTrue(buy["success"])
 
     def test_buy_special(self):
-        buy = json.loads(self.clients[0].get('/game/buy/0/').content)
+        buy = json.loads(self.john.get('/game/buy/0/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property_already_owned(self):
-        self.clients[0].get('/game/buy/1/')
-        buy = json.loads(self.clients[1].get('/game/buy/1/').content)
+        self.john.get('/game/buy/1/')
+        buy = json.loads(self.mary.get('/game/buy/1/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_utility_already_owned(self):
-        client0 = self.clients[0]
-        client1 = self.clients[1]
+        client0 = self.john
+        client1 = self.mary
         client0.get('/game/buy/5/')
         buy = json.loads(client1.get('/game/buy/5/').content)
         self.assertFalse(buy["success"])
@@ -140,27 +146,27 @@ class TestPayRent(TestGameFlow):
         TestGameFlow.setUp(self)
 
     def test_pay_rent_your_property(self):
-        self.clients[0].get('/game/buy/1/')
-        money_before = self.clients[0].player().money
-        rules.move_player(self.clients[0].player(), (0,1))
-        self.assertEquals(self.clients[0].player().money, money_before)
+        self.john.get('/game/buy/1/')
+        money_before = self.john.player().money
+        rules.move_player(self.john.player(), (0,1))
+        self.assertEquals(self.john.player().money, money_before)
 
     def test_pay_rent_another_property(self):
-        self.clients[0].get('/game/buy/1/')
-        money_before = self.clients[1].player().money
-        rules.move_player(self.clients[1].player(), (0,1))
+        self.john.get('/game/buy/1/')
+        money_before = self.mary.player().money
+        rules.move_player(self.mary.player(), (0,1))
         property = Square.objects.get(game=self.game, position=1).property
-        self.assertEquals(self.clients[1].player().money, money_before - property.tax_site)
+        self.assertEquals(self.mary.player().money, money_before - property.tax_site)
 
     def test_pay_rent_your_utility(self):
-        self.clients[0].get('/game/buy/5/')
-        money_before = self.clients[0].player().money
-        rules.move_player(self.clients[0].player(), (0,5))
-        self.assertEquals(self.clients[0].player().money, money_before)
+        self.john.get('/game/buy/5/')
+        money_before = self.john.player().money
+        rules.move_player(self.john.player(), (0,5))
+        self.assertEquals(self.john.player().money, money_before)
 
     def test_pay_rent_another_utility(self):
-        self.clients[0].get('/game/buy/5/')
-        money_before = self.clients[1].player().money
-        rules.move_player(self.clients[1].player(), (0,5))
+        self.john.get('/game/buy/5/')
+        money_before = self.mary.player().money
+        rules.move_player(self.mary.player(), (0,5))
         utility = Square.objects.get(game=self.game, position=5).utility
-        self.assertEquals(self.clients[1].player().money, money_before - utility.tax_site)
+        self.assertEquals(self.mary.player().money, money_before - utility.tax_site)
