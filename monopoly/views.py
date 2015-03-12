@@ -81,6 +81,7 @@ def new_game(request, private):
         elif x['type'] == 'utility':
             identity = Utility()
             identity.price = x['price']
+            identity.tax_site = x['tax_site']
         elif x['type'] == 'special':
             identity = Special()
             identity.effect, created = Effect.objects.get_or_create(type=x['effect']['type'], param=x['effect']['param'])

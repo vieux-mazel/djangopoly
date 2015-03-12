@@ -219,37 +219,43 @@ utilities = [
         'type': 'utility',
         'position': 5,
         'title': 'Kings Cross Station',
-        'price': 200
+        'price': 200,
+        'tax_site': 25
     },
     {
         'type': 'utility',
         'position': 12,
         'title': 'Electric Company',
-        'price': 150
+        'price': 150,
+        'tax_site': 25
     },
     {
         'type': 'utility',
         'position': 15,
         'title': 'Maryll Boan Station',
-        'price': 200
+        'price': 200,
+        'tax_site': 25
     },
     {
         'type': 'utility',
         'position': 25,
         'title': 'Fenchurchstreet Station',
-        'price': 150
+        'price': 150,
+        'tax_site': 25
     },
     {
         'type': 'utility',
         'position': 28,
         'title': 'Waterworks',
-        'price': 150
+        'price': 150,
+        'tax_site': 25
     },
     {
         'type': 'utility',
         'position': 35,
         'title': 'Liverpoolstreet Station',
-        'price': 200
+        'price': 200,
+        'tax_site': 25
     }
 ]
 
