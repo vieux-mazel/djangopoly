@@ -28,6 +28,10 @@ class Player(models.Model):
     money = models.IntegerField(default=1500)
     square = models.ForeignKey(Square)
     plays_in_turns = models.IntegerField(default=0)
+    in_jail_for = models.IntegerField(default=0)
+
+    def is_in_jail(self):
+        return self.in_jail_for == 0
 
     def __str__(self):
         return "Session ID: {0}\nGame ID: {1}\nName: {2}\nMoney: {3}\nSquare: {4}\nPlays in turns: {5}".format(

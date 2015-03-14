@@ -4,6 +4,7 @@
 #
 # Ideally, all game logic should be in this module and views.py
 # should refer to it in its API.
+# Handle moving a player to a new square
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -15,10 +16,17 @@ def roll_dice():
     return (2, 4)
 
 
-# Handle moving a player to a new square
+# Try moving the player to a new square
+# and handle the effect of that.
 def move_player(player, dice):
     assert len(dice) == 2, "Unexpected number of dice rolls. Should be exactly two." 
-    new_position = (player.square.position + dice[0] + dice[1]) % len(squares)
+
+    if not player.is_in_jail(): # Move the player only if she's not in jail
+        new_position = (player.square.position + dice[0] + dice[1]) % len(squares)
+    else:
+        new_position = player.square.position
+        handle_jail(player, dice)
+
     player.square = Square.objects.get(game=player.game, position=new_position)
     player.save()
 
@@ -111,8 +119,35 @@ def pay_rent(payer, payee, cash):
 
 def go_to_jail(player):
     player.square = Square.objects.get(game=player.game, position=10) # Hardcoded jail position, probably shouldn't be like that
-    # Should also prevent the player from moving subsequent turns
+    player.in_jail_for = 3 # In jail for 3 turns
     player.save()
+
+# Determine what to do with the player if she lands in jail.
+# There two possibilities:
+#  1) Just visiting, nothing happens.
+#  2) In jail for 3 or 2 more turns, either pay 50 or roll doubles.
+#  3) In jail for 1 more turn, pay 50.
+def handle_jail(player, dice):
+    assert player.in_jail_for >=0 and player.in_jail_for <= 3, "Unexpected number of jail turns."
+    if not player.is_in_jail(): # Just visiting, nothing happens.
+        return
+    if player.in_jail_for == 2 and player.in_jail_for == 3:
+        if dice[0] == dice[1]:
+            liberate(player) # Player rolled doubles, he's free.
+    if player.in_jail_for == 1:
+        pay_bailout(player)
+    player.in_jail_for -= 1
+    player.save()
+
+# Liberates a player from jail.
+def liberate(player):
+    player.in_jail_for = 0
+    player.save()
+
+# Makes a player pay his bailout to get out of jail.
+def pay_bailout(player):
+    take_money(player, 50)
+    liberate(player)
 
 # Determine identity of square
 def identify_square(square):
