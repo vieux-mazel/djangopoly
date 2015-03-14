@@ -216,7 +216,9 @@ class TestJail(TestCase):
         self.game = Game.objects.all()[0]
         self.game.player_set.all().delete() # Delete dummy player that created the game
         self.john = Client()
+        self.mary = Client()
         self.john.get('/game/{0}/'.format(self.game.id), follow=True)
+        self.mary.get('/game/{0}/'.format(self.game.id), follow=True)
         self.money_before = self.john.player().money
         rules.move_player(self.john.player(), (30, 0)) # Roll a 30 to land on "Go to jail"
 
@@ -241,4 +243,7 @@ class TestJail(TestCase):
         self.assertFalse(self.john.player().is_in_jail())
         self.assertEquals(self.john.player().money, self.money_before)
 
+    def test_bailout_when_not_in_jail(self):
+        bailout = json.loads(self.mary.get('/game/pay_bailout/').content)
+        self.assertFalse(bailout["success"])
 
