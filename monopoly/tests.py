@@ -157,6 +157,12 @@ class TestBuying(TestGameFlow):
         buy = json.loads(self.mary.get('/game/buy/5/').content)
         self.assertFalse(buy["success"])
 
+    def test_buy_property_street_conflict(self):
+        self.john.get('/game/buy/1/')
+        self.john.get('/game/end_turn/')
+        buy = json.loads(self.mary.get('/game/buy/3/').content)
+        self.assertFalse(buy["success"])
+
 
 class TestPayRent(TestGameFlow):
     def setUp(self):

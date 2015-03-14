@@ -75,7 +75,7 @@ def new_game(request, private):
         identity = None # Identity of the square (property/utility/special)
         if x['type'] == 'property':
             identity = Property()
-            identity.street = Street.objects.get(color=x['street']) 
+            identity.street = Street.objects.get(color=x['street'], game=newGame) 
             identity.tax_site = x['tax_site']
             identity.price = x['price']
         elif x['type'] == 'utility':

@@ -6,6 +6,7 @@
 # should refer to it in its API.
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from monopoly.models import Game, Player, Square, Property, Utility, Special
 from board import squares, streets
 
@@ -66,6 +67,10 @@ def buy(player, square):
         return False
 
     if player.money < identity.price: # The player doesn't have enough money to buy the square
+        return False
+
+    # The square is a property, and another property of the same street (color) is owned by another player
+    if isinstance(identity, Property) and identity.street.property_set.filter(~Q(owned_by=player) & ~Q(owned_by=None)):
         return False
 
     # Do the transaction
