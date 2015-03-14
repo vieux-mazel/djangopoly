@@ -186,6 +186,19 @@ def buy(request, position):
     # Buying has succeeded
     return HttpResponse(SUCCESS)
 
+# Pay a bailout when the player is in jail
+# in order to become free.
+@player_can_play
+def pay_bailout(request):
+    player = Player.objects.get(session_id=request.session.session_key)
+
+    try:
+        rules.pay_bailout(player)
+    except AssertionError:
+        return HttpResponse(FAILURE)
+
+    return HttpResponse(SUCCESS)
+
 # Return JSON containing all of the game's state
 def game_state(request, id):
     # Find the game for which the state is requested

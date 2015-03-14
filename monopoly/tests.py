@@ -231,7 +231,8 @@ class TestJail(TestCase):
         self.assertEquals(self.john.player().money, self.money_before - 50)
 
     def test_jail_liberate_by_bailout(self):
-        rules.pay_bailout(self.john.player())
+        bailout = json.loads(self.john.get('/game/pay_bailout/').content)
+        self.assertTrue(bailout["success"])
         self.assertEquals(self.john.player().money, self.money_before - 50)
         self.assertFalse(self.john.player().is_in_jail())
 

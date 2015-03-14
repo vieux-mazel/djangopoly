@@ -143,6 +143,7 @@ def liberate(player):
 
 # Makes a player pay his bailout to get out of jail.
 def pay_bailout(player):
+    assert player.is_in_jail(), "A player is not in jail, yet pay_bailout() was called."
     take_money(player, 50)
     liberate(player)
 
