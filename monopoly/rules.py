@@ -15,7 +15,6 @@ from board import squares, streets
 def roll_dice():
     return (2, 4)
 
-
 # Try moving the player to a new square
 # and handle the effect of that.
 def move_player(player, dice):
