@@ -168,36 +168,42 @@ class TestPayRent(TestGameFlow):
     def setUp(self):
         TestGameFlow.setUp(self)
 
+    # Sets a property/utility as bought without
+    # going through the API.
+    def set_bought(self, client, identity):
+        identity.owned_by = client.player()
+        identity.save()
+
     def test_pay_rent_your_property(self):
-        self.john.get('/game/buy/1/')
+        self.set_bought(self.john, Square.objects.get(game=self.game, position=1).property)
         money_before = self.john.player().money
         rules.move_player(self.john.player(), (0,1))
         self.assertEquals(self.john.player().money, money_before)
 
     def test_pay_rent_another_property(self):
-        self.john.get('/game/buy/1/')
+        property = Square.objects.get(game=self.game, position=1).property
+        self.set_bought(self.john, property)
         money_before = self.mary.player().money
         rules.move_player(self.mary.player(), (0,1))
-        property = Square.objects.get(game=self.game, position=1).property
         self.assertEquals(self.mary.player().money, money_before - property.tax_site)
 
     def test_pay_rent_your_utility(self):
-        self.john.get('/game/buy/5/')
+        self.set_bought(self.john, Square.objects.get(game=self.game, position=5).utility)
         money_before = self.john.player().money
         rules.move_player(self.john.player(), (0,5))
         self.assertEquals(self.john.player().money, money_before)
 
     def test_pay_rent_another_utility(self):
-        self.john.get('/game/buy/5/')
+        utility = Square.objects.get(game=self.game, position=5).utility
+        self.set_bought(self.john, utility)
         money_before = self.mary.player().money
         rules.move_player(self.mary.player(), (0,5))
-        utility = Square.objects.get(game=self.game, position=5).utility
         self.assertEquals(self.mary.player().money, money_before - utility.tax_site)
 
     def test_pay_rent_multiple_utilities(self):
-        self.john.get('/game/buy/5/')
-        self.john.get('/game/buy/12/')
-        self.john.get('/game/buy/15/')
+        self.set_bought(self.john, Square.objects.get(game=self.game, position=5).utility)
+        self.set_bought(self.john, Square.objects.get(game=self.game, position=12).utility)
+        self.set_bought(self.john, Square.objects.get(game=self.game, position=15).utility)
         money_before = self.mary.player().money
         rules.move_player(self.mary.player(), (0,5))
         utility = Square.objects.get(game=self.game, position=5).utility
