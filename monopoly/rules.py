@@ -91,7 +91,6 @@ def buy(player, square):
 # Apply an effect to a player
 def apply_effect(player, effect):
     # Give money to a player
-    print effect.type
     if effect.type == "give_money":
         give_money(player, effect.param)
     elif effect.type == "income_tax":
@@ -124,18 +123,17 @@ def go_to_jail(player):
 
 # Determine what to do with the player if she lands in jail.
 # There two possibilities:
-#  1) Just visiting, nothing happens.
-#  2) In jail for 3 or 2 more turns, either pay 50 or roll doubles.
-#  3) In jail for 1 more turn, pay 50.
+#  1) In jail for 3 or 2 more turns, either pay 50 or roll doubles.
+#  2) In jail for 1 more turn, pay 50.
 def handle_jail(player, dice):
-    assert player.in_jail_for >=0 and player.in_jail_for <= 3, "Unexpected number of jail turns."
-    if not player.is_in_jail(): # Just visiting, nothing happens.
-        return
-    if player.in_jail_for == 2 and player.in_jail_for == 3:
+    assert player.is_in_jail(), "A player is not in jail, yet handle_jail() was called."
+    if player.in_jail_for == 2 or player.in_jail_for == 3:
         if dice[0] == dice[1]:
             liberate(player) # Player rolled doubles, he's free.
+            return
     if player.in_jail_for == 1:
         pay_bailout(player)
+        return
     player.in_jail_for -= 1
     player.save()
 

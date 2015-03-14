@@ -208,3 +208,36 @@ class TestPayRent(TestGameFlow):
         rules.move_player(self.mary.player(), (0,5))
         utility = Square.objects.get(game=self.game, position=5).utility
         self.assertEquals(self.mary.player().money, money_before - utility.tax_site * 3)
+
+
+class TestJail(TestCase):
+    def setUp(self):
+        Client().get('/new_game/public', follow=True)
+        self.game = Game.objects.all()[0]
+        self.game.player_set.all().delete() # Delete dummy player that created the game
+        self.john = Client()
+        self.john.get('/game/{0}/'.format(self.game.id), follow=True)
+        self.money_before = self.john.player().money
+        rules.move_player(self.john.player(), (30, 0)) # Roll a 30 to land on "Go to jail"
+
+    def test_go_to_jail(self):
+        self.assertEquals(self.john.player().square.position, 10) # Should have been moved to position 10, "Jail"
+    
+    def test_jail_stay_for_three_turns(self):
+        for t in range(3):
+            self.assertTrue(self.john.player().is_in_jail())
+            rules.move_player(self.john.player(), (3, 5))
+        self.assertFalse(self.john.player().is_in_jail())
+        self.assertEquals(self.john.player().money, self.money_before - 50)
+
+    def test_jail_liberate_by_bailout(self):
+        rules.pay_bailout(self.john.player())
+        self.assertEquals(self.john.player().money, self.money_before - 50)
+        self.assertFalse(self.john.player().is_in_jail())
+
+    def test_jail_liberate_by_dice(self):
+        rules.move_player(self.john.player(), (1, 1))
+        self.assertFalse(self.john.player().is_in_jail())
+        self.assertEquals(self.john.player().money, self.money_before)
+
+

@@ -31,6 +31,7 @@ class Player(models.Model):
     in_jail_for = models.IntegerField(default=0)
 
     def is_in_jail(self):
+        assert self.in_jail_for >=0 and self.in_jail_for <= 3, "Unexpected number of jail turns: {0}.".format(self.in_jail_for)
         return self.in_jail_for > 0
 
     def __str__(self):
