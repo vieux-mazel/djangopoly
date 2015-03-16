@@ -1,4 +1,4 @@
-# Describes the game board and all properties on it
+"""Describes the board of Monopoly."""
 
 streets = [
     {
