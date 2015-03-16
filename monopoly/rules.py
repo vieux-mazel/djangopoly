@@ -114,6 +114,26 @@ def buy(player, square):
     return True
 
 
+def get_rent(identity):
+    """Determines the rent due on a property or utility.
+
+    Args:
+        identity: Property or Utility
+
+    Returns:
+        rent: int
+    """
+    if isinstance(identity, Property): # If it's a property, the rent is the tax site.
+        return identity.tax_site
+    elif isinstance(identity, Utility): # If it's a utitlity, the rent depends on how many other utilities are owned by the same player.
+        if identity.owned_by is None:
+            return identity.tax_site
+        else:
+            return identity.tax_site * identity.owned_by.utility_set.all().count()
+    else:
+        assert False, "Tried to determine rent on a special square"
+
+
 def apply_effect(player, effect):
     """Applies an effect onto a player.
 
@@ -251,23 +271,4 @@ def identify_square(square):
     assert identity is not None, "Couldn't determine square identity."
     return identity
 
-
-def get_rent(identity):
-    """Determines the rent due on a property or utility.
-
-    Args:
-        identity: Property or Utility
-
-    Returns:
-        rent: int
-    """
-    if isinstance(identity, Property): # If it's a property, the rent is the tax site.
-        return identity.tax_site
-    elif isinstance(identity, Utility): # If it's a utitlity, the rent depends on how many other utilities are owned by the same player.
-        if identity.owned_by is None:
-            return identity.tax_site
-        else:
-            return identity.tax_site * identity.owned_by.utility_set.all().count()
-    else:
-        assert False, "Tried to determine rent on a special square"
 
