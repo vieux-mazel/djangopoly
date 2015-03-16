@@ -1,23 +1,37 @@
-# Module to model the rules of Monopoly.
-# Consists mainly of functions that model the game flow
-# and reflect any changes to the game state in the database.
-#
-# Ideally, all game logic should be in this module and views.py
-# should refer to it in its API.
-# Handle moving a player to a new square
+"""Models the rules of the board game Monopoly.
+
+Consists mainly of functions that model the game flow
+and reflect changes in the game state to the database.
+
+Ideally, all game logic should go in this module and be referred
+to from the API in views.py
+"""
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from monopoly.models import Game, Player, Square, Property, Utility, Special
 from board import squares, streets
 
-# Rolling dice by Monopoly rules
 def roll_dice():
+    """Roll two dice randomly
+
+    Returns:
+        Tuple of the form (int, int)
+    """
     return (2, 4)
 
-# Try moving the player to a new square
-# and handle the effect of that.
+
 def move_player(player, dice):
+    """Attempt moving a player according to a dice roll.
+
+    The player will not be moved if he's in jail. Otherwise, he'll be moved
+    by the sum of the two dice and game logic will be run according to the type
+    of square he lands on.
+
+    Args:
+        player: Player
+        dice: (int, int)
+    """
     assert len(dice) == 2, "Unexpected number of dice rolls. Should be exactly two." 
 
     if not player.is_in_jail(): # Move the player only if she's not in jail
@@ -37,7 +51,6 @@ def move_player(player, dice):
         apply_effect(player, identity.effect)
 
     elif isinstance(identity, Property) or isinstance(identity, Utility):
-        # At this point, the property is certainly owned by someone
         assert identity.owned_by is None or isinstance(identity.owned_by, Player), "The property/utility is owned by a non-Player object?"
         assert identity.owned_by is None or Player.objects.filter(session_id=identity.owned_by.session_id, game=player.game).exists(), "The property/utility is owned by an invalid player or someone from another game."
 
@@ -61,10 +74,23 @@ def move_player(player, dice):
     else:
         assert False, "Identity of a square is not Special, Property or Utility."
 
-# Buys a square on behalf of player
-# Returns True upon success and False upon failure
-def buy(player, square):
 
+def buy(player, square):
+    """Buys a square on behalf of a player.
+
+    Buying can fail if:
+        o) The square is special.
+        o) The square is owned by someone else.
+        o) The player doesn't have enough money to buy it.
+        o) Another player owns a property of the same color.
+
+    Args:
+        player: Player
+        square: Square
+
+    Returns:
+        True upon success, False otherwise.
+    """
     identity = identify_square(square)
 
     if isinstance(identity, Special): # The square is special, so it can't be bought
@@ -87,8 +113,14 @@ def buy(player, square):
     # It has succeeded
     return True
 
-# Apply an effect to a player
+
 def apply_effect(player, effect):
+    """Applies an effect onto a player.
+
+    Args:
+        player: Player
+        effect: Effect
+    """
     # Give money to a player
     if effect.type == "give_money":
         give_money(player, effect.param)
@@ -99,32 +131,66 @@ def apply_effect(player, effect):
     elif effect.type == "go_to_jail":
         go_to_jail(player)
 
+
 def give_money(player, cash):
+    """Gives money to a player.
+
+    Args:
+        player: Player
+        cash: int, cash > 0
+    """
     assert isinstance(cash, int), "Cash is not an integer."
     assert cash > 0, "Can't give non-positive cash to a player."
     player.money = player.money + cash
     player.save()
 
+
 def take_money(player, cash):
+    """Takes money from a player.
+
+    Args:
+        player: Player
+        cash: int, cash > 0
+    """
     assert isinstance(cash, int), "Cash is not an integer."
     assert cash > 0, "Can't take non-positive cash from a player."
     player.money = (player.money - cash) if (player.money - cash > 0) else 0
     player.save()
 
+
 def pay_rent(payer, payee, cash):
+    """Takes a sum of money from one player and gives it to another as rent payment.
+
+    Args:
+        payer: Player
+        payee: Player
+        cash: int, cash > 0
+    """
     take_money(payer, cash)
     give_money(payee, cash)
 
+
 def go_to_jail(player):
+    """Sends a player to jail for 3 turns.
+
+    Args:
+        player: Player
+    """
     player.square = Square.objects.get(game=player.game, position=10) # Hardcoded jail position, probably shouldn't be like that
     player.in_jail_for = 3 # In jail for 3 turns
     player.save()
 
-# Determine what to do with the player if she lands in jail.
-# There two possibilities:
-#  1) In jail for 3 or 2 more turns, either pay 50 or roll doubles.
-#  2) In jail for 1 more turn, pay 50.
+
 def handle_jail(player, dice):
+    """Determines what to do with a player when he's in jail.
+
+    If in jail for 2 or 3 more turns, to get out he either pays 50 or rolls doubles.
+    If in jail for 1 more turn, always pay 50.
+
+    Args:
+        player: Player, player.is_in_jail() is True
+        dice: (int, int)
+    """
     assert player.is_in_jail(), "A player is not in jail, yet handle_jail() was called."
     if player.in_jail_for == 2 or player.in_jail_for == 3:
         if dice[0] == dice[1]:
@@ -136,19 +202,39 @@ def handle_jail(player, dice):
     player.in_jail_for -= 1
     player.save()
 
-# Liberates a player from jail.
+
 def liberate(player):
+    """Sets a player free (not in jail anymore).
+
+    Args:
+        player: Player
+    """
     player.in_jail_for = 0
     player.save()
 
-# Makes a player pay his bailout to get out of jail.
+
 def pay_bailout(player):
+    """Pays bailout on behalf of a player.
+
+    Pays 50 to the bank and sets him free.
+
+    Args:
+        player: Player, player.is_in_jail() is True
+    """
     assert player.is_in_jail(), "A player is not in jail, yet pay_bailout() was called."
     take_money(player, 50)
     liberate(player)
 
-# Determine identity of square
+
 def identify_square(square):
+    """Determines a square's identity.
+
+    Args:
+        square: Square
+
+    Returns:
+        identity: Property, Utility or Special
+    """
     identity = None
     try:
         identity = square.special
@@ -165,11 +251,19 @@ def identify_square(square):
     assert identity is not None, "Couldn't determine square identity."
     return identity
 
-# Determine how much rent is to be payed on a property/utility
+
 def get_rent(identity):
-    if isinstance(identity, Property):
+    """Determines the rent due on a property or utility.
+
+    Args:
+        identity: Property or Utility
+
+    Returns:
+        rent: int
+    """
+    if isinstance(identity, Property): # If it's a property, the rent is the tax site.
         return identity.tax_site
-    elif isinstance(identity, Utility):
+    elif isinstance(identity, Utility): # If it's a utitlity, the rent depends on how many other utilities are owned by the same player.
         if identity.owned_by is None:
             return identity.tax_site
         else:
