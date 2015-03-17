@@ -215,7 +215,8 @@ def game_state(request, id):
             'name': player.name,
             'money': player.money,
             'plays_in_turns': player.plays_in_turns,
-            'in_jail_for': player.in_jail_for
+            'in_jail_for': player.in_jail_for,
+            'is_in_jail': player.is_in_jail()
         }
         print p
         pp.append(p)
@@ -224,13 +225,14 @@ def game_state(request, id):
     squares = game.square_set.all()
     for square in squares:
         s = {
-            'id': square.id,
+            'position': square.position,
             'title': square.title,
             'type': rules.identify_square(square).__class__.__name__.lower()
         }
 
         t = rules.identify_square(square)
         if s['type'] == 'property':
+            s['street'] = square.property.street.color
             if square.property.owned_by is not None:
                 s['owner'] = {
                     'name': square.property.owned_by.name,
