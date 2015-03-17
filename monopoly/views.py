@@ -41,7 +41,7 @@ def game(request, id):
     try:
         player = Player.objects.get(session_id=session_id)
     except Player.DoesNotExist:
-        player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0))
+        player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0), name='Player ' + str(len(game.player_set.all()) + 1))
         # If there are other players that have already joined, adjust plays_in_turns
         if len(Player.objects.filter(game=game)) > 0:
             player.plays_in_turns = Player.objects.filter(game=game).order_by('-plays_in_turns')[0].plays_in_turns + 1
@@ -207,9 +207,18 @@ def game_state(request, id):
     except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
+    pp = []
     players = game.player_set.all()
+    print players
     for player in players:
-        print player
+        p = {
+            'name': player.name,
+            'money': player.money,
+            'plays_in_turns': player.plays_in_turns,
+            'in_jail_for': player.in_jail_for
+        }
+        print p
+        pp.append(p)
 
     ss = []
     squares = game.square_set.all()
@@ -221,17 +230,25 @@ def game_state(request, id):
         }
 
         t = rules.identify_square(square)
-        print s['type']
         if s['type'] == 'property':
-            s['owned_by'] = square.property.owned_by
+            if square.property.owned_by is not None:
+                s['owner'] = {
+                    'name': square.property.owned_by.name,
+                    'id': square.property.owned_by.session_id
+                }
+            else:
+                s['owner'] = None
+
             s['price'] = square.property.price
 
-            s['tax_site'] = square.property.tax_site
-            s['tax_1house'] = square.property.tax_1house
-            s['tax_2house'] = square.property.tax_2house
-            s['tax_3house'] = square.property.tax_3house
-            s['tax_4house'] = square.property.tax_4house
-            s['tax_hotel'] = square.property.tax_hotel
+            s['tax'] = {
+                't0': square.property.tax_site,
+                't1': square.property.tax_1house,
+                't2': square.property.tax_2house,
+                't3': square.property.tax_3house,
+                't4': square.property.tax_4house,
+                't5': square.property.tax_hotel
+            }
 
             s['mortgage_price'] = square.property.mortgage_price
             s['is_mortgaged'] = square.property.is_mortgaged
@@ -247,8 +264,13 @@ def game_state(request, id):
 
         #print square.__dict__
         ss.append(s)
+
+    state = {
+        'players': pp,
+        'squares': ss
+    }
         
-    state = json.dumps(ss, indent=4)
+    state = json.dumps(state, indent=4, sort_keys=True)
 
     # Use Django's serializer
     #state = serializers.serialize("dictionary",
