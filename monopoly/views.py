@@ -207,16 +207,58 @@ def game_state(request, id):
     except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
-    # Use Django's serializer
-    state = serializers.serialize("json",
-        list(Game.objects.filter(id=id)) +
-        list(Player.objects.filter(game=game)) +
-        list(Square.objects.filter(game=game)) +
-        list(Property.objects.filter(square__game=game)) +
-        list(Utility.objects.filter(square__game=game)) +
-        list(Special.objects.filter(square__game=game))
+    players = game.player_set.all()
+    for player in players:
+        print player
 
-    )
+    ss = []
+    squares = game.square_set.all()
+    for square in squares:
+        s = {
+            'id': square.id,
+            'title': square.title,
+            'type': rules.identify_square(square).__class__.__name__.lower()
+        }
+
+        t = rules.identify_square(square)
+        print s['type']
+        if s['type'] == 'property':
+            s['owned_by'] = square.property.owned_by
+            s['price'] = square.property.price
+
+            s['tax_site'] = square.property.tax_site
+            s['tax_1house'] = square.property.tax_1house
+            s['tax_2house'] = square.property.tax_2house
+            s['tax_3house'] = square.property.tax_3house
+            s['tax_4house'] = square.property.tax_4house
+            s['tax_hotel'] = square.property.tax_hotel
+
+            s['mortgage_price'] = square.property.mortgage_price
+            s['is_mortgaged'] = square.property.is_mortgaged
+        
+        elif s['type'] == 'utility':
+            s['owned_by'] = square.utility.owned_by
+            s['price'] = square.utility.price
+
+            s['tax_site'] = square.utility.tax_site
+
+            s['mortgage_price'] = square.utility.mortgage_price
+            s['is_mortgaged'] = square.utility.is_mortgaged
+
+        #print square.__dict__
+        ss.append(s)
+        
+    state = json.dumps(ss, indent=4)
+
+    # Use Django's serializer
+    #state = serializers.serialize("dictionary",
+    #    list(Game.objects.filter(id=id)) +
+    #    list(Player.objects.filter(game=game)) +
+    #    list(Square.objects.filter(game=game)) +
+    #    list(Property.objects.filter(square__game=game)) +
+    #    list(Utility.objects.filter(square__game=game)) +
+    #    list(Special.objects.filter(square__game=game))
+    #)
 
     # Echo the JSON as the response's body
     return HttpResponse(state)
