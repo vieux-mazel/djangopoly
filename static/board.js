@@ -2,7 +2,7 @@
   var $board = $('#board');
   resizeBoard();
 
-  $.getJSON('http://localhost:8000/game/1/state/', function(state) {
+  $.getJSON('http://localhost:8000/game/2/state/', function(state) {
     //console.log(state);
 
     var i, e, squares = [];

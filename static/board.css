@@ -27,7 +27,7 @@ html, body {
     border: 1px solid black;
     display: inline-block;
     height: 14%;
-    background: red;
+    //background: red;
     position: absolute;
 }
 
