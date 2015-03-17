@@ -17,7 +17,7 @@
     var size2 = 8;
 
     var classes, styles, distance;
-
+    
     for (i = 0; i < squares.length; i++) {
       classes = ['square'];
       styles = [];
@@ -56,6 +56,7 @@
 
       $board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '"></div>');
     }
+    
   });
 
   function resizeBoard() {
