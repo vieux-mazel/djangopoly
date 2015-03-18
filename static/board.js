@@ -78,6 +78,15 @@
     })
   });
 
+  $('#end-turn').click(function(){
+    console.log('asdf-click');
+    $.getJSON('/game/end_turn', function(data){
+      console.log(data);
+      if (data.success === true){
+        drawBoard();
+      }
+    })
+  });
   drawBoard();
 
   $(window).on('resize', resizeBoard);

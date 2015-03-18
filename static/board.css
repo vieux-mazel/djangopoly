@@ -80,7 +80,15 @@ html, body {
 }
 
 #dice{
-    width: 20px;
-    height: 10px;
+    width: 100px;
+    height: 20px;
+    padding: 30px;
     background: green;
+}
+
+#end-turn{
+    width:100px;
+    height:20px;
+    padding:30px;
+    background: yellow;
 }
