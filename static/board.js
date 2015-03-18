@@ -1,4 +1,5 @@
 (function($) {
+  var oldState = '';
   var $board = $('#board');
   resizeBoard();
 
@@ -9,6 +10,7 @@
     $board.html('');
 
   $.getJSON('state/', function(state) {
+    oldState = state;
     //console.log(state);
 
     var size1 = 14;
@@ -90,7 +92,11 @@
   });
   drawBoard();
 
-  setInterval(function() { drawBoard(); }, 1000);
+  setInterval(function() {
+    $.getJSON('state', function(state) {
+      if (state !== oldState) drawBoard();
+    });
+  }, 1000);
 
   $(window).on('resize', resizeBoard);
 
