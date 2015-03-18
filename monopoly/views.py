@@ -142,6 +142,15 @@ def roll_dice(request):
     # Roll two dice - will be random at some point
     (dice1, dice2) = rules.roll_dice();
 
+    # Can't roll more than once (except when it's a double)
+    if player.rolled_this_turn:
+        return HttpResponse(FAILURE)
+
+    # If it's a double, the player can roll twice.
+    if dice1 != dice2:
+        player.rolled_this_turn = True
+        player.save()
+
     # Handle player movement
     rules.move_player(player, (dice1, dice2))
 
@@ -158,6 +167,9 @@ def roll_dice(request):
 @player_can_play
 def end_turn(request):
     player = Player.objects.get(session_id=request.session.session_key)
+
+    # Make sure the player can roll the next turn
+    player.rolled_this_turn = False
 
     # Get all players in this game, subtract one from plays_in_turns
     # (when it gets negative it resets to the maximum)

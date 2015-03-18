@@ -131,6 +131,12 @@ class TestGameFlow(TestCase):
         roll = json.loads(self.mary.get('/game/roll/').content)
         self.assertFalse(roll["success"])
 
+    def test_roll_twice(self):
+        roll = json.loads(self.john.get('/game/roll/').content)
+        self.assertTrue(roll["success"])
+        roll = json.loads(self.john.get('/game/roll/').content)
+        self.assertFalse(roll["success"])
+
 
 class TestBuying(TestGameFlow):
     def setUp(self):

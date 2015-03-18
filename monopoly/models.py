@@ -29,6 +29,7 @@ class Player(models.Model):
     square = models.ForeignKey(Square)
     plays_in_turns = models.IntegerField(default=0)
     in_jail_for = models.IntegerField(default=0)
+    rolled_this_turn = models.BooleanField(default=False)
 
     def is_in_jail(self):
         assert self.in_jail_for >=0 and self.in_jail_for <= 3, "Unexpected number of jail turns: {0}.".format(self.in_jail_for)
