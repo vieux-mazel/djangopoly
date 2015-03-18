@@ -119,6 +119,11 @@ class TestGameFlow(TestCase):
         player.square = Square.objects.get(game=self.game, position=position)
         player.save()
 
+
+class TestRollsAndTurns(TestGameFlow):
+    def setUp(self):
+        TestGameFlow.setUp(self)
+
     def test_turns(self):
         for client in self.clients:
             player = client.player()
