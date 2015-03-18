@@ -31,10 +31,6 @@ html, body {
     position: absolute;
 }
 
-.square:after {
-    content: 'Test title';
-}
-
 .big {
     width: 14%;
 }

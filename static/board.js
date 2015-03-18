@@ -2,23 +2,18 @@
   var $board = $('#board');
   resizeBoard();
 
-  $.getJSON('http://localhost:8000/game/2/state/', function(state) {
-    //console.log(state);
+  var gameId = document.URL.split('/');
+  gameId = gameId[gameId.length - 2];
 
-    var i, e, squares = [];
-    for (i = 0; i < state.length; i++) {
-      e = state[i];
-      if (e.model === 'monopoly.square') {
-        squares.push(e);
-      }
-    }
+  $.getJSON('http://localhost:8000/game/' + gameId + '/state/', function(state) {
+    //console.log(state);
 
     var size1 = 14;
     var size2 = 8;
 
-    var classes, styles, distance;
+    var i, classes, styles, distance;
     
-    for (i = 0; i < squares.length; i++) {
+    for (i = 0; i < state.squares.length; i++) {
       classes = ['square'];
       styles = [];
      
@@ -54,7 +49,7 @@
       if (i % 10 === 0) distance += size1;
       else distance += size2;
 
-      $board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '"></div>');
+      $board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
     }
     
   });
