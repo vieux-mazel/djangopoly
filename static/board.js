@@ -8,7 +8,7 @@
   function drawBoard(){
     $board.html('');
 
-    $.getJSON('http://localhost:8000/game/' + gameId + '/state/', function(state) {
+  $.getJSON('state/', function(state) {
     //console.log(state);
 
     var size1 = 14;
