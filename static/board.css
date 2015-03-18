@@ -60,3 +60,27 @@ html, body {
 #chance{
     
 }
+
+#player0{
+    background: red;
+    width: 40px;
+    height: 40px;
+}
+
+#player1{
+    background: blue;
+    width: 40px;
+    height: 40px;
+}
+
+#player2{
+    background: yellow;
+    width: 40px;
+    height: 40px;
+}
+
+#dice{
+    width: 20px;
+    height: 10px;
+    background: green;
+}
