@@ -11,9 +11,10 @@
     var size1 = 14;
     var size2 = 8;
 
-    var i, classes, styles, distance;
+    var i, classes, styles, distance, square;
     
     for (i = 0; i < state.squares.length; i++) {
+      square = state.squares[i];
       classes = ['square'];
       styles = [];
      
@@ -49,7 +50,14 @@
       if (i % 10 === 0) distance += size1;
       else distance += size2;
 
-      $board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
+      var $square = $('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
+      for (player in square.players){
+        $square.append('<div class="person" id="player' + player +'"></div>');
+        console.log(player);
+      }
+      
+      $board.append($square);
+      //$board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
     }
     
   });
