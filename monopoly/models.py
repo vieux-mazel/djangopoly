@@ -23,6 +23,7 @@ class Square(models.Model):
 
 class Player(models.Model):
     session_id = models.CharField(primary_key=True, max_length=32)
+    joined = models.IntegerField(default=0)
     game = models.ForeignKey(Game)
     name = models.CharField(default="Player", max_length=255)
     money = models.IntegerField(default=1500)

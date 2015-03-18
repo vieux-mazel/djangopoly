@@ -41,7 +41,7 @@ def game(request, id):
     try:
         player = Player.objects.get(session_id=session_id)
     except Player.DoesNotExist:
-        player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0), name='Player ' + str(len(game.player_set.all()) + 1))
+        player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0), name='Player ' + str(len(game.player_set.all()) + 1), joined=len(game.player_set.all()))
         # If there are other players that have already joined, adjust plays_in_turns
         if len(Player.objects.filter(game=game)) > 0:
             player.plays_in_turns = Player.objects.filter(game=game).order_by('-plays_in_turns')[0].plays_in_turns + 1
@@ -262,7 +262,8 @@ def game_state(request, id):
             for p in square.player_set.all():
                 s['players'].append({
                     'player_id': p.session_id,
-                    'player_name': p.name
+                    'player_name': p.name,
+                    'joined': p.joined
                 })
 
         t = rules.identify_square(square)
