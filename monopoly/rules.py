@@ -122,17 +122,17 @@ def mortgage(player, square):
 
     Args:
         player: Player
-        square: Property or Utility
+        square: Square
 
     Returns:
         True upon success, False otherwise.
     """
     identity = identify_square(square)
     if isinstance(identity, Special):
-        return False
+        return False # Can't mortgage a special square.
 
     if identity.owned_by != player:
-        return False
+        return False # The square is not owned by the player.
 
     identity.is_mortgaged = True
     identity.save()
