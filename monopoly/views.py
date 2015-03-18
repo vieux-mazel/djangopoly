@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core import serializers
-import json
+import json, time
 
 from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect
 
@@ -221,14 +221,16 @@ def mortgage(request):
 # Return JSON containing all of the game's state
 def game_state(request, id):
     # Find the game for which the state is requested
+
+    start = time.clock()
     try:
         game = Game.objects.get(id=id)
     except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
+    start = time.clock()
     pp = []
     players = game.player_set.all()
-    print players
     for player in players:
         p = {
             'name': player.name,
@@ -237,30 +239,36 @@ def game_state(request, id):
             'in_jail_for': player.in_jail_for,
             'is_in_jail': player.is_in_jail()
         }
-        print p
         pp.append(p)
 
+    can_be_bought = False
+    
     ss = []
     squares = game.square_set.all()
     for square in squares:
+
+        if not hasattr(square, 'price'): square_type = 'special'
+        elif hasattr(square, 'tax_1house'): square_type = 'property'
+        else: square_type = 'utility'
+
         s = {
             'position': square.position,
             'title': square.title,
-            'type': rules.identify_square(square).__class__.__name__.lower(),
+            'type': square_type,
             'players': []
         }
 
         if len(square.player_set.all()):
-            for p in square.player_set.all():
+            for player in square.player_set.all():
                 s['players'].append({
-                    'player_id': p.session_id,
-                    'player_name': p.name,
-                    'joined': p.joined
+                    'player_id': player.session_id,
+                    'player_name': player.name,
+                    'joined': player.joined
                 })
+                if player.plays_in_turns == 0 and rules.can_be_bought(player, square):
+                    can_be_bought = True
 
-        t = rules.identify_square(square)
         if s['type'] == 'property':
-            s['street'] = square.property.street.color
             if square.property.owned_by is not None:
                 s['owner'] = {
                     'name': square.property.owned_by.name,
@@ -269,35 +277,15 @@ def game_state(request, id):
             else:
                 s['owner'] = None
 
-            s['price'] = square.property.price
-
-            s['tax'] = {
-                't0': square.property.tax_site,
-                't1': square.property.tax_1house,
-                't2': square.property.tax_2house,
-                't3': square.property.tax_3house,
-                't4': square.property.tax_4house,
-                't5': square.property.tax_hotel
-            }
-
-            s['mortgage_price'] = square.property.mortgage_price
-            s['is_mortgaged'] = square.property.is_mortgaged
-        
         elif s['type'] == 'utility':
             s['owned_by'] = square.utility.owned_by
-            s['price'] = square.utility.price
 
-            s['tax_site'] = square.utility.tax_site
-
-            s['mortgage_price'] = square.utility.mortgage_price
-            s['is_mortgaged'] = square.utility.is_mortgaged
-
-        #print square.__dict__
         ss.append(s)
 
     state = {
         'players': pp,
-        'squares': ss
+        'squares': ss,
+        'can_be_bought': can_be_bought
     }
         
     state = json.dumps(state, indent=4, sort_keys=True)
