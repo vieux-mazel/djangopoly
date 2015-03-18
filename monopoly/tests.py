@@ -174,6 +174,12 @@ class TestPayRent(TestGameFlow):
         identity.owned_by = client.player()
         identity.save()
 
+    # Sets a property/utility as mortgaged
+    # without going through the API.
+    def set_mortgaged(self, identity):
+        identity.is_mortgaged = True
+        identity.save()
+
     def test_pay_rent_your_property(self):
         self.set_bought(self.john, Square.objects.get(game=self.game, position=1).property)
         money_before = self.john.player().money
@@ -208,6 +214,22 @@ class TestPayRent(TestGameFlow):
         rules.move_player(self.mary.player(), (0,5))
         utility = Square.objects.get(game=self.game, position=5).utility
         self.assertEquals(self.mary.player().money, money_before - utility.tax_site * 3)
+
+    def test_pay_rent_mortgaged_property(self):
+        property = Square.objects.get(game=self.game, position=1).property
+        self.set_bought(self.john, property)
+        self.set_mortgaged(property)
+        money_before = self.mary.player().money
+        rules.move_player(self.mary.player(), (0,1))
+        self.assertEquals(self.mary.player().money, money_before)
+
+    def test_pay_rent_mortgaged_utility(self):
+        utility = Square.objects.get(game=self.game, position=5).utility
+        self.set_bought(self.john, utility)
+        self.set_mortgaged(utility)
+        money_before = self.mary.player().money
+        rules.move_player(self.mary.player(), (0,5))
+        self.assertEquals(self.mary.player().money, money_before)
 
 
 class TestJail(TestCase):
