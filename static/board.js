@@ -90,6 +90,8 @@
   });
   drawBoard();
 
+  setInterval(function() { drawBoard(); }, 1000);
+
   $(window).on('resize', resizeBoard);
 
 })(jQuery);
