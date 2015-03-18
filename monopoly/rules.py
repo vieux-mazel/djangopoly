@@ -74,6 +74,33 @@ def move_player(player, dice):
     else:
         assert False, "Identity of a square is not Special, Property or Utility."
 
+def can_be_bought(player, square):
+    """Determine whether a square can be bought by a player.
+
+    See buying for the rules.
+
+    Args:
+        player: Player
+        square: Square
+
+    Returns:
+        True if possible, False otherwise.
+    """"
+    identity = identify_square(square)
+    if isinstance(identity, Special): # The square is special, so it can't be bought
+        return False
+    
+    if identity.owned_by != None: # The square is owned by someone else
+        return False
+
+    if player.money < identity.price: # The player doesn't have enough money to buy the square
+        return False
+
+    # The square is a property, and another property of the same street (color) is owned by another player
+    if isinstance(identity, Property) and identity.street.property_set.filter(~Q(owned_by=player) & ~Q(owned_by=None)):
+        return False
+
+    return True
 
 def buy(player, square):
     """Buys a square on behalf of a player.
@@ -91,22 +118,10 @@ def buy(player, square):
     Returns:
         True upon success, False otherwise.
     """
-    identity = identify_square(square)
-
-    if isinstance(identity, Special): # The square is special, so it can't be bought
+    if not can_be_bought(player, square):
         return False
-    
-    if identity.owned_by != None: # The square is owned by someone else
-        return False
-
-    if player.money < identity.price: # The player doesn't have enough money to buy the square
-        return False
-
-    # The square is a property, and another property of the same street (color) is owned by another player
-    if isinstance(identity, Property) and identity.street.property_set.filter(~Q(owned_by=player) & ~Q(owned_by=None)):
-        return False
-
     # Do the transaction
+    identity = identify_square(square)
     take_money(player, identity.price)
     identity.owned_by = player
     identity.save()
