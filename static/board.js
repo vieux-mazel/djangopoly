@@ -94,7 +94,7 @@
 
   setInterval(function() {
     $.getJSON('state', function(state) {
-      if (state !== oldState) drawBoard();
+      if (JSON.stringify(state) !== JSON.stringify(oldState)) drawBoard();
     });
   }, 1000);
 
