@@ -227,8 +227,16 @@ def game_state(request, id):
         s = {
             'position': square.position,
             'title': square.title,
-            'type': rules.identify_square(square).__class__.__name__.lower()
+            'type': rules.identify_square(square).__class__.__name__.lower(),
+            'players': []
         }
+
+        if len(square.player_set.all()):
+            for p in square.player_set.all():
+                s['players'].append({
+                    'player_id': p.session_id,
+                    'player_name': p.name
+                })
 
         t = rules.identify_square(square)
         if s['type'] == 'property':
