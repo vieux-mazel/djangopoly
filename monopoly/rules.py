@@ -85,7 +85,7 @@ def can_be_bought(player, square):
 
     Returns:
         True if possible, False otherwise.
-    """"
+    """
     identity = identify_square(square)
     if isinstance(identity, Special): # The square is special, so it can't be bought
         return False
