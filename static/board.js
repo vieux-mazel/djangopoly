@@ -5,15 +5,16 @@
   var gameId = document.URL.split('/');
   gameId = gameId[gameId.length - 2];
 
-  $.getJSON('http://localhost:8000/game/' + gameId + '/state/', function(state) {
+  $.getJSON('state/', function(state) {
     //console.log(state);
 
     var size1 = 14;
     var size2 = 8;
 
-    var i, classes, styles, distance;
+    var i, classes, styles, distance, square;
     
     for (i = 0; i < state.squares.length; i++) {
+      square = state.squares[i];
       classes = ['square'];
       styles = [];
      
@@ -49,7 +50,13 @@
       if (i % 10 === 0) distance += size1;
       else distance += size2;
 
-      $board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
+      var $square = $('<div class="square ' + classes.join(' ')  + '" style="' + styles.join(';') + '"></div>');
+      for (j = 0; j < square.players.length; j++) {
+        $square.append('<div class="player"></div>');
+      }
+
+      $board.append($square);
+      //$board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
     }
     
   });
