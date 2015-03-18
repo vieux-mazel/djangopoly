@@ -199,6 +199,21 @@ def pay_bailout(request):
 
     return HttpResponse(SUCCESS)
 
+# Mortgage a property belonging to the player
+@player_can_play
+def mortgage(request, position):
+    player = Player.objects.get(session_id=request.session.session_key)
+    
+    try:
+        square = Square.objects.get(game=player.game, position=position)
+    except Square.DoesNotExist:
+        return HttpResponse(FAILURE)
+    
+    if not rules.mortgage(player, square):
+        return HttpResponse(FAILURE)
+
+    return HttpResponse(SUCCESS)
+
 # Return JSON containing all of the game's state
 def game_state(request, id):
     # Find the game for which the state is requested

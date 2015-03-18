@@ -114,6 +114,30 @@ def buy(player, square):
     return True
 
 
+def mortgage(player, square):
+    """Mortgages a property/utility on
+    behalf of a player.
+
+    Mortgaging will fail if the property is not owned by the player.
+
+    Args:
+        player: Player
+        square: Square
+
+    Returns:
+        True upon success, False otherwise.
+    """
+    identity = identify_square(square)
+    if isinstance(identity, Special):
+        return False # Can't mortgage a special square.
+
+    if identity.owned_by != player:
+        return False # The square is not owned by the player.
+
+    identity.is_mortgaged = True
+    identity.save()
+    return True
+
 def get_rent(identity):
     """Determines the rent due on a property or utility.
 

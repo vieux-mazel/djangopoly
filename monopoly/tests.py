@@ -101,6 +101,18 @@ class TestGameFlow(TestCase):
         self.john = self.clients[0]
         self.mary = self.clients[1]
 
+    # Sets a property/utility as bought without
+    # going through the API.
+    def set_bought(self, client, identity):
+        identity.owned_by = client.player()
+        identity.save()
+
+    # Sets a property/utility as mortgaged
+    # without going through the API.
+    def set_mortgaged(self, identity):
+        identity.is_mortgaged = True
+        identity.save()
+
     def test_turns(self):
         for client in self.clients:
             player = client.player()
@@ -164,15 +176,40 @@ class TestBuying(TestGameFlow):
         self.assertFalse(buy["success"])
 
 
-class TestPayRent(TestGameFlow):
+class TestMortgage(TestGameFlow):
     def setUp(self):
         TestGameFlow.setUp(self)
 
-    # Sets a property/utility as bought without
-    # going through the API.
-    def set_bought(self, client, identity):
-        identity.owned_by = client.player()
-        identity.save()
+    def test_mortgage_property(self):
+        property = Square.objects.get(game=self.game, position=1).property
+        utility = Square.objects.get(game=self.game, position=5).utility
+        self.set_bought(self.john, property)
+        self.set_bought(self.john, utility)
+        mortgage = json.loads(self.john.get('/game/mortgage/1/').content)
+        self.assertTrue(mortgage["success"])
+        mortgage = json.loads(self.john.get('/game/mortgage/5/').content)
+        self.assertTrue(mortgage["success"])
+
+    def test_mortgage_not_yours(self):
+        property = Square.objects.get(game=self.game, position=1).property
+        utility = Square.objects.get(game=self.game, position=5).utility
+        self.set_bought(self.mary, property)
+        self.set_bought(self.mary, utility)
+        mortgage = json.loads(self.john.get('/game/mortgage/1/').content)
+        self.assertFalse(mortgage["success"])
+        mortgage = json.loads(self.john.get('/game/mortgage/5/').content)
+        self.assertFalse(mortgage["success"])
+
+    def test_mortgage_not_owned(self):
+        mortgage = json.loads(self.john.get('/game/mortgage/1/').content)
+        self.assertFalse(mortgage["success"])
+        mortgage = json.loads(self.john.get('/game/mortgage/5/').content)
+        self.assertFalse(mortgage["success"])
+
+
+class TestPayRent(TestGameFlow):
+    def setUp(self):
+        TestGameFlow.setUp(self)
 
     def test_pay_rent_your_property(self):
         self.set_bought(self.john, Square.objects.get(game=self.game, position=1).property)
@@ -208,6 +245,22 @@ class TestPayRent(TestGameFlow):
         rules.move_player(self.mary.player(), (0,5))
         utility = Square.objects.get(game=self.game, position=5).utility
         self.assertEquals(self.mary.player().money, money_before - utility.tax_site * 3)
+
+    def test_pay_rent_mortgaged_property(self):
+        property = Square.objects.get(game=self.game, position=1).property
+        self.set_bought(self.john, property)
+        self.set_mortgaged(property)
+        money_before = self.mary.player().money
+        rules.move_player(self.mary.player(), (0,1))
+        self.assertEquals(self.mary.player().money, money_before)
+
+    def test_pay_rent_mortgaged_utility(self):
+        utility = Square.objects.get(game=self.game, position=5).utility
+        self.set_bought(self.john, utility)
+        self.set_mortgaged(utility)
+        money_before = self.mary.player().money
+        rules.move_player(self.mary.player(), (0,5))
+        self.assertEquals(self.mary.player().money, money_before)
 
 
 class TestJail(TestCase):
