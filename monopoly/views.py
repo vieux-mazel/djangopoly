@@ -170,6 +170,7 @@ def end_turn(request):
 
     # Make sure the player can roll the next turn
     player.rolled_this_turn = False
+    player.save()
 
     # Get all players in this game, subtract one from plays_in_turns
     # (when it gets negative it resets to the maximum)
