@@ -21,7 +21,18 @@
     	</div>
 	{% endif %}
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="{% static 'board.js' %}"></script>
+	
+
+{% endblock %}
+
+
+{% block side_block %}
+    
+    <!--
+    <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
+    -->
+
+    <div id="dice"></div>
+    
 
 {% endblock %}

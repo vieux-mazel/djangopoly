@@ -5,7 +5,10 @@
   var gameId = document.URL.split('/');
   gameId = gameId[gameId.length - 2];
 
-  $.getJSON('http://localhost:8000/game/' + gameId + '/state/', function(state) {
+  function drawBoard(){
+    $board.html('');
+
+    $.getJSON('http://localhost:8000/game/' + gameId + '/state/', function(state) {
     //console.log(state);
 
     var size1 = 14;
@@ -57,14 +60,25 @@
       }
       
       $board.append($square);
-      //$board.append('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
     }
     
   });
+  }
 
   function resizeBoard() {
     $board.css({width: $board.height()});
   }
+
+  $('#dice').click(function(){
+    $.getJSON('/game/roll', function(data){
+      console.log(data);
+      if (data.success === true){
+        drawBoard();
+      }
+    })
+  });
+
+  drawBoard();
 
   $(window).on('resize', resizeBoard);
 
