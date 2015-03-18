@@ -209,13 +209,9 @@ def pay_bailout(request):
 
 # Mortgage a property belonging to the player
 @player_can_play
-def mortgage(request, position):
+def mortgage(request):
     player = Player.objects.get(session_id=request.session.session_key)
-    
-    try:
-        square = Square.objects.get(game=player.game, position=position)
-    except Square.DoesNotExist:
-        return HttpResponse(FAILURE)
+    square = player.square
     
     if not rules.mortgage(player, square):
         return HttpResponse(FAILURE)

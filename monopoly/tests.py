@@ -113,6 +113,12 @@ class TestGameFlow(TestCase):
         identity.is_mortgaged = True
         identity.save()
 
+    # Set a player's position
+    def set_position(self, client, position):
+        player = client.player()
+        player.square = Square.objects.get(game=self.game, position=position)
+        player.save()
+
     def test_turns(self):
         for client in self.clients:
             player = client.player()
@@ -141,12 +147,6 @@ class TestGameFlow(TestCase):
 class TestBuying(TestGameFlow):
     def setUp(self):
         TestGameFlow.setUp(self)
-
-    # Set a player's position
-    def set_position(self, client, position):
-        player = client.player()
-        player.square = Square.objects.get(game=self.game, position=position)
-        player.save()
 
     def test_buy_when_not_your_turn(self):
         self.set_position(self.mary, 1)
@@ -208,9 +208,11 @@ class TestMortgage(TestGameFlow):
         utility = Square.objects.get(game=self.game, position=5).utility
         self.set_bought(self.john, property)
         self.set_bought(self.john, utility)
-        mortgage = json.loads(self.john.get('/game/mortgage/1/').content)
+        self.set_position(self.john, 1)
+        mortgage = json.loads(self.john.get('/game/mortgage/').content)
         self.assertTrue(mortgage["success"])
-        mortgage = json.loads(self.john.get('/game/mortgage/5/').content)
+        self.set_position(self.john, 5)
+        mortgage = json.loads(self.john.get('/game/mortgage/').content)
         self.assertTrue(mortgage["success"])
 
     def test_mortgage_not_yours(self):
@@ -218,15 +220,19 @@ class TestMortgage(TestGameFlow):
         utility = Square.objects.get(game=self.game, position=5).utility
         self.set_bought(self.mary, property)
         self.set_bought(self.mary, utility)
-        mortgage = json.loads(self.john.get('/game/mortgage/1/').content)
+        self.set_position(self.john, 1)
+        mortgage = json.loads(self.john.get('/game/mortgage/').content)
         self.assertFalse(mortgage["success"])
-        mortgage = json.loads(self.john.get('/game/mortgage/5/').content)
+        self.set_position(self.john, 5)
+        mortgage = json.loads(self.john.get('/game/mortgage/').content)
         self.assertFalse(mortgage["success"])
 
     def test_mortgage_not_owned(self):
-        mortgage = json.loads(self.john.get('/game/mortgage/1/').content)
+        self.set_position(self.john, 1)
+        mortgage = json.loads(self.john.get('/game/mortgage/').content)
         self.assertFalse(mortgage["success"])
-        mortgage = json.loads(self.john.get('/game/mortgage/5/').content)
+        self.set_position(self.john, 5)
+        mortgage = json.loads(self.john.get('/game/mortgage/').content)
         self.assertFalse(mortgage["success"])
 
 
