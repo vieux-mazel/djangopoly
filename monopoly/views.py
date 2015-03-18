@@ -183,14 +183,9 @@ def end_turn(request):
 
 # Buying a property or utility
 @player_can_play
-def buy(request, position):
+def buy(request):
     player = Player.objects.get(session_id=request.session.session_key)
-
-    # Find the square at that position
-    try:
-        square = Square.objects.get(game=player.game, position=position)
-    except Square.DoesNotExist:
-        return HttpResponse(FAILURE)
+    square = player.square
 
     # Check if the square can be bought
     if not rules.buy(player, square):

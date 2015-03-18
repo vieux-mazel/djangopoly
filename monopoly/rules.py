@@ -95,7 +95,7 @@ def buy(player, square):
 
     if isinstance(identity, Special): # The square is special, so it can't be bought
         return False
-    
+
     if identity.owned_by != None: # The square is owned by someone else
         return False
 

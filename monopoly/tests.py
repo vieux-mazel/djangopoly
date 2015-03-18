@@ -142,43 +142,60 @@ class TestBuying(TestGameFlow):
     def setUp(self):
         TestGameFlow.setUp(self)
 
+    # Set a player's position
+    def set_position(self, client, position):
+        player = client.player()
+        player.square = Square.objects.get(game=self.game, position=position)
+        player.save()
+
     def test_buy_when_not_your_turn(self):
-        buy = json.loads(self.mary.get('/game/buy/1/').content)
+        self.set_position(self.mary, 1)
+        buy = json.loads(self.mary.get('/game/buy/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property(self):
-        buy = json.loads(self.john.get('/game/buy/1/').content)
+        self.set_position(self.john, 1)
+        buy = json.loads(self.john.get('/game/buy/').content)
         self.assertTrue(buy["success"])
 
     def test_buy_utility(self):
-        buy = json.loads(self.john.get('/game/buy/5/').content)
+        self.set_position(self.john, 5)
+        buy = json.loads(self.john.get('/game/buy/').content)
         self.assertTrue(buy["success"])
 
     def test_buy_special(self):
-        buy = json.loads(self.john.get('/game/buy/0/').content)
+        self.set_position(self.john, 0)
+        buy = json.loads(self.john.get('/game/buy/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property_twice(self):
-        self.john.get('/game/buy/1/')
-        buy = json.loads(self.john.get('/game/buy/1/').content)
+        self.set_position(self.john, 1)
+        self.john.get('/game/buy/')
+        buy = json.loads(self.john.get('/game/buy/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property_already_owned(self):
-        self.john.get('/game/buy/1/')
+        self.set_position(self.john, 1)
+        self.john.get('/game/buy/')
         self.john.get('/game/end_turn/')
-        buy = json.loads(self.mary.get('/game/buy/1/').content)
+        self.set_position(self.mary, 1)
+        buy = json.loads(self.mary.get('/game/buy/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_utility_already_owned(self):
-        self.john.get('/game/buy/5/')
+        self.set_position(self.john, 5)
+        self.john.get('/game/buy/')
         self.john.get('/game/end_turn/')
-        buy = json.loads(self.mary.get('/game/buy/5/').content)
+        self.set_position(self.mary, 5)
+        buy = json.loads(self.mary.get('/game/buy/').content)
         self.assertFalse(buy["success"])
 
     def test_buy_property_street_conflict(self):
-        self.john.get('/game/buy/1/')
+        self.set_position(self.john, 1)
+        self.john.get('/game/buy/')
         self.john.get('/game/end_turn/')
-        buy = json.loads(self.mary.get('/game/buy/3/').content)
+        self.set_position(self.mary, 3)
+        buy = json.loads(self.mary.get('/game/buy/').content)
         self.assertFalse(buy["success"])
 
 
