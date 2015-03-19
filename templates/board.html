@@ -5,71 +5,69 @@
 {% block title %}Board{% endblock %}
 
 {% block body_block %}
-    
+
     <!--
     <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
-    -->
+-->
 
-    {% if massive_json %}
-    	<div id="board"><div class="content">
-  		{% for e in massive_json %}
- 		    {{ e }}
-		{% endfor %}
-		</div></div>
-	{% else %}
-    	<div id="board">
-    	</div>
-	{% endif %}
+{% if massive_json %}
+<div id="board"><div class="content">
+    {% for e in massive_json %}
+    {{ e }}
+    {% endfor %}
+</div></div>
+{% else %}
+<div id="board">
+</div>
+{% endif %}
 
-	
+
 
 {% endblock %}
 
 
 {% block side_block %}
-    
+
     <!--
     <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
-    -->
+-->
 
-    <div id="playerList">
+<div id="playerList">
 
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading">Djangopoly</div>
         
         <!-- Table -->
-        <table class="table">
+        <table class="table" id="players-table">
             <thead>
                 <tr>
                     <th>Player</th>
                     <th>Cash</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>$1000</td>
-                </tr>
-
+            <tbody id="players-table-body">
             </tbody> 
         </table>
         <div class="panel-body">
             <div id="button-controls">
-    <div id="dice">
-       <span class="button-wrap"><a href="#" class="button button-pill button-primary">Roll the dice!</a></span>
-    </div>
-    <div id="buy">
-        <span class="button-wrap"><a href="#" class="button button-pill">Buy property</a></span>
-    </div>
-    <div id="end-turn">
-        <span class="button-wrap"><a href="#" class="button button-pill">End turn</a></span>
+                <div id="dice">
+                 <span class="button-wrap"><a href="#" class="button button-pill button-primary">Roll the dice!</a></span>
+                </div>
+             <div id="buy">
+                <span class="button-wrap"><a href="#" class="button button-pill">Buy property</a></span>
+            </div>
+            <div id="mortgage">
+                <span class="button-wrap"><a href="#" class="button button-pill">Mortgage</a></span>
+            </div>
+            <div id="end-turn">
+                <span class="button-wrap"><a href="#" class="button button-pill">End turn</a></span>
 
-    </div>
-</div>
+            </div>
         </div>
     </div>
-    </div>
-        
+</div>
+</div>
+
 
 {% endblock %}
