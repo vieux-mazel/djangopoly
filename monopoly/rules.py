@@ -9,6 +9,8 @@ to from the API in views.py
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+import random
+
 from monopoly.models import Game, Player, Square, Property, Utility, Special
 from board import squares, streets
 
@@ -18,7 +20,7 @@ def roll_dice():
     Returns:
         Tuple of the form (int, int)
     """
-    return (2, 4)
+    return (random.randint(1, 6), random.randint(1, 6))
 
 
 def move_player(player, dice):
