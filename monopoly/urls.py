@@ -4,6 +4,7 @@ from monopoly import views
 urlpatterns = patterns('',
         url(r'^$', views.index, name='index'),
         url(r'^new_game/(?P<private>[\w\-]+)/$', views.new_game, name='new_game'),
+        url(r'^join_random/$', views.join_random_game, name='join_random_game'),
         url(r'^game/roll/$', views.roll_dice, name='roll_dice'),
         url(r'^game/end_turn/$', views.end_turn, name='end_turn'),
         url(r'^game/buy/$', views.buy, name='buy'),

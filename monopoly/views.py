@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core import serializers
 import json
+import random
 
 from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect
 
@@ -94,6 +95,15 @@ def new_game(request, private):
 
     # After creating the game, redirect to game view
     return redirect(game, id=newGame.id)
+
+# Make someone join a random public game that's not started
+# This is called from the home page
+def join_random_game(request):
+    if Game.objects.all().count() == 0:
+        return redirect(new_game, private="no") # Create a new public game if there are none
+
+    random_game = random.choice(list(Game.objects.filter(private=False, in_progress=False)))
+    return redirect(game, id=random_game.id)
 
 ### API
 # All requests return an empty string upon failure.
