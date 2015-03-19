@@ -9,6 +9,8 @@ to from the API in views.py
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+import random
+
 from monopoly.models import Game, Player, Square, Property, Utility, Special
 from board import squares, streets
 
@@ -18,7 +20,7 @@ def roll_dice():
     Returns:
         Tuple of the form (int, int)
     """
-    return (2, 4)
+    return (random.randint(1, 6), random.randint(1, 6))
 
 
 def move_player(player, dice):
@@ -218,7 +220,7 @@ def give_money(player, cash):
         player: Player
         cash: int, cash > 0
     """
-    assert isinstance(cash, int), "Cash is not an integer."
+    assert isinstance(cash, (int, long)), "Cash is not an integer."
     assert cash > 0, "Can't give non-positive cash to a player."
     player.money = player.money + cash
     player.save()
@@ -231,7 +233,7 @@ def take_money(player, cash):
         player: Player
         cash: int, cash > 0
     """
-    assert isinstance(cash, int), "Cash is not an integer."
+    assert isinstance(cash, (int, long)), "Cash is not an integer."
     assert cash > 0, "Can't take non-positive cash from a player."
     player.money = (player.money - cash) if (player.money - cash > 0) else 0
     player.save()
