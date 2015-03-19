@@ -1,10 +1,13 @@
 (function($) {
+  var TIME_INTERVAL = 800;
+
   var oldState;
   var $board = $('#board');
+  var isAjaxing = false;
   resizeBoard();
 
   for (var i = 0; i < 40; i++) {
-    $board.append('<div id="square' + i + '"></div>');
+    $board.append('<div id="square' + i + '" class="square"></div>');
   }
 
   var gameId = document.URL.split('/');
@@ -12,69 +15,29 @@
 
   function drawBoard() {
     $.getJSON('state/', function(state) {
-      //console.log(state);
-      //console.log(oldState);
-      //console.log('---');
-
-      var size1 = 14;
-      var size2 = 8;
-
-      var i, j, classes, styles, distance, square, player;
+      isAjaxing = true;
+      var i, j, square, player, squareStr, playersStr;
+      var $square = $('<div />');
       
       for (i = 0; i < state.squares.length; i++) {
+        if (oldState && JSON.stringify(oldState.squares[i]) === JSON.stringify(state.squares[i])) continue;
+
         square = state.squares[i];
-        classes = ['square'];
-        styles = [];
-       
-        if (i % 10 === 0) {
-          distance = 0;
-          classes.push('big');
-        } else {
-          classes.push('small');
-        }
+        squareStr = square.title;
 
-        if (i < 10) {
-
-          classes.push('bottom');
-          styles.push('right:' + distance + '%');
-        
-        } else if (i < 20) {
-
-          classes.push('left');
-          styles.push('bottom: ' + distance + '%');      
-        
-        } else if (i < 30) {
-        
-          classes.push('top');
-          styles.push('left: ' + distance + '%');
-        
-        } else {
-          
-          classes.push('right');
-          styles.push('top: ' + distance + '%');
-        
-        }
-
-        if (i % 10 === 0) distance += size1;
-        else distance += size2;
-
-        if (oldState && JSON.stringify(oldState.squares[i]) === JSON.stringify(state.squares[i])) {
-          console.log('No news.');
-          continue;
-        }
-
-        var $square = $('<div id="square' + i + '" class="' + classes.join(' ') + '" style="' + styles.join(';') + '">' + state.squares[i].title + '</div>');
+        playersStr = '';
         for (j = 0; j < square.players.length; j++) {
           player = square.players[j];
-          $square.append('<div class="person" id="player' + player.joined +'"></div>');
+          playersStr += '<div class="person" id="player' + player.joined + '"></div>';
         }
+        squareStr = squareStr + playersStr;
         
-        $board.find('#square' + square.position).replaceWith($square);
+        document.getElementById('square' + square.position).innerHTML = squareStr;
 
       } // for
 
       oldState = state;
-      
+      isAjaxing = false;
     });
   }
 
@@ -107,10 +70,9 @@
 
   setInterval(function() {
     $.getJSON('state/', function(state) {
-      //console.log('Interval');
-      drawBoard();
+      if (!isAjaxing) drawBoard();
     });
-  }, 1000);
+  }, TIME_INTERVAL);
 
   $(window).on('resize', resizeBoard);
 

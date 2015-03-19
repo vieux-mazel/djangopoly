@@ -29,25 +29,58 @@ html, body {
     height: 14%;
     //background: red;
     position: absolute;
-}
 
-.big {
-    width: 14%;
-}
-.small {
     width: 8%;
 }
-.top { top: 0; }
-.right { right: 0; }
-.bottom { bottom: 0; }
-.left { left: 0; }
 
-.small.left,
-.small.right {
-    width: 14%;
-    height: 8%;
-}
+#square0 { right: 0%; bottom: 0; width: 14% }
+#square1 { right: 14%; bottom: 0 }
+#square2 { right: 22%; bottom: 0 }
+#square3 { right: 30%; bottom: 0 }
+#square4 { right: 38%; bottom: 0 }
+#square5 { right: 46%; bottom: 0 }
+#square6 { right: 54%; bottom: 0 }
+#square7 { right: 62%; bottom: 0 }
+#square8 { right: 70%; bottom: 0 }
+#square9 { right: 78%; bottom: 0 }
 
+#square10 { bottom: 0%; left: 0; width: 14% }
+#square11 { bottom: 14%; left: 0; width: 14%; height: 8% }
+#square12 { bottom: 22%; left: 0; width: 14%; height: 8% }
+#square13 { bottom: 30%; left: 0; width: 14%; height: 8% }
+#square14 { bottom: 38%; left: 0; width: 14%; height: 8% }
+#square15 { bottom: 46%; left: 0; width: 14%; height: 8% }
+#square16 { bottom: 54%; left: 0; width: 14%; height: 8% }
+#square17 { bottom: 62%; left: 0; width: 14%; height: 8% }
+#square18 { bottom: 70%; left: 0; width: 14%; height: 8% }
+#square19 { bottom: 78%; left: 0; width: 14%; height: 8% }
+
+#square20 { left: 0%; top: 0; width: 14% }
+#square21 { left: 14%; top: 0 }
+#square22 { left: 22%; top: 0 }
+#square23 { left: 30%; top: 0 }
+#square24 { left: 38%; top: 0 }
+#square25 { left: 46%; top: 0 }
+#square26 { left: 54%; top: 0 }
+#square27 { left: 62%; top: 0 }
+#square28 { left: 70%; top: 0 }
+#square29 { left: 78%; top: 0 }
+
+#square30 { top: 0%; right: 0; ; width: 14% }
+#square31 { top: 14%; right: 0; width: 14%; height: 8% }
+#square32 { top: 22%; right: 0; width: 14%; height: 8% }
+#square33 { top: 30%; right: 0; width: 14%; height: 8% }
+#square34 { top: 38%; right: 0; width: 14%; height: 8% }
+#square35 { top: 46%; right: 0; width: 14%; height: 8% }
+#square36 { top: 54%; right: 0; width: 14%; height: 8% }
+#square37 { top: 62%; right: 0; width: 14%; height: 8% }
+#square38 { top: 70%; right: 0; width: 14%; height: 8% }
+#square39 { top: 78%; right: 0; width: 14%; height: 8% }
+
+
+/*
+----------------------------------
+*/
 #chance, #community{
     width:20%;
     height:20%;
