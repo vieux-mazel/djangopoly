@@ -61,18 +61,11 @@
       }
 
       // Buy and mortgage
-      if (
-        lastState &&
-        state.can_be_bought !== lastState.can_be_bought
-        ) {
-        $buy.toggleClass('active');
-      }
-      if (
-        lastState &&
-        state.can_be_mortgaged !== lastState.can_be_mortgaged
-        ) {
-        $mortgage.toggleClass('active');
-      }
+      if (state.can_be_bought) $buy.addClass('active');
+      else $buy.removeClass('active');
+      
+      if (state.can_be_mortgaged) $mortgage.addClass('active');
+      else $mortgage.removeClass('active');
 
       // Dice
       if (!state.is_your_turn) {
