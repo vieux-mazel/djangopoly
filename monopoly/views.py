@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core import serializers
-import json, time
+import json
 
 from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect
 
@@ -221,14 +221,23 @@ def mortgage(request):
 # Return JSON containing all of the game's state
 def game_state(request, id):
     # Find the game for which the state is requested
+    current_player = Player.objects.get(session_id=request.session.session_key)
 
-    start = time.clock()
     try:
         game = Game.objects.get(id=id)
     except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
-    start = time.clock()
+    # Check whether current player can buy        
+    can_be_bought = False
+    if not current_player.plays_in_turns and rules.can_be_bought(current_player, current_player.square):
+        can_be_bought = True
+    
+    # Check wheter current player can mortgage
+    can_be_mortgaged = False
+    if not current_player.plays_in_turns and rules.can_be_mortgaged(current_player, current_player.square):
+        can_be_mortgaged = True
+
     pp = []
     players = game.player_set.all()
     for player in players:
@@ -241,8 +250,6 @@ def game_state(request, id):
         }
         pp.append(p)
 
-    can_be_bought = False
-    
     ss = []
     squares = game.square_set.all()
     for square in squares:
@@ -265,8 +272,6 @@ def game_state(request, id):
                     'player_name': player.name,
                     'joined': player.joined
                 })
-                if player.plays_in_turns == 0 and rules.can_be_bought(player, square):
-                    can_be_bought = True
 
         if s['type'] == 'property':
             if square.property.owned_by is not None:
@@ -285,7 +290,8 @@ def game_state(request, id):
     state = {
         'players': pp,
         'squares': ss,
-        'can_be_bought': can_be_bought
+        'can_be_bought': can_be_bought,
+        'can_be_mortgaged': can_be_mortgaged
     }
         
     state = json.dumps(state, indent=4, sort_keys=True)
