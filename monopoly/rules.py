@@ -150,6 +150,9 @@ def can_be_mortgaged(player, square):
     if identity.owned_by != player:
         return False # The square is not owned by the player.
 
+    if identity.is_mortgaged:
+        return False
+
     return True
 
 
