@@ -228,6 +228,11 @@ def game_state(request, id):
     except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
+    # Tell wheter it's your turn
+    is_your_turn = False
+    if not current_player.plays_in_turns:
+        is_your_turn = True
+
     # Check whether current player can buy        
     can_be_bought = False
     if not current_player.plays_in_turns and rules.can_be_bought(current_player, current_player.square):
@@ -290,6 +295,8 @@ def game_state(request, id):
     state = {
         'players': pp,
         'squares': ss,
+        'is_your_turn': is_your_turn,
+        'rolled_this_turn': current_player.rolled_this_turn,
         'can_be_bought': can_be_bought,
         'can_be_mortgaged': can_be_mortgaged
     }
