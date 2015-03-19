@@ -113,12 +113,16 @@ html, body {
     height: 40px;
 }
 
-#dice{
-    
-}
-
-#end-turn{
-    
+.die{
+    display:inline-block;
+    height:90px;
+    width:90px;
+    border: 1px solid black;
+    border-radius: 30%;
+    margin:5px;
+    line-height: 90px;
+    font-size: 80px;
+    text-align: center;
 }
 
 #buy {
@@ -129,11 +133,14 @@ html, body {
 }
 
 #button-controls{
-    margin: 0 auto;
+    
+}
+
+#button-controls div{
+    margin: 4px auto;
 }
 
 
 #button-controls span, #button-controls span a{
-    display:inline-block;
-    margin: 0 auto;
+    
 }

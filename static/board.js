@@ -6,6 +6,7 @@
 
   var $board = $('#board');
   var $playerList = $('#players-table-body');
+  var $dicevis = $('#dice-vis');
   var $buy = $('#buy');
 
   for (var i = 0; i < 40; i++) {
@@ -25,7 +26,7 @@
     isAjaxing = true;
 
     $.getJSON('state/', function(state) {
-      var i, j, square, player, squareStr, playersStr, playerStr;
+      var i, j, square, player, squareStr, playersStr, playerStr, diceRoll;
 
 
 
@@ -72,8 +73,13 @@
   }
 
   $('#dice').click(function() {
+    console.log('dice');
     $.getJSON('/game/roll', function(data) {
       //console.log('Dice roll:');
+      console.log(data);
+      if(data.success === true){
+        $dicevis.html('<div class="die">'+ data.dice1 +'</div>'+ '<div class="die">'+ data.dice2 +'</div>');
+      }
       console.log(data);
       //console.log('---');
     });
