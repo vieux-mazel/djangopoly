@@ -32,13 +32,44 @@
     <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
     -->
 
-    <div id="playerList"></div>
+    <div id="playerList">
+
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Djangopoly</div>
         
+        <!-- Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Cash</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>$1000</td>
+                </tr>
+
+            </tbody> 
+        </table>
+        <div class="panel-body">
+            <div id="button-controls">
     <div id="dice">
        <span class="button-wrap"><a href="#" class="button button-pill button-primary">Roll the dice!</a></span>
     </div>
-    <div id="end-turn">End turn</div>
-    
-    <div id="buy">Buy</div>
+    <div id="buy">
+        <span class="button-wrap"><a href="#" class="button button-pill">Buy property</a></span>
+    </div>
+    <div id="end-turn">
+        <span class="button-wrap"><a href="#" class="button button-pill">End turn</a></span>
+
+    </div>
+</div>
+        </div>
+    </div>
+    </div>
+        
 
 {% endblock %}

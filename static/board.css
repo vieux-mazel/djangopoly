@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background: url('wood.png');
 }
 html, body {
     height: 100%;
@@ -113,26 +114,26 @@ html, body {
 }
 
 #dice{
-    width: 100px;
-    height: 20px;
-    padding: 30px;
-    background: green;
+    
 }
 
 #end-turn{
-    width:100px;
-    height:20px;
-    padding:30px;
-    background: yellow;
+    
 }
 
 #buy {
-    width: 50px;
-    height: 50px;
-    background: silver;
-    border-radius: 10px;
-    border: 1px solid #000;
+    
 }
 #buy.active {
     background: white;
+}
+
+#button-controls{
+    margin: 0 auto;
+}
+
+
+#button-controls span, #button-controls span a{
+    display:inline-block;
+    margin: 0 auto;
 }
