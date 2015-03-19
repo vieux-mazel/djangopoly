@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core import serializers
+from django.db import transaction
 import json
 import random
 
@@ -56,10 +57,14 @@ def game(request, id):
 
 # Create a new game
 # Can be private or public, depends on URL invocation
+@transaction.non_atomic_requests
 def new_game(request, private):
     newGame = Game()
     newGame.private = True if private == "private" else False
     newGame.save()
+
+    # Start transaction
+    transaction.set_autocommit(False)
 
     # Create game board
 
@@ -92,6 +97,10 @@ def new_game(request, private):
         square.save()
         identity.square = square
         identity.save()
+
+    # End transaction
+    transaction.commit()
+    transaction.set_autocommit(True)
 
     # After creating the game, redirect to game view
     return redirect(game, id=newGame.id)
