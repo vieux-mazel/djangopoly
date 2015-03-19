@@ -8,6 +8,7 @@
   var $playerList = $('#players-table-body');
   var $dicevis = $('#dice-vis');
   var $buy = $('#buy');
+  var $mortgage = $('#mortgage');
 
   for (var i = 0; i < 40; i++) {
     $board.append('<div id="square' + i + '" class="square"></div>');
@@ -23,8 +24,6 @@
     
 
   function drawState() {
-    isAjaxing = true;
-
     $.getJSON('state/', function(state) {
       var i, j, square, player, squareStr, playersStr, playerStr, diceRoll;
 
@@ -58,13 +57,14 @@
         document.getElementById('playerItem' + i).innerHTML = playerStr;
       }
 
-      // Buy action
-      if (state.can_be_bought) $buy.addClass('active');
-      else $buy.removeClass('active');
+      // Buy and mortgage
+      if (state.can_be_bought != lastState.can_be_bought)
+        $buy.toggleClass('active');
+      if (state.can_be_mortgaged != lastState.can_be_mortgaged)
+        $mortgage.toggleClass('active');
 
       // Reflect new state
       lastState = state;
-      isAjaxing = false;
     });
   }
 
@@ -75,7 +75,6 @@
   $('#dice').click(function() {
     console.log('dice');
     $.getJSON('/game/roll', function(data) {
-      //console.log('Dice roll:');
       console.log(data);
       if(data.success === true){
         $dicevis.html('<div class="die">'+ data.dice1 +'</div>'+ '<div class="die">'+ data.dice2 +'</div>');
@@ -92,9 +91,17 @@
   });
 
   $buy.click(function() {
-    var $self = $(this);
     if (!lastState.can_be_bought) return;
+    
     $.getJSON('/game/buy', function(data) {
+      console.log(data);
+    });
+  });
+
+  $mortgage.click(function() {
+    if (!lastState.can_be_mortgaged) return;
+    
+    $.getJSON('/game/mortgage', function(data) {
       console.log(data);
     });
   });
