@@ -5,25 +5,29 @@
   var isAjaxing = false;
 
   var $board = $('#board');
-  var $playerList = $('#playerList');
+  var $playerList = $('#players-table-body');
   var $buy = $('#buy');
 
   for (var i = 0; i < 40; i++) {
     $board.append('<div id="square' + i + '" class="square"></div>');
   }
+
   for (var i = 0; i < 6; i++) {
-    $playerList.append('<div id="playerItem' + i + '"></div>');
+    $playerList.append('<tr id="playerItem'+ i +'"></tr>');
   }
 
   var gameId = document.URL.split('/');
   gameId = gameId[gameId.length - 2];
 
+    
 
   function drawState() {
     isAjaxing = true;
 
     $.getJSON('state/', function(state) {
       var i, j, square, player, squareStr, playersStr, playerStr;
+
+
 
       // Main content
       for (i = 0; i < state.squares.length; i++) {
@@ -48,7 +52,7 @@
         if (lastState && JSON.stringify(lastState.players[i]) === JSON.stringify(state.players[i])) continue;
 
         player = state.players[i];
-        playerStr = 'Player: ' + player.name;
+        playerStr = '<td>'+ (i + 1) +'</td><td>' + state.players[i].money + '</td>';
 
         document.getElementById('playerItem' + i).innerHTML = playerStr;
       }
