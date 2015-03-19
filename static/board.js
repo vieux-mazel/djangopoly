@@ -1,11 +1,12 @@
 (function($) {
   var TIME_INTERVAL = 800;
 
-  var oldState;
+  var lastState;
   var isAjaxing = false;
 
   var $board = $('#board');
   var $playerList = $('#playerList');
+  var $buy = $('#buy');
 
   for (var i = 0; i < 40; i++) {
     $board.append('<div id="square' + i + '" class="square"></div>');
@@ -26,7 +27,7 @@
 
       // Main content
       for (i = 0; i < state.squares.length; i++) {
-        if (oldState && JSON.stringify(oldState.squares[i]) === JSON.stringify(state.squares[i])) continue;
+        if (lastState && JSON.stringify(lastState.squares[i]) === JSON.stringify(state.squares[i])) continue;
 
         square = state.squares[i];
         squareStr = square.title;
@@ -34,7 +35,7 @@
         playersStr = '';
         for (j = 0; j < square.players.length; j++) {
           player = square.players[j];
-          playersStr += '<div class="person" id="player' + player.joined + '"></div>';
+          playersStr += '<div class="person person' + j + '" id="player' + player.joined + '"></div>';
         }
         squareStr = squareStr + playersStr;
         
@@ -44,7 +45,7 @@
 
       // Sidebar
       for (i = 0; i < state.players.length; i++) {
-        if (oldState && JSON.stringify(oldState.players[i]) === JSON.stringify(state.players[i])) continue;
+        if (lastState && JSON.stringify(lastState.players[i]) === JSON.stringify(state.players[i])) continue;
 
         player = state.players[i];
         playerStr = 'Player: ' + player.name;
@@ -52,8 +53,12 @@
         document.getElementById('playerItem' + i).innerHTML = playerStr;
       }
 
+      // Buy action
+      if (state.can_be_bought) $buy.addClass('active');
+      else $buy.removeClass('active');
+
       // Reflect new state
-      oldState = state;
+      lastState = state;
       isAjaxing = false;
     });
   }
@@ -76,8 +81,12 @@
     });
   });
 
-  $('#buy').click(function () {
+  $buy.click(function() {
     var $self = $(this);
+    if (!lastState.can_be_bought) return;
+    $.getJSON('/game/buy', function(data) {
+      console.log(data);
+    });
   });
 
   setInterval(function() {
