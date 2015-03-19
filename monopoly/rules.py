@@ -218,7 +218,7 @@ def give_money(player, cash):
         player: Player
         cash: int, cash > 0
     """
-    assert isinstance(cash, int), "Cash is not an integer."
+    assert isinstance(cash, (int, long)), "Cash is not an integer."
     assert cash > 0, "Can't give non-positive cash to a player."
     player.money = player.money + cash
     player.save()
@@ -231,7 +231,7 @@ def take_money(player, cash):
         player: Player
         cash: int, cash > 0
     """
-    assert isinstance(cash, int), "Cash is not an integer."
+    assert isinstance(cash, (int, long)), "Cash is not an integer."
     assert cash > 0, "Can't take non-positive cash from a player."
     player.money = (player.money - cash) if (player.money - cash > 0) else 0
     player.save()
