@@ -2,23 +2,29 @@
   var TIME_INTERVAL = 800;
 
   var oldState;
-  var $board = $('#board');
   var isAjaxing = false;
-  resizeBoard();
+
+  var $board = $('#board');
+  var $playerList = $('#playerList');
 
   for (var i = 0; i < 40; i++) {
     $board.append('<div id="square' + i + '" class="square"></div>');
+  }
+  for (var i = 0; i < 6; i++) {
+    $playerList.append('<div id="playerItem' + i + '"></div>');
   }
 
   var gameId = document.URL.split('/');
   gameId = gameId[gameId.length - 2];
 
-  function drawBoard() {
+
+  function drawState() {
+    isAjaxing = true;
+
     $.getJSON('state/', function(state) {
-      isAjaxing = true;
-      var i, j, square, player, squareStr, playersStr;
-      var $square = $('<div />');
-      
+      var i, j, square, player, squareStr, playersStr, playerStr;
+
+      // Main content
       for (i = 0; i < state.squares.length; i++) {
         if (oldState && JSON.stringify(oldState.squares[i]) === JSON.stringify(state.squares[i])) continue;
 
@@ -36,6 +42,17 @@
 
       } // for
 
+      // Sidebar
+      for (i = 0; i < state.players.length; i++) {
+        if (oldState && JSON.stringify(oldState.players[i]) === JSON.stringify(state.players[i])) continue;
+
+        player = state.players[i];
+        playerStr = 'Player: ' + player.name;
+
+        document.getElementById('playerItem' + i).innerHTML = playerStr;
+      }
+
+      // Reflect new state
       oldState = state;
       isAjaxing = false;
     });
@@ -54,26 +71,24 @@
   });
 
   $('#end-turn').click(function() {
-    $.getJSON('/game/end_turn', function(data){
-      //console.log('End turn:');
+    $.getJSON('/game/end_turn', function(data) {
       console.log(data);
-      //console.log('---');
     });
   });
 
   $('#buy').click(function () {
     var $self = $(this);
-    //console.log('About to buy...');
   });
-
-  drawBoard();
 
   setInterval(function() {
     $.getJSON('state/', function(state) {
-      if (!isAjaxing) drawBoard();
+      if (!isAjaxing) drawState();
     });
   }, TIME_INTERVAL);
 
   $(window).on('resize', resizeBoard);
+
+  resizeBoard();
+  drawState();
 
 })(jQuery);
