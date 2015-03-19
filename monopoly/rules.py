@@ -172,7 +172,7 @@ def mortgage(player, square):
     identity = identify_square(square)
     identity.is_mortgaged = True
     identity.save()
-    give_money(player, identity.price)
+    give_money(player, identity.price/2)
     return True
 
 
