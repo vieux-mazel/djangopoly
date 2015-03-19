@@ -7,8 +7,11 @@
   var $board = $('#board');
   var $playerList = $('#players-table-body');
   var $dicevis = $('#dice-vis');
+  
   var $buy = $('#buy');
   var $mortgage = $('#mortgage');
+  var $dice = $('#dice');
+  var $endTurn = $('#end-turn');
 
   for (var i = 0; i < 40; i++) {
     $board.append('<div id="square' + i + '" class="square"></div>');
@@ -27,11 +30,12 @@
     $.getJSON('state/', function(state) {
       var i, j, square, player, squareStr, playersStr, playerStr, diceRoll;
 
-
-
       // Main content
       for (i = 0; i < state.squares.length; i++) {
-        if (lastState && JSON.stringify(lastState.squares[i]) === JSON.stringify(state.squares[i])) continue;
+        if (
+          lastState &&
+          JSON.stringify(lastState.squares[i]) === JSON.stringify(state.squares[i])
+        ) continue;
 
         square = state.squares[i];
         squareStr = square.title;
@@ -44,12 +48,14 @@
         squareStr = squareStr + playersStr;
         
         document.getElementById('square' + square.position).innerHTML = squareStr;
-
-      } // for
+      }
 
       // Sidebar
       for (i = 0; i < state.players.length; i++) {
-        if (lastState && JSON.stringify(lastState.players[i]) === JSON.stringify(state.players[i])) continue;
+        if (
+          lastState &&
+          JSON.stringify(lastState.players[i]) === JSON.stringify(state.players[i])
+        ) continue;
 
         player = state.players[i];
         playerStr = '<td>'+ (i + 1) +'</td><td>' + state.players[i].money + '</td>';
@@ -58,40 +64,56 @@
       }
 
       // Buy and mortgage
-      if (state.can_be_bought != lastState.can_be_bought)
+      if (
+        lastState &&
+        state.can_be_bought !== lastState.can_be_bought
+        ) {
         $buy.toggleClass('active');
-      if (state.can_be_mortgaged != lastState.can_be_mortgaged)
+      }
+      if (
+        lastState &&
+        state.can_be_mortgaged !== lastState.can_be_mortgaged
+        ) {
         $mortgage.toggleClass('active');
+      }
 
+      // Dice
+      if (!state.is_your_turn) {
+        $dice.removeClass('active');
+        $endTurn.removeClass('active');
+      } else if (!state.rolled_this_turn) {
+        $dice.addClass('active');
+        $endTurn.removeClass('active');
+      } else {
+        $dice.removeClass('active');
+        $endTurn.addClass('active');
+      }
+      
       // Reflect new state
       lastState = state;
     });
   }
 
-  function resizeBoard() {
-    $board.css({width: $board.height()});
-  }
-
-  $('#dice').click(function() {
-    console.log('dice');
+  $dice.click(function() {
     $.getJSON('/game/roll', function(data) {
       console.log(data);
-      if(data.success === true){
+
+      if (data.success === true) {
+        $dice.removeClass('active');
+        $endTurn.addClass('active');
         $dicevis.html('<div class="die">'+ data.dice1 +'</div>'+ '<div class="die">'+ data.dice2 +'</div>');
       }
-      console.log(data);
-      //console.log('---');
     });
   });
 
-  $('#end-turn').click(function() {
+  $endTurn.click(function() {
     $.getJSON('/game/end_turn', function(data) {
-      console.log(data);
+      $endTurn.removeClass('active');
     });
   });
 
   $buy.click(function() {
-    if (!lastState.can_be_bought) return;
+    if (lastState && !lastState.can_be_bought) return;
     
     $.getJSON('/game/buy', function(data) {
       console.log(data);
@@ -99,7 +121,7 @@
   });
 
   $mortgage.click(function() {
-    if (!lastState.can_be_mortgaged) return;
+    if (lastState && !lastState.can_be_mortgaged) return;
     
     $.getJSON('/game/mortgage', function(data) {
       console.log(data);
@@ -112,9 +134,12 @@
     });
   }, TIME_INTERVAL);
 
+  function resizeBoard() {
+    $board.css({width: $board.height()});
+  }
   $(window).on('resize', resizeBoard);
-
   resizeBoard();
+
   drawState();
 
 })(jQuery);

@@ -132,6 +132,20 @@ html, body {
     background: white;
 }
 
+#buy,
+#mortgage,
+#dice,
+#end-turn {
+	opacity: 0.3;
+}
+
+#buy.active,
+#mortgage.active,
+#dice.active,
+#end-turn.active {
+	opacity: 1;
+}
+
 #button-controls{
     
 }
