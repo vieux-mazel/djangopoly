@@ -98,6 +98,9 @@ def can_be_bought(player, square):
     if player.money < identity.price: # The player doesn't have enough money to buy the square
         return False
 
+    if not player.rolled_this_turn:
+        return False
+
     # The square is a property, and another property of the same street (color) is owned by another player
     if isinstance(identity, Property) and identity.street.property_set.filter(~Q(owned_by=player) & ~Q(owned_by=None)):
         return False
@@ -151,6 +154,9 @@ def can_be_mortgaged(player, square):
         return False # The square is not owned by the player.
 
     if identity.is_mortgaged:
+        return False
+
+    if not player.rolled_this_turn:
         return False
 
     return True
