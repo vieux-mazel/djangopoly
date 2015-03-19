@@ -23,9 +23,6 @@
 
   var gameId = document.URL.split('/');
   gameId = gameId[gameId.length - 2];
-
-    
-
   function drawState() {
     $.getJSON('state/', function(state) {
       var i, j, square, player, squareStr, playersStr, playerStr, diceRoll;

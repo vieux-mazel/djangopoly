@@ -251,9 +251,11 @@ def game_state(request, id):
             'money': player.money,
             'plays_in_turns': player.plays_in_turns,
             'in_jail_for': player.in_jail_for,
-            'is_in_jail': player.is_in_jail()
+            'is_in_jail': player.is_in_jail(),
+            'joined': player.joined
         }
         pp.append(p)
+    pp = sorted(pp, key=lambda p: p['joined']) 
 
     ss = []
     squares = game.square_set.all()
