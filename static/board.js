@@ -55,7 +55,7 @@
         ) continue;
 
         player = state.players[i];
-        playerStr = '<td>'+ (i + 1) +'</td><td>' + state.players[i].money + '</td>';
+        playerStr = '<td>'+ player.name +'</td><td>' + player.money + '</td>';
 
         document.getElementById('playerItem' + i).innerHTML = playerStr;
       }
