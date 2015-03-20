@@ -294,26 +294,25 @@ def game_state(request, id):
     ss = []
     squares = game.square_set.all()
     for square in squares:
-
-        if not hasattr(square, 'price'): square_type = 'special'
-        elif hasattr(square, 'tax_1house'): square_type = 'property'
-        else: square_type = 'utility'
-
         s = {
             'position': square.position,
             'title': square.title,
-            'type': square_type,
             'players': []
         }
 
-        if len(square.player_set.all()):
-            for player in square.player_set.all():
+        square_type = rules.identify_square(square)
+
+        s_players = square.player_set.all()
+        if len(s_players):
+            for player in s_players:
                 s['players'].append({
                     'player_id': player.session_id,
                     'player_name': player.name,
                     'joined': player.joined
                 })
 
+        ss.append(s)
+        '''
         if s['type'] == 'property':
             if square.property.owned_by is not None:
                 s['owner'] = {
@@ -325,8 +324,7 @@ def game_state(request, id):
 
         elif s['type'] == 'utility':
             s['owned_by'] = square.utility.owned_by
-
-        ss.append(s)
+        '''
 
     state = {
         'players': pp,
