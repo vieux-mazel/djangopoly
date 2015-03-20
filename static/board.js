@@ -24,6 +24,7 @@
   var gameId = document.URL.split('/');
   gameId = gameId[gameId.length - 2];
   function drawState() {
+    isAjaxing = true;
     $.getJSON('state/', function(state) {
       var i, j, square, player, squareStr, playersStr, playerStr, diceRoll;
 
@@ -35,7 +36,7 @@
         ) continue;
 
         square = state.squares[i];
-        squareStr = square.title;
+        squareStr = '';
 
         playersStr = '';
         for (j = 0; j < square.players.length; j++) {
@@ -44,7 +45,11 @@
         }
         squareStr = squareStr + playersStr;
         
-        document.getElementById('square' + square.position).innerHTML = squareStr;
+        var s = document.getElementById('square' + square.position);
+        if (square.owned_by) {
+          s.className = 'owned';
+        }
+        s.innerHTML = squareStr;
       }
 
       // Sidebar
@@ -81,6 +86,7 @@
       
       // Reflect new state
       lastState = state;
+      isAjaxing = false;
     });
   }
 
