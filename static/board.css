@@ -157,3 +157,17 @@ html, body {
 #button-controls span, #button-controls span a{
     
 }
+
+.profile-pic{
+    width: 60%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 20%;
+}
+
+.profile-name{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+
+}
