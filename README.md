@@ -1,5 +1,4 @@
 # Djangopoly
-----
 Monopoly implementation in Python and Django. Live demo at: http://djangopoly.shtarkov.net/
 
 Course project for the Web Application Development course at the University of Glasgow.
