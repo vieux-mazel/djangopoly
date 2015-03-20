@@ -147,6 +147,19 @@ html, body {
     
 }
 
+.profile-pic{
+    width: 60%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 20%;
+}
+
+.profile-name{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+
+}
 .owned0 { background: rgba(0, 173, 167, 0.7) }
 .owned1 { background: rgba(255, 235, 121, 0.7) }
 .owned2 { background: rgba(194, 71, 4, 0.7) }

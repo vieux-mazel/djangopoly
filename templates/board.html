@@ -6,10 +6,6 @@
 
 {% block body_block %}
 
-    <!--
-    <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
--->
-
 {% if massive_json %}
 <div id="board"><div class="content">
     {% for e in massive_json %}
@@ -21,16 +17,9 @@
 </div>
 {% endif %}
 
-
-
 {% endblock %}
 
-
 {% block side_block %}
-
-    <!--
-    <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
--->
 
 <div id="playerList">
 
