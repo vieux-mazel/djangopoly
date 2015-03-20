@@ -392,6 +392,42 @@ cards = [
                 'param': 0
             }
     },
+    {
+        'name': 'Advance to The Angel Inslington',
+        'description': 'Mr. M has tied a cloth bundle onto his cane to make a bindle, carried over his right shoulder, and is smoking a cigar.',
+        'effect':
+            {
+                'type': 'move',
+                'param': 6
+            }
+    },
+    {
+        'name': 'Bank pays you dividend of $50',
+        'description': 'With his feet up on a telephone-bearing desk, Mr. M leans back in an overstuffed chair, blowing cigar smoke rings.',
+        'effect':
+            {
+                'type': 'give_money',
+                'param': 50,
+            }
+    },
+    {
+        'name': 'Go to Jail!',
+        'description': 'A truncheon-carrying policeman in a dark-colored uniform hauls a surprised Mr M along by the feet.',
+        'effect':
+            {
+                'type': 'go_to_jail',
+                'param': 0,
+            }
+    },
+    {
+        'name': 'Pay poor tax of $15',
+        'description': 'His trouser pockets pulled out to show them empty, Mr. M spreads his hands.',
+        'effect':
+            {
+                'type': 'take_money',
+                'param': 15
+            }
+    }
 ]
 
 squares = properties + utilities + specials

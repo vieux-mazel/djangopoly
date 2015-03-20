@@ -206,6 +206,8 @@ def apply_effect(player, effect):
     # Give money to a player
     if effect.type == "give_money":
         give_money(player, effect.param)
+    elif effect.type == "take_money":
+        take_money(player, effect.param)
     elif effect.type == "income_tax":
         take_money(player, 200) # Pay a flat rate of 200
     elif effect.type == "supertax":
@@ -215,6 +217,7 @@ def apply_effect(player, effect):
     elif effect.type == "move":
         player.square = Square.objects.get(game=player.game, position=effect.param)
         player.save()
+        move_player(player, (0,0))
 
 
 def give_money(player, cash):
