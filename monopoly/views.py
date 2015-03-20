@@ -11,7 +11,7 @@ import rules
 
 # Placeholder index page
 def index(request):
-    return HttpResponse('Hello')
+    return render(request, 'index.html')
 
 # Establishes a Session ID if one hasn't been established
 #
