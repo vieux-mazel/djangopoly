@@ -63,7 +63,9 @@
         ) continue;
 
         player = state.players[i];
-        playerStr = '<td>'+ player.name +'</td><td>' + player.money + '</td>';
+        playerStr = '<td';
+        if (player.is_in_jail) playerStr += ' class="jailed"';
+        playerStr += '>' + player.name +'</td><td>' + player.money + '</td>';
 
         document.getElementById('playerItem' + i).innerHTML = playerStr;
       }
