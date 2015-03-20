@@ -430,4 +430,4 @@ cards = [
     }
 ]
 
-squares = properties + utilities + specials
+squares = sorted(properties + utilities + specials, key=lambda s: s['position'])
