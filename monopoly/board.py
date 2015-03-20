@@ -382,4 +382,16 @@ specials = [
     }
 ]
 
+cards = [
+    {
+        'name': 'Advance to Go',
+        'description': 'Mr. M strides in 7-league boots.',
+        'effect':
+            {
+                'type': 'move',
+                'param': 0
+            }
+    },
+]
+
 squares = properties + utilities + specials

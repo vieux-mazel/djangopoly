@@ -221,6 +221,9 @@ def apply_effect(player, effect):
         take_money(player, 100) # Pay a flat rate of 100
     elif effect.type == "go_to_jail":
         go_to_jail(player)
+    elif effect.type == "move":
+        player.square = Square.objects.get(game=player.game, position=effect.param)
+        player.save()
 
 
 def give_money(player, cash):
@@ -315,6 +318,30 @@ def pay_bailout(player):
     assert player.is_in_jail(), "A player is not in jail, yet pay_bailout() was called."
     take_money(player, 50)
     liberate(player)
+
+
+def can_draw_card(player):
+    """Determines whether a player can draw a card.
+
+    Only if he's on a community chest or chance square.
+
+    Args:
+        player: Player
+
+    Returns:
+        True if possible, False otherwise.
+    """
+    identity = identify_square(player.square)
+    if not isinstance(identity, Special):
+        return False
+
+    if identity.effect.type != "community_chest" and identity.effect.type != "chance":
+        return False
+
+    if player.drew_card_this_turn:
+        return False
+
+    return True
 
 
 def identify_square(square):

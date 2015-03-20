@@ -182,6 +182,10 @@ def end_turn(request):
     player.rolled_this_turn = False
     player.save()
 
+    # Make sure the player can draw a card next turn
+    player.drew_card_this_turn = False
+    player.save()
+
     # Get all players in this game, subtract one from plays_in_turns
     # (when it gets negative it resets to the maximum)
     players = player.game.player_set.all()
@@ -227,6 +231,26 @@ def mortgage(request):
         return HttpResponse(FAILURE)
 
     return HttpResponse(SUCCESS)
+
+# Draw a card
+@player_can_play
+def draw_card(request):
+    player = Player.objects.get(session_id=request.session.session_key)
+
+    if not rules.can_draw_card(player):
+        return HttpResponse(FAILURE)
+    
+    card = random.choice(board.cards)
+    player.drew_card_this_turn = True
+    player.save()
+
+    rules.apply_effect(player, Effect(type=card["effect"]["type"], param=card["effect"]["param"]))
+
+    return HttpResponse(json.dumps({
+        'success': True,
+        'name': card["name"],
+        'description': card["description"],
+        }))
 
 # Return JSON containing all of the game's state
 def game_state(request, id):
