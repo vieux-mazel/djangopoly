@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Board{% endblock %}
+
+{% block body_block %}
+
+    <div class=" hero-feature">
+                <div class="thumbnail">
+                    <img src="{% static 'img/logo.png' %}" alt="">
+                    <div class="caption">
+                        <h3>Feature Label</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        <p>
+                            <a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+
+{% block side_block %}
+<div id="playerList">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">Authors</div>
+        
+        <table class="table" id="players-table">
+            <tbody id="players-table-body">
+            <tr>
+                <td>
+                    <img class="profile-pic" src="{% static 'img/author1.jpg' %}" />
+                    <div class="profile-name">Christian Shtarkov</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img class="profile-pic" src="{% static 'img/author2.jpg' %}" />
+                    <div class="profile-name">Atanas Penchev</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img class="profile-pic" src="{% static 'img/author3.jpg' %}" />
+                    <div class="profile-name">Ian Denev</div>
+                </td>
+            </tr>
+            </tbody> 
+        </table>
+</div>
+</div>
+    
+{% endblock %}

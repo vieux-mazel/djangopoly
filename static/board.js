@@ -12,6 +12,8 @@
   var $mortgage = $('#mortgage');
   var $dice = $('#dice');
   var $endTurn = $('#end-turn');
+  var $payJail = $('#pay-jail');
+  var $card = $('#card');
 
   for (var i = 0; i < 40; i++) {
     $board.append('<div id="square' + i + '" class="square"></div>');
@@ -47,7 +49,8 @@
         
         var s = document.getElementById('square' + square.position);
         if (square.owned_by) {
-          s.className = 'owned';
+          s.className += ' owned owned' + square.owned_by.joined;
+          if (square.is_mortgaged) s.className += ' mortgaged'
         }
         s.innerHTML = squareStr;
       }
@@ -60,7 +63,9 @@
         ) continue;
 
         player = state.players[i];
-        playerStr = '<td>'+ player.name +'</td><td>' + player.money + '</td>';
+        playerStr = '<td';
+        if (player.is_in_jail) playerStr += ' class="jailed"';
+        playerStr += '>' + player.name +'</td><td>' + player.money + '</td>';
 
         document.getElementById('playerItem' + i).innerHTML = playerStr;
       }
@@ -83,6 +88,14 @@
         $dice.removeClass('active');
         $endTurn.addClass('active');
       }
+
+      // Drawing cards
+      if (state.can_draw_card) $card.addClass('active');
+      else $card.removeClass('active');
+
+      // Jail bailout
+      if (state.can_pay_jail) $payJail.addClass('active');
+      else $payJail.removeClass('active');
       
       // Reflect new state
       lastState = state;
@@ -120,6 +133,26 @@
     if (lastState && !lastState.can_be_mortgaged) return;
     
     $.getJSON('/game/mortgage', function(data) {
+      console.log(data);
+    });
+  });
+
+  $card.click(function() {
+    if (lastState && !lastState.can_draw_card) return;
+
+    $.getJSON('/game/draw_card', function(data) {
+      console.log(data);
+
+      if (data.success === true) {
+        alert(data.name + ': ' + data.description);
+      }
+    });
+  });
+
+  $payJail.click(function() {
+    if (lastState && !lastState.can_pay_jail) return;
+
+    $.getJSON('/game/pay_bailout', function(data) {
       console.log(data);
     });
   });

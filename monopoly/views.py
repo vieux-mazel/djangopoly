@@ -12,7 +12,7 @@ import rules
 
 # Placeholder index page
 def index(request):
-    return HttpResponse('Hello')
+    return render(request, 'index.html')
 
 # Establishes a Session ID if one hasn't been established
 #
@@ -271,21 +271,8 @@ def game_state(request, id):
     except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
-    # Tell wheter it's your turn
-    is_your_turn = False
-    if not current_player.plays_in_turns:
-        is_your_turn = True
-
-    # Check whether current player can buy        
-    can_be_bought = False
-    if not current_player.plays_in_turns and rules.can_be_bought(current_player, current_player.square):
-        can_be_bought = True
-    
-    # Check wheter current player can mortgage
-    can_be_mortgaged = False
-    if not current_player.plays_in_turns and rules.can_be_mortgaged(current_player, current_player.square):
-        can_be_mortgaged = True
-
+    # Players list of Python dictionaries
+    # instead of a list of Django objects
     pp = []
     players = game.player_set.all()
     for player in players:
@@ -300,17 +287,19 @@ def game_state(request, id):
         pp.append(p)
     pp = sorted(pp, key=lambda p: p['joined']) 
 
+    # Squares list of Python dictionaries
+    # instead of a list with Django objects
     ss = []
     squares = game.square_set.all()
     for square in squares:
         s = {
             'position': square.position,
             'title': square.title,
+            'type': board.squares[square.position]['type'],
             'players': []
         }
 
-        square_type = rules.identify_square(square)
-
+        # Players who are currently on the square
         s_players = square.player_set.all()
         if len(s_players):
             for player in s_players:
@@ -320,28 +309,38 @@ def game_state(request, id):
                     'joined': player.joined
                 })
 
-        ss.append(s)
-        '''
+        # Reflect the square's type
         if s['type'] == 'property':
+            s['is_mortgaged'] = square.property.is_mortgaged
             if square.property.owned_by is not None:
-                s['owner'] = {
+                s['owned_by'] = {
                     'name': square.property.owned_by.name,
-                    'id': square.property.owned_by.session_id
+                    'joined': square.property.owned_by.joined
                 }
             else:
-                s['owner'] = None
+                s['owned_by'] = None
 
         elif s['type'] == 'utility':
-            s['owned_by'] = square.utility.owned_by
-        '''
+            s['is_mortgaged'] = square.utility.is_mortgaged
+            if square.utility.owned_by is not None:
+                s['owned_by'] = {
+                    'name': square.utility.owned_by.name,
+                    'joined': square.utility.owned_by.joined
+                }
+            else:
+                s['owned_by'] = None
+        
+        ss.append(s)
 
     state = {
         'players': pp,
         'squares': ss,
-        'is_your_turn': is_your_turn,
+        'is_your_turn': not current_player.plays_in_turns,
         'rolled_this_turn': current_player.rolled_this_turn,
-        'can_be_bought': can_be_bought,
-        'can_be_mortgaged': can_be_mortgaged
+        'can_be_bought': current_player.rolled_this_turn and rules.can_be_bought(current_player, current_player.square),
+        'can_be_mortgaged': rules.can_be_mortgaged(current_player, current_player.square),
+        'can_draw_card': rules.can_draw_card(player),
+        'can_pay_jail': current_player.is_in_jail()
     }
         
     state = json.dumps(state, indent=4, sort_keys=True)

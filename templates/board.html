@@ -6,10 +6,6 @@
 
 {% block body_block %}
 
-    <!--
-    <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
--->
-
 {% if massive_json %}
 <div id="board"><div class="content">
     {% for e in massive_json %}
@@ -21,16 +17,9 @@
 </div>
 {% endif %}
 
-
-
 {% endblock %}
 
-
 {% block side_block %}
-
-    <!--
-    <img id="board" src="{% static 'monopoly-board.jpg' %}" alt="My image"/>
--->
 
 <div id="playerList">
 
@@ -60,6 +49,12 @@
             </div>
             <div id="mortgage">
                 <span class="button-wrap"><a href="#" class="button button-pill">Mortgage</a></span>
+            </div>
+            <div id="pay-jail">
+                <span class="button-wrap"><a href="#" class="button button-pill">Pay jail fine</a></span>
+            </div>
+            <div id="card">
+                <span class="button-wrap"><a href="#" class="button button-pill">Draw card</a></span>
             </div>
             <div id="end-turn">
                 <span class="button-wrap"><a href="#" class="button button-pill">End turn</a></span>

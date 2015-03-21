@@ -96,21 +96,6 @@ html, body {
     
 }
 
-.person {
-	width: 40px;
-	height: 40px;
-	border: 5px solid #000;
-	background-color: #000;
-	border-radius: 50%;
-	background-size: contain;
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-}
-#player0 { background-image: url(img/player1.png) }
-#player1 { background-image: url(img/player2.png) }
-#player2 { background-image: url(img/player3.png) }
-#player3 { background-image: url(img/player4.png) }
-
 
 .die {
     display:inline-block;
@@ -134,14 +119,18 @@ html, body {
 #buy,
 #mortgage,
 #dice,
-#end-turn {
+#end-turn,
+#pay-jail,
+#card {
 	opacity: 0.3;
 }
 
 #buy.active,
 #mortgage.active,
 #dice.active,
-#end-turn.active {
+#end-turn.active,
+#pay-jail.active,
+#card.active {
 	opacity: 1;
 }
 
@@ -156,4 +145,46 @@ html, body {
 
 #button-controls span, #button-controls span a{
     
+}
+
+.profile-pic{
+    width: 60%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 20%;
+}
+
+.profile-name{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+
+}
+.owned0 { background: rgba(0, 173, 167, 0.7) }
+.owned1 { background: rgba(255, 235, 121, 0.7) }
+.owned2 { background: rgba(194, 71, 4, 0.7) }
+.owned3 { background: rgba(91, 224, 108, 0.7) }
+
+.owned0.mortgaged { background: rgba(0, 173, 167, 0.3) }
+.owned1.mortgaged { background: rgba(255, 235, 121, 0.3) }
+.owned2.mortgaged { background: rgba(194, 71, 4, 0.3) }
+.owned3.mortgaged { background: rgba(91, 224, 108, 0.3) }
+
+.person {
+	width: 40px;
+	height: 40px;
+	border: 1px solid #000;
+	background-color: #000;
+	border-radius: 50%;
+	background-size: 80%;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+}
+#player0 { background-image: url(img/player1.png); background-color: rgba(0, 173, 167, 0.7) }
+#player1 { background-image: url(img/player2.png); background-color: rgba(255, 235, 121, 0.7) }
+#player2 { background-image: url(img/player3.png); background-color: rgba(194, 71, 4, 0.7) }
+#player3 { background-image: url(img/player4.png); background-color: rgba(91, 224, 108, 0.7) }
+
+td.jailed {
+	background: rgba(0, 0, 0, 0.2); 
 }

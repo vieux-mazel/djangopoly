@@ -150,6 +150,9 @@ def can_be_mortgaged(player, square):
     if identity.owned_by != player:
         return False # The square is not owned by the player.
 
+    if identity.is_mortgaged:
+        return False
+        
     return True
 
 
@@ -348,6 +351,16 @@ def identify_square(square):
         identity: Property, Utility or Special
     """
     identity = None
+    
+    type = squares[square.position]['type']
+    if type == 'property':
+        identity = square.property
+    elif type == 'special':
+        identity = square.special
+    elif type == 'utility':
+        identity = square.utility
+
+    '''
     try:
         identity = square.special
     except ObjectDoesNotExist:
@@ -360,7 +373,6 @@ def identify_square(square):
         identity = square.utility
     except ObjectDoesNotExist:
         pass
+    '''
     assert identity is not None, "Couldn't determine square identity."
     return identity
-
-
