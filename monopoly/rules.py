@@ -152,6 +152,9 @@ def can_be_mortgaged(player, square):
 
     if identity.is_mortgaged:
         return False
+
+    if player.plays_in_turns != 0:
+        return False
         
     return True
 
