@@ -335,6 +335,9 @@ def can_draw_card(player):
     if identity.effect.type != "community_chest" and identity.effect.type != "chance":
         return False
 
+    if not player.rolled_this_turn:
+        return False
+
     if player.drew_card_this_turn:
         return False
 

@@ -42,7 +42,8 @@ class Player(models.Model):
             self.session_id, self.game.id, self.name, self.money, self.square.position, self.plays_in_turns)
 
 class Street(models.Model):
-    color = models.CharField(primary_key=True, max_length=16)
+    id = models.AutoField(primary_key=True)
+    color = models.CharField(max_length=16)
     game = models.ForeignKey(Game)
 
     def __str__(self):
