@@ -331,7 +331,7 @@ def game_state(request, id):
         'can_be_bought': current_player.rolled_this_turn and rules.can_be_bought(current_player, current_player.square),
         'can_be_mortgaged': rules.can_be_mortgaged(current_player, current_player.square),
         'can_draw_card': rules.can_draw_card(player),
-        'can_pay_jail': current_player.is_in_jail()
+        'can_pay_jail': current_player.is_in_jail() and current_player.plays_in_turns != 0
     }
         
     state = json.dumps(state, indent=4, sort_keys=True)
