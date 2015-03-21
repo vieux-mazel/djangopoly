@@ -93,7 +93,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Street',
             fields=[
-                ('color', models.CharField(max_length=16, serialize=False, primary_key=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('color', models.CharField(max_length=16)),
                 ('game', models.ForeignKey(to='monopoly.Game')),
             ],
             options={
