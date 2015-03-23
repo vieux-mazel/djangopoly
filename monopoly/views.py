@@ -38,6 +38,9 @@ def game(request, id):
     if session_id is None:
         return redirect('join_game', id)
     
+    if game.in_progress:
+        return redirect('index') # Disallow joining games in progress
+
     # Try to find the player with this Session ID
     # If there isn't one, create her.
     try:
@@ -108,11 +111,20 @@ def new_game(request, private):
 # Make someone join a random public game that's not started
 # This is called from the home page
 def join_random_game(request):
-    if Game.objects.all().count() == 0:
+    if Game.objects.filter(private=False, in_progress=False).count() == 0:
         return redirect(new_game, private="no") # Create a new public game if there are none
 
     random_game = random.choice(list(Game.objects.filter(private=False, in_progress=False)))
     return redirect(game, id=random_game.id)
+
+# Leave a game
+def leave(request):
+    try:
+        player = Player.objects.filter(session_id=request.session.session_key)
+        player.delete()
+    except:
+        pass
+    return redirect(index)
 
 ### API
 # All requests return an empty string upon failure.
@@ -157,6 +169,11 @@ def start_game(request, id):
 @player_can_play
 def roll_dice(request):
     player = Player.objects.get(session_id=request.session.session_key)
+
+    # Lock the game - shouldn't be like that
+    game = player.game
+    game.in_progress = True
+    game.save()
 
     # Roll two dice - will be random at some point
     (dice1, dice2) = rules.roll_dice();
