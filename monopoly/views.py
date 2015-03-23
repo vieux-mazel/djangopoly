@@ -99,7 +99,7 @@ def new_game(request, private):
 # Make someone join a random public game that's not started
 # This is called from the home page
 def join_random_game(request):
-    if Game.objects.all().count() == 0:
+    if Game.objects.filter(private=False, in_progress=False).count() == 0:
         return redirect(new_game, private="no") # Create a new public game if there are none
 
     random_game = random.choice(list(Game.objects.filter(private=False, in_progress=False)))
