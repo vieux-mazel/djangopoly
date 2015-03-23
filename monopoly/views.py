@@ -37,14 +37,14 @@ def game(request, id):
     if session_id is None:
         return redirect('join_game', id)
     
-    if game.in_progress:
-        return redirect('index') # Disallow joining games in progress
 
     # Try to find the player with this Session ID
     # If there isn't one, create her.
     try:
         player = Player.objects.get(session_id=session_id)
     except Player.DoesNotExist:
+        if game.in_progress:
+            return redirect('index') # Disallow joining games in progress
         player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0), name='Player ' + str(len(game.player_set.all()) + 1), joined=len(game.player_set.all()))
         # If there are other players that have already joined, adjust plays_in_turns
         if len(Player.objects.filter(game=game)) > 0:
