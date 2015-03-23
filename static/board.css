@@ -13,6 +13,15 @@ html, body {
     height: 100%;
 }
 
+.less {
+	margin-left: 5px;
+	color: red;
+}
+.more {
+	margin-left: 5px;
+	color: green;
+}
+
 #board {
     position: relative;
     height: 100%;

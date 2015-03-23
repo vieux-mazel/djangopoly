@@ -65,7 +65,15 @@
         player = state.players[i];
         playerStr = '<td';
         if (player.is_in_jail) playerStr += ' class="jailed"';
-        playerStr += '>' + player.name +'</td><td>' + player.money + '</td>';
+        playerStr += '>' + player.name +'</td><td>' + player.money;
+
+        if (lastState && (player.money > lastState.players[i].money)) {
+          playerStr += '<span class="more">+' + (player.money - lastState.players[i].money) + '</span>';
+        } else if (lastState && (player.money < lastState.players[i].money)) {
+          playerStr += '<span class="less">-' + (lastState.players[i].money - player.money) + '</span>';
+        }
+
+        playerStr = playerStr + '</td>';
 
         document.getElementById('playerItem' + i).innerHTML = playerStr;
       }
