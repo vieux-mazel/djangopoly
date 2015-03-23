@@ -99,13 +99,15 @@ html, body {
 
 .die {
     display:inline-block;
-    height:90px;
-    width:90px;
+    width: 47%;
+    height: 0;
+    padding-bottom: 47%;
     border: 1px solid black;
     border-radius: 30%;
-    margin:5px;
-    line-height: 90px;
-    font-size: 80px;
+    margin:5px 2px;
+    line-height: 70px;
+    font-size: 70px;
+    vertical-align: middle;
     text-align: center;
 }
 
@@ -134,19 +136,32 @@ html, body {
 	opacity: 1;
 }
 
+.panel-body{
+    padding:9px;
+}
+
 #button-controls{
-    
+    //width:100%;
 }
 
 #button-controls div{
     margin: 4px auto;
 }
 
-
-#button-controls span, #button-controls span a{
-    
+#button-controls span{
+    //display: block;
+    margin: 0 auto;
+    text-align: center;
 }
 
+#button-controls span a{
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+span.button-wrap{
+    padding: 6px;
+}
 .profile-pic{
     width: 60%;
     margin: 0 auto;
