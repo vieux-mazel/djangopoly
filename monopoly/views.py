@@ -105,6 +105,15 @@ def join_random_game(request):
     random_game = random.choice(list(Game.objects.filter(private=False, in_progress=False)))
     return redirect(game, id=random_game.id)
 
+# Leave a game
+def leave(request):
+    try:
+        player = Player.objects.filter(session_id=request.session.session_key)
+        player.delete()
+    except:
+        pass
+    return redirect(index)
+
 ### API
 # All requests return an empty string upon failure.
 # On success, they return "ok" for content-empty responses
