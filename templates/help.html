@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Board{% endblock %}
+
+{% block body_block %}
+
+    <div class=" hero-feature">
+                <div class="thumbnail">
+                    <a href="/"><img src="{% static 'img/logo.png' %}" alt=""></a>
+                    <div class="caption">
+                        <h1>Djangopoly Documentation</h1>
+
+<h2>What is Djangopoly</h2>
+<p>Djangopoly is a web-based implementation of the old time classic board game Monopoly.</p>
+
+<h2>Technologies used:</h2>
+<p><ul><li>HTML</li>
+<li>CSS</li>
+<li>JavaScript / jQuery / various external libraries</li>
+<li>Python / Django</li></ul></p>
+
+<h2>Who is this for:</h2>
+<p>People of ages between 18-99.</p>
+
+<h2>Types of games:</h2>
+<p><ul><li> Public - can be played with anyone worldwide with no limitations</li>
+<li> Private - only people with the link can join the game</li></ul></p>
+
+<h2>Gameplay:</h2>
+<h3>Beginning</h3>
+<p>As soon as a game is created by one of the players, other players can start joining in. When the first dice roll is made the game becomes locked and no new players can join.</p>
+<h3>Playing the game</h3></h3>
+<p>The order of the players is determined by their time of joining, i.e. the first player to join will be the first to roll the dice. Each player gets a piece on the board and that piece has a colour associated to it that can be seen around the piece. That same colour is then used as an overlay over each property that the player buys. The overlay becomes more transparent when a property is mortgaged. As the player moves around the board they can not only land on properties, but also other special types of squares. These are: utilities, free parking, go to jail, jail, go, chance, community chest. When the player lands on chance/community chest they have the option of drawing a card that would affect the player's progress in game, e.g. they will be advanced to GO, they will pay additional tax, etc.</p>
+<h3>Ending</h3>
+<p>The game ends for a player if they can no longer pay their debts, i.e. declare bancruptcy. They can also leave the game voluntarily at any point.</p>
+<h2>Djangopoly Official Rules</h2>
+<p>Djangopoly strictly follows all the official rules of the Monopoly which can be seen <a href="http://en.wikibooks.org/wiki/Monopoly/Official_Rules">here</a>.</p>
+<hr>
+                        <p>
+                        All material used falls within the Fair Use Copyright Act of 2014 (UK).
+                        </p>
+                        <p>
+                        2015 Web App Development / Team A1 - University of Glasgow - All rights reserved
+                        </p>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+
+{% block side_block %}
+<div id="playerList">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">Authors</div>
+        
+        <table class="table" id="players-table">
+            <tbody id="players-table-body">
+            <tr>
+                <td>
+                    <img class="profile-pic" src="{% static 'img/author1.jpg' %}" />
+                    <div class="profile-name">Christian Shtarkov</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img class="profile-pic" src="{% static 'img/author2.jpg' %}" />
+                    <div class="profile-name">Atanas Penchev</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img class="profile-pic" src="{% static 'img/author3.jpg' %}" />
+                    <div class="profile-name">Ian Denev</div>
+                </td>
+            </tr>
+            </tbody> 
+        </table>
+</div>
+</div>
+    
+{% endblock %}
