@@ -14,6 +14,9 @@ import rules
 def index(request):
     return render(request, 'index.html')
 
+def help(request):
+    return render(request, 'help.html')
+
 # Establishes a Session ID if one hasn't been established
 #
 # Because Django is magic, it doesn't create a session until AFTER
