@@ -43,6 +43,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'monopoly',
+
+    'django_extensions',
 )
 
 MIDDLEWARE_CLASSES = (
