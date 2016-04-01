@@ -19,6 +19,11 @@ TEMPLATE_DIRS = [
     TEMPLATE_PATH,
 ]
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    # Required by `allauth` template tags
+    'django.contrib.auth.context_processors.auth',
+)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -45,6 +50,10 @@ INSTALLED_APPS = (
     'monopoly',
 
     'django_extensions',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -95,3 +104,9 @@ STATICFILES_DIRS = (STATIC_PATH,)
 # Change default session behaviour
 SESSION_SAVE_EVERY_REQUEST = True
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
