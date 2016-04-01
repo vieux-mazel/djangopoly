@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from pprint import pprint
 import json
 
@@ -96,3 +97,8 @@ class Special(models.Model):
         return "Square: {0}\nEffect: {1}".format(
             self.square.position, (self.effect.type if self.effect is not None else "None"))
 
+class UserProfile(models.Model):
+    django_user = models.OneToOneField(settings.AUTH_USER_MODEL,
+        related_name='profile',
+        primary_key=True)
+    groupe = models.ForeignKey(Player)
