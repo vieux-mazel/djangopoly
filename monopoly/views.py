@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core import serializers
+from django.contrib.auth.decorators import login_required
+
+from .models import UserProfile
+
 import json
 import random
 
@@ -23,41 +27,26 @@ def help(request):
 # it will redirect to 'join_game'. 'join_game' should discover the session id
 # created by returning from 'game' and continue on rendering the game.
 # If it doesn't discover anything, then the browser doesn't support sessions.
+@login_required
 def join_game(request, id):
-    session_id = request.session.session_key
-
-    if session_id is None:
-        return redirect('index') # There's no session. Incognito mode?
-
     return redirect('game', id)
 
 # Displays the game
+@login_required
 def game(request, id):
     game = Game.objects.get(id=id)
-    
-    session_id = request.session.session_key
-
-    if session_id is None:
-        return redirect('join_game', id)
-    
 
     # Try to find the player with this Session ID
     # If there isn't one, create her.
     try:
-        player = Player.objects.get(session_id=session_id)
-    except Player.DoesNotExist:
-        if game.in_progress:
-            return redirect('index') # Disallow joining games in progress
-        player = Player(session_id=session_id, game=game, square=Square.objects.get(game=game, position=0), name='Player ' + str(len(game.player_set.all()) + 1), joined=len(game.player_set.all()))
-        # If there are other players that have already joined, adjust plays_in_turns
-        if len(Player.objects.filter(game=game)) > 0:
-            player.plays_in_turns = Player.objects.filter(game=game).order_by('-plays_in_turns')[0].plays_in_turns + 1
-        player.save()
+        player = request.user.profile.groupe
+    except UserProfile.DoesNotExist:
+        return redirect('index') # Disallow joining games in progress
 
     # This player exists, but she's playing another game.
     if player.game != game:
         return redirect('index')
-    
+
     return render(request, 'board.html')
 
 # Create a new game
@@ -133,7 +122,7 @@ def player_can_play(f):
     def wrap(request, *args, **kwargs):
         # Check that the player exists
         try:
-            player = Player.objects.get(session_id=request.session.session_key)
+            player = request.user.profile.groupe
         except Player.DoesNotExist:
             return HttpResponse(FAILURE)
         # Check that it is this player's turn
@@ -162,7 +151,7 @@ def start_game(request, id):
 
 @player_can_play
 def roll_dice(request):
-    player = Player.objects.get(session_id=request.session.session_key)
+    player = request.user.profile.groupe
 
     # Lock the game - shouldn't be like that
     game = player.game
@@ -196,7 +185,7 @@ def roll_dice(request):
 # End a turn, and adjust plays_in_turns for every player
 @player_can_play
 def end_turn(request):
-    player = Player.objects.get(session_id=request.session.session_key)
+    player = request.user.profile.groupe
 
     # Make sure the player can roll the next turn
     player.rolled_this_turn = False
@@ -218,7 +207,7 @@ def end_turn(request):
 # Buying a property or utility
 @player_can_play
 def buy(request):
-    player = Player.objects.get(session_id=request.session.session_key)
+    player = request.user.profile.groupe
     square = player.square
 
     # Check if the square can be bought
@@ -232,7 +221,7 @@ def buy(request):
 # in order to become free.
 @player_can_play
 def pay_bailout(request):
-    player = Player.objects.get(session_id=request.session.session_key)
+    player = request.user.profile.groupe
 
     try:
         rules.pay_bailout(player)
@@ -244,7 +233,7 @@ def pay_bailout(request):
 # Mortgage a property belonging to the player
 @player_can_play
 def mortgage(request):
-    player = Player.objects.get(session_id=request.session.session_key)
+    player = request.user.profile.groupe
     square = player.square
     
     if not rules.mortgage(player, square):
@@ -255,7 +244,7 @@ def mortgage(request):
 # Draw a card
 @player_can_play
 def draw_card(request):
-    player = Player.objects.get(session_id=request.session.session_key)
+    player = request.user.profile.groupe
 
     if not rules.can_draw_card(player):
         return HttpResponse(FAILURE)
@@ -273,9 +262,12 @@ def draw_card(request):
         }))
 
 # Return JSON containing all of the game's state
+@login_required
 def game_state(request, id):
-    # Find the game for which the state is requested
-    current_player = Player.objects.get(session_id=request.session.session_key)
+    try:
+        current_player = request.user.profile.groupe
+    except UserProfile.DoesNotExist:
+        return HttpResponse(FAILURE)
 
     try:
         game = Game.objects.get(id=id)
@@ -315,7 +307,7 @@ def game_state(request, id):
         if len(s_players):
             for player in s_players:
                 s['players'].append({
-                    'player_id': player.session_id,
+                    'player_id': player.pk,
                     'player_name': player.name,
                     'joined': player.joined
                 })

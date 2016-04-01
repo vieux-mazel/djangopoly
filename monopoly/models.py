@@ -23,7 +23,6 @@ class Square(models.Model):
                 self.game.id, self.position, self.title)
 
 class Player(models.Model):
-    session_id = models.CharField(primary_key=True, max_length=32)
     joined = models.IntegerField(default=0)
     game = models.ForeignKey(Game)
     name = models.CharField(default="Player", max_length=255)
@@ -39,8 +38,16 @@ class Player(models.Model):
         return self.in_jail_for > 0
 
     def __str__(self):
-        return "Session ID: {0}\nGame ID: {1}\nName: {2}\nMoney: {3}\nSquare: {4}\nPlays in turns: {5}".format(
-            self.session_id, self.game.id, self.name, self.money, self.square.position, self.plays_in_turns)
+        return "Game ID: {game}\nName: {name}\nMoney: {money}\nSquare: {square}\nPlays in turns: {plays}".format(
+            game=self.game.id,
+            name=self.name,
+            money=self.money,
+            square=self.square.position,
+            plays=self.plays_in_turns)
+
+    class Meta:
+        verbose_name = 'Group'
+        verbose_name_plural = 'Groups'
 
 class Street(models.Model):
     id = models.AutoField(primary_key=True)
@@ -102,3 +109,8 @@ class UserProfile(models.Model):
         related_name='profile',
         primary_key=True)
     groupe = models.ForeignKey(Player)
+
+    def __str__(self):
+        return "Groupe {groupe} : {user}".format(
+            groupe=self.groupe.name,
+            user=self.django_user)
