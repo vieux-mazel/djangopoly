@@ -1,0 +1,61 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Didier Raboud <oriole@vieux-mazel.ch>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-01 17:09+0000\n"
+"PO-Revision-Date: 2016-04-01 19:12+0100\n"
+"Last-Translator: Didier Raboud <oriole@vieux-mazel.ch>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/board.html:6
+msgid "Board"
+msgstr "Plateau"
+
+#: templates/board.html:29
+msgid "Djangopoly"
+msgstr "VM'opoly"
+
+#: templates/board.html:35
+msgid "Player"
+msgstr "Groupe"
+
+#: templates/board.html:36
+msgid "Cash"
+msgstr "Portemonnaie"
+
+#: templates/board.html:46
+msgid "Roll the dice!"
+msgstr "Lancer les dés !"
+
+#: templates/board.html:49
+msgid "Buy property"
+msgstr "Acheter la propriété"
+
+#: templates/board.html:52
+msgid "Mortgage"
+msgstr "Hypothéquer"
+
+#: templates/board.html:55
+msgid "Pay jail fine"
+msgstr "Payer la caution"
+
+#: templates/board.html:58
+msgid "Draw card"
+msgstr "Tirer une carte"
+
+#: templates/board.html:61
+msgid "End turn"
+msgstr "Fin du tour"
+
+#: templates/board.html:64
+msgid "Leave game"
+msgstr "Quitter le jeu"
+

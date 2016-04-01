@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
 {% load staticfiles %}
+{% load i18n %}
 
-{% block title %}Board{% endblock %}
+{% block title %}{% trans "Board" %}{% endblock %}
 
 {% block body_block %}
 
@@ -25,42 +26,42 @@
 
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">Djangopoly</div>
-        
+        <div class="panel-heading">{% trans "Djangopoly" %}</div>
+
         <!-- Table -->
         <table class="table" id="players-table">
             <thead>
                 <tr>
-                    <th>Player</th>
-                    <th>Cash</th>
+                    <th>{% trans "Player" %}</th>
+                    <th>{% trans "Cash" %}</th>
                 </tr>
             </thead>
             <tbody id="players-table-body">
-            </tbody> 
+            </tbody>
         </table>
         <div id="dice-vis"></div>
         <div class="panel-body">
             <div id="button-controls">
                 <div id="dice">
-                 <span class="button-wrap"><a href="#" class="button button-pill button-primary">Roll the dice!</a></span>
+                 <span class="button-wrap"><a href="#" class="button button-pill button-primary">{% trans "Roll the dice!" %}</a></span>
                 </div>
              <div id="buy">
-                <span class="button-wrap"><a href="#" class="button button-pill">Buy property</a></span>
+                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Buy property" %}</a></span>
             </div>
             <div id="mortgage">
-                <span class="button-wrap"><a href="#" class="button button-pill">Mortgage</a></span>
+                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Mortgage" %}</a></span>
             </div>
             <div id="pay-jail">
-                <span class="button-wrap"><a href="#" class="button button-pill">Pay jail fine</a></span>
+                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Pay jail fine" %}</a></span>
             </div>
             <div id="card">
-                <span class="button-wrap"><a href="#" class="button button-pill">Draw card</a></span>
+                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Draw card" %}</a></span>
             </div>
             <div id="end-turn">
-                <span class="button-wrap"><a href="#" class="button button-pill">End turn</a></span>
+                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "End turn" %}</a></span>
             </div>
             <div id="">
-                <span class="button-wrap"><a href="/leave" class="button button-pill">Leave game</a></span>
+                <span class="button-wrap"><a href="/leave" class="button button-pill">{% trans "Leave game" %}</a></span>
             </div>
         </div>
     </div>
