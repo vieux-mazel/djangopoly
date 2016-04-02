@@ -7,4 +7,5 @@ urlpatterns = patterns('',
     url(r'^vmadmin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^', include('monopoly.urls')),
+    url(r'^chat/', include('jchat.urls')),
 )
