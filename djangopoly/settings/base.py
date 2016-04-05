@@ -41,8 +41,7 @@ DEBUG = get_env_variable('DEBUG', False)
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = tuple(get_env_variable('ALLOWED_HOSTS', '').splitlines())
 
 # Application definition
 
