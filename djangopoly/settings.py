@@ -53,7 +53,6 @@ INSTALLED_APPS = (
     'monopoly',
     'jchat',
 
-    'django_extensions',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
