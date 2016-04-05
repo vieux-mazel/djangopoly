@@ -3,12 +3,13 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import datetime
+import jchat.models
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('monopoly', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('contenttypes', '0001_initial'),
     ]
@@ -32,9 +33,21 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('object_id', models.PositiveIntegerField()),
-                ('created', models.DateTimeField(default=datetime.datetime(2016, 4, 2, 9, 54, 12, 821032))),
                 ('comment', models.TextField(null=True, blank=True)),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Spy_code',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('spy_hash', models.CharField(default=jchat.models.my_random_key, unique=True, max_length=10)),
+                ('first_used', models.DateTimeField(null=True, blank=True)),
+                ('linked_room', models.ForeignKey(blank=True, to='jchat.Room', null=True)),
+                ('used_by', models.ForeignKey(blank=True, to='monopoly.Player', null=True)),
             ],
             options={
             },
