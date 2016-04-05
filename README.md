@@ -10,6 +10,8 @@ You'll need Django 1.7 and Python 2.7+ installed.
 
     $ git clone https://github.com/cshtarkov/djangopoly.git
     $ cd djangopoly
+    $ mkvirtualenv -a . -r requirements/dev.txt djangopoly
+
     $ python manage.py migrate
     $ python manage.py runserver
 
