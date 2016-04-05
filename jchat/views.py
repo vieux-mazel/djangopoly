@@ -18,31 +18,34 @@ from .forms import SpyForm, SpyTeamSelector
 @login_required
 def spy(request):
     if request.method == 'POST':
-            p = request.POST
-            form = SpyForm(p)
-            hash = p['spycode']
-            print hash
+        p = request.POST
+        form = SpyForm(p)
+        hash = p['spycode']
+        print hash
+        try:
+            spy = Spy_code.objects.get(spy_hash = hash)
+        except Spy_code.DoesNotExist:
+            message = 'ce code n\'est pas valide - En cas de besoin n\'hésite pas à contacter cg@vieux-mazel.ch'
+            return render(request, 'spy.html' , {'message': message, 'form':form})
+        if (spy.is_active()):
             try:
-                spy = Spy_code.objects.get(spy_hash = hash)
-            except Spy_code.DoesNotExist:
-                message = 'ce code n\'est pas valide - En cas de besoin n\'hésite pas à contacter cg@vieux-mazel.ch'
+                if(p['spyteam']):
+                    spy.linked_room = Room.objects.get(id=p['spyteam'])
+                    spy.save()
+            except:
+                pass
+            print spy.is_allowed(request.user.profile.groupe)
+            if (not spy.is_allowed(request.user.profile.groupe)):
+                message = 'ce code est déjà utilisé par une autre équipe ! Soit tu essaies de tricher... c\'est bien essayé mais triche mieux la prochaine fois ;-) soit tu t\'es fait piqué ton code d\'accès SHAME ON YOU :-)'
                 return render(request, 'spy.html' , {'message': message, 'form':form})
-            if (spy.is_active()):
-                try:
-                    if(p['spyteam']):
-                        spy.linked_room = Room.objects.get(id=p['spyteam'])
-                        spy.save()
-                except:
-                    pass
-                print spy.is_allowed(request.user.profile.groupe)
-                if (not spy.is_allowed(request.user.profile.groupe)):
-                    message = 'ce code est déjà utilisé par une autre équipe ! Soit tu essaies de tricher... c\'est bien essayé mais triche mieux la prochaine fois ;-) soit tu t\'es fait piqué ton code d\'accès SHAME ON YOU :-)'
-                    return render(request, 'spy.html' , {'message': message, 'form':form})
-                if (spy.is_set()):
-                    return render(request, 'spy.html', {'hash': hash})
-                else:
-                    form_team = SpyTeamSelector()
-                    return render(request, 'spy.html', {'hash':hash, 'form': form, 'form_teamselector':form_team})
+            if (spy.is_set()):
+                return render(request, 'spy.html', {'hash': hash})
+            else:
+                form_team = SpyTeamSelector()
+                return render(request, 'spy.html', {'hash':hash, 'form': form, 'form_teamselector':form_team})
+        else:
+            message = 'ce code a expiré, il n\'est plus valable. Pour rappel les codes d\'espionnage ne sont utilisables que 12h.'
+            return render(request, 'spy.html' , {'message': message, 'form':form})
     else:
         form = SpyForm()
         return render(request, 'spy.html',{'form': form})
