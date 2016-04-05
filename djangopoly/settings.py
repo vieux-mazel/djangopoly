@@ -7,6 +7,8 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
+import dj_database_url
+from . import get_env_variable
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -80,10 +82,7 @@ WSGI_APPLICATION = 'djangopoly.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.parse(get_env_variable('DATABASE_URL', 'sqlite:///db.sqlite3')),
 }
 
 # Internationalization
