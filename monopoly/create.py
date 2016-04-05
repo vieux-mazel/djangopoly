@@ -1,6 +1,5 @@
 import board
-from .models import Game, Street, Property, Utility, Special, Square, Effect
-
+from .models import Game, Street, Property, Utility, Special, Square, Effect, Player
 
 @classmethod
 def create(cls):
@@ -36,7 +35,15 @@ def create(cls):
         square.save()
         identity.square = square
         identity.save()
+    group_names = ['Rouge', 'Vert', 'Jaune', 'Bleu']
+    for i in range(4):
+        player = Player(game=newGame,
+                         square=Square.objects.get(game=newGame, position=0),
+                         name='Groupe %s' % group_names[i],
+                         joined=len(newGame.player_set.all()),
+                         dice_left = 2,
+                         )
+        player.save()
     return newGame
-
 
 Game.add_to_class("create",create)

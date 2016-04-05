@@ -5,23 +5,37 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import UserProfile
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django.db.models import Count
 import json
-import random
+import random, string
 
-from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect
+
+from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect, UserProfile
 
 import board
 import rules
 
+def my_random_key():
+    return ''.join(random.choice(string.digits) for _ in range(4))
+
 # Placeholder index page
 @login_required
 def index(request):
-    try:
-        game = Game.objects.first()
-    except Game.DoesNotExist:
+    game = Game.objects.first()
+    if (game is None):
         game = Game.create()
         game.save()
+    try:
+        user = request.user.profile.groupe
+    except UserProfile.DoesNotExist:
+        g = Player.objects.annotate(num_players=Count('userprofile')).order_by('num_players') # get the smalest group (monopoly player)
+        u = request.user # get django user
+        profil = UserProfile()
+        profil.django_user = u
+        profil.groupe = g[0] # assign new user to the smallest team
+        profil.save()
+        u.username = '%s_%s' % (g[0].name[6:], my_random_key())
+        u.save()
     return render(request, 'index.html', {'game_id':game.pk})
 
 def help(request):
