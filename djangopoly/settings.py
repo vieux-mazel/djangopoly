@@ -34,10 +34,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'vfl$8gcvl#&ijcvopcydrqjzl5q_m5&sougra(%v%u@gq+6xwf'
+SECRET_KEY = get_env_variable('SECRET_KEY', 'UNSET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = get_env_variable('DEBUG', False)
 
 TEMPLATE_DEBUG = True
 
