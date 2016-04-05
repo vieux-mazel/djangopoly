@@ -17,10 +17,8 @@
                         Après une épique Bataille navale, nous revenons à la charge avec un Monopoly unique et entièrement automatisé ! Plus besoin d'attendre que l'on valide vos tirs, codes secrets et autres... A vous de jouer !
                     </p>
                     <h4> Sur cette page ... </h4>
-                    
-                    <p>
-                        <a href="/join_random" class="btn btn-primary">Join Random game</a> <a href="/new_game/public" class="btn btn-default">Create Public game</a><a href="/new_game/private" class="btn btn-default">Create Private game</a>
-                    </p><hr>
+                    <a href="{% url 'game' game_id %}"><button class="btn btn-default orange-circle-button">Voir le <br> plateau<br /><span class="orange-circle-greater-than"></span></button>
+                    </a>
                     <h3><a href="/help">Help File / Documentation</a></h3>
                     <hr><p>
                     All material used falls within the Fair Use Copyright Act of 2014 (UK).

@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_exempt
 from .models import UserProfile
+from django.contrib.admin.views.decorators import staff_member_required
 
 import json
 import random
@@ -14,8 +15,14 @@ import board
 import rules
 
 # Placeholder index page
+@login_required
 def index(request):
-    return render(request, 'index.html')
+    try:
+        game = Game.objects.first()
+    except Game.DoesNotExist:
+        game = Game.create()
+        game.save()
+    return render(request, 'index.html', {'game_id':game.pk})
 
 def help(request):
     return render(request, 'help.html')
@@ -47,52 +54,19 @@ def game(request, id):
     if player.game != game:
         return redirect('index')
 
-    return render(request, 'board.html')
+    return render(request, 'board.html',{'groupe':player,'player':request.user})
 
 # Create a new game
 # Can be private or public, depends on URL invocation
+@staff_member_required
 def new_game(request, private):
-    newGame = Game()
-    newGame.private = True if private == "private" else False
+    newGame = Game.create()
     newGame.save()
-
-    # Create game board
-
-    # Streets
-    for x in board.streets:
-        street = Street(color=x['color'], game=newGame)
-        street.save()
-
-    # 40 squares that are either properties, utilities, or "specials"
-    for x in sorted(board.squares, key=lambda k: k['position']):
-        square = Square(position=x['position'], game=newGame)
-
-        # Create square identity
-        identity = None # Identity of the square (property/utility/special)
-        if x['type'] == 'property':
-            identity = Property()
-            identity.street = Street.objects.get(color=x['street'], game=newGame) 
-            identity.tax_site = x['tax_site']
-            identity.price = x['price']
-        elif x['type'] == 'utility':
-            identity = Utility()
-            identity.price = x['price']
-            identity.tax_site = x['tax_site']
-        elif x['type'] == 'special':
-            identity = Special()
-            identity.effect, created = Effect.objects.get_or_create(type=x['effect']['type'], param=x['effect']['param'])
-        assert identity is not None, "A square MUST have an identity that is Property, Utility or Special."
-
-        square.title = x['title']
-        square.save()
-        identity.square = square
-        identity.save()
-
-    # After creating the game, redirect to game view
     return redirect(game, id=newGame.id)
 
 # Make someone join a random public game that's not started
 # This is called from the home page
+@staff_member_required
 def join_random_game(request):
     if Game.objects.filter(private=False, in_progress=False).count() == 0:
         return redirect(new_game, private="no") # Create a new public game if there are none
@@ -101,6 +75,7 @@ def join_random_game(request):
     return redirect(game, id=random_game.id)
 
 # Leave a game
+@staff_member_required
 def leave(request):
     try:
         player = Player.objects.filter(session_id=request.session.session_key)
@@ -361,3 +336,29 @@ def game_state(request, id):
     # Echo the JSON as the response's body
     return HttpResponse(state)
 
+
+#### Property views
+@login_required
+@csrf_exempt
+def property_check(request):
+    post = request.POST
+    try:
+        player = request.user.profile.groupe
+    except UserProfile.DoesNotExist:
+        return redirect('index') # Disallow joining games in progress
+    player = request.user.profile.groupe
+    game = Game.objects.get(id=1)
+    square = Square.objects.filter(game=game).get(position=post['property_id'])
+    game_property = False
+
+    try:
+        game_property = Property.objects.get(square=square)
+    except:
+        try:
+            game_property = Utility.objects.get(square=square)
+        except:
+            return JsonResponse({'owned' : False})
+    if (game_property.owned_by == player):
+        return JsonResponse({'owned' : True})
+    else:
+        return JsonResponse({'owned' : False})

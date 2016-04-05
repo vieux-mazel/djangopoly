@@ -121,6 +121,8 @@ class Spy_code(models.Model):
             return True
         else:
             return False
+    def __unicode__(self):
+        return "ID : {pk} -- Hash : {hash}".format(pk=self.pk, hash=self.spy_hash)
 
 class Message(models.Model):
     '''A message that belongs to a chat room'''

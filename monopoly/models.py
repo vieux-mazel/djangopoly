@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from pprint import pprint
 import json
+import board
 
 class Game(models.Model):
     id = models.AutoField(primary_key=True)
