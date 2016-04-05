@@ -42,7 +42,7 @@ class Room(models.Model):
     content_type = models.ForeignKey(ContentType) # to what kind of object is this related
     object_id = models.PositiveIntegerField() # to which instace of the aforementioned object is this related
     content_object = generic.GenericForeignKey('content_type','object_id') # use both up, USE THIS WHEN INSTANCING THE MODEL
-    created = models.DateTimeField(default=datetime.datetime.now())
+    #created = models.DateTimeField(default=datetime.datetime.now())
     comment = models.TextField(blank=True, null=True)
     objects = RoomManager() # custom manager
 

@@ -32,7 +32,7 @@ class Player(models.Model):
     in_jail_for = models.IntegerField(default=0)
     rolled_this_turn = models.BooleanField(default=False)
     drew_card_this_turn = models.BooleanField(default=False)
-
+    dice_left = models.IntegerField(default=1)
     def is_in_jail(self):
         assert self.in_jail_for >=0 and self.in_jail_for <= 3, "Unexpected number of jail turns: {0}.".format(self.in_jail_for)
         return self.in_jail_for > 0
@@ -76,7 +76,7 @@ class Property(models.Model):
 
     def __str__(self):
         return "Square: {0}\nOwned by: {1}\nStreet: {2}\nIs mortgaged: {3}".format(
-            self.square.position, (self.owned_by.session_id if self.owned_by is not None else "Nobody"), self.street.color, self.is_mortgaged)
+            self.square.position, (self.owned_by.game.id if self.owned_by is not None else "Nobody"), self.street.color, self.is_mortgaged)
 
 class Utility(models.Model):
     square = models.OneToOneField(Square)

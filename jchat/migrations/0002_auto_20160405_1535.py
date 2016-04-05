@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import datetime
 import jchat.models
 
 
@@ -27,10 +26,8 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
             model_name='room',
             name='created',
-            field=models.DateTimeField(default=datetime.datetime(2016, 4, 5, 15, 9, 14, 955637)),
-            preserve_default=True,
         ),
     ]
