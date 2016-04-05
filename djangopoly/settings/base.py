@@ -122,5 +122,6 @@ LOGIN_REDIRECT_URL = '/'  # No profile
 
 SITE_ID = 1
 
+DEFAULT_FROM_EMAIL = 'it+vmpoly2016@vieux-mazel.ch'
 
 GROUP_NAMES = ['Rouge', 'Vert', 'Jaune', 'Bleu']
