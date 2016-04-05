@@ -5,23 +5,21 @@ import json
 import board
 
 class Game(models.Model):
-    id = models.AutoField(primary_key=True)
     private = models.BooleanField(default=False)
     in_progress = models.BooleanField(default=False)
 
     def __str__(self):
         return "ID: {0}\nPrivate: {1}\nIn progress: {2}".format(
-                self.id, self.private, self.in_progress)
+                self.pk, self.private, self.in_progress)
 
 class Square(models.Model):
-    id = models.AutoField(primary_key=True)
     position = models.IntegerField(default=0)
     game = models.ForeignKey(Game)
     title = models.CharField(default="Square", max_length=255)
 
     def __str__(self):
         return "Game ID: {0}\nPosition: {1}\nTitle: {2}".format(
-                self.game.id, self.position, self.title)
+                self.game.pk, self.position, self.title)
 
 class Player(models.Model):
     joined = models.IntegerField(default=0)
@@ -40,7 +38,7 @@ class Player(models.Model):
 
     def __str__(self):
         return "Game ID: {game}\nName: {name}\nMoney: {money}\nSquare: {square}\nPlays in turns: {plays}".format(
-            game=self.game.id,
+            game=self.game.pk,
             name=self.name,
             money=self.money,
             square=self.square.position,
@@ -53,13 +51,12 @@ class Player(models.Model):
         verbose_name_plural = 'Groups'
 
 class Street(models.Model):
-    id = models.AutoField(primary_key=True)
     color = models.CharField(max_length=16)
     game = models.ForeignKey(Game)
 
     def __str__(self):
         return "Game ID: {0}\nColor: {1}".format(
-            self.game.id, self.color)
+            self.game.pk, self.color)
 
 class Property(models.Model):
     square = models.OneToOneField(Square)
@@ -77,7 +74,7 @@ class Property(models.Model):
 
     def __str__(self):
         return "Square: {0}\nOwned by: {1}\nStreet: {2}\nIs mortgaged: {3}".format(
-            self.square.position, (self.owned_by.game.id if self.owned_by is not None else "Nobody"), self.street.color, self.is_mortgaged)
+            self.square.position, (self.owned_by.game.pk if self.owned_by is not None else "Nobody"), self.street.color, self.is_mortgaged)
 
 class Utility(models.Model):
     square = models.OneToOneField(Square)
