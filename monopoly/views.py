@@ -115,10 +115,13 @@ def player_can_play(f):
         except Player.DoesNotExist:
             return HttpResponse(FAILURE)
         # Check that it is this player's turn
-        if player.plays_in_turns != 0:
+        #
+        #if player.plays_in_turns != 0:
+            #return HttpResponse(FAILURE)
+        #return f(request, *args, **kwargs)
+        if player.dice_left == 0:
             return HttpResponse(FAILURE)
         return f(request, *args, **kwargs)
-
     # Black magic
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
@@ -141,6 +144,9 @@ def start_game(request, id):
 @player_can_play
 def roll_dice(request):
     player = request.user.profile.groupe
+    player.rolled_this_turn = False
+    player.drew_card_this_turn = False
+    player.save()
 
     # Lock the game - shouldn't be like that
     game = player.game
@@ -161,7 +167,7 @@ def roll_dice(request):
 
     # Handle player movement
     rules.move_player(player, (dice1, dice2))
-
+    player.dice_left -= 1
     player.save()
     return HttpResponse(json.dumps(
         {
@@ -259,7 +265,7 @@ def game_state(request, id):
         return HttpResponse(FAILURE)
 
     try:
-        game = Game.objects.get(id=id)
+        game = current_player.game
     except Game.DoesNotExist:
         return HttpResponse(FAILURE)
 
@@ -361,7 +367,7 @@ def property_check(request):
     except UserProfile.DoesNotExist:
         return redirect('index') # Disallow joining games in progress
     player = request.user.profile.groupe
-    game = Game.objects.get(id=1)
+    game = player.game
     square = Square.objects.filter(game=game).get(position=post['property_id'])
     game_property = False
 

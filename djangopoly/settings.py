@@ -122,3 +122,6 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 LOGIN_REDIRECT_URL = '/'  # No profile
 
 SITE_ID = 1
+
+
+GROUP_NAMES = ['Rouge', 'Vert', 'Jaune', 'Bleu']

@@ -1,5 +1,6 @@
 import board
 from .models import Game, Street, Property, Utility, Special, Square, Effect, Player
+from django.conf import settings
 
 @classmethod
 def create(cls):
@@ -35,11 +36,11 @@ def create(cls):
         square.save()
         identity.square = square
         identity.save()
-    group_names = ['Rouge', 'Vert', 'Jaune', 'Bleu']
-    for i in range(4):
+
+    for i in settings.GROUP_NAMES:
         player = Player(game=newGame,
                          square=Square.objects.get(game=newGame, position=0),
-                         name='Groupe %s' % group_names[i],
+                         name='Groupe %s' % i,
                          joined=len(newGame.player_set.all()),
                          dice_left = 2,
                          )
