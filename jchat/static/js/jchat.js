@@ -1,6 +1,7 @@
 var chat_room_id = undefined;
 var last_received = 0;
 var initial_scroll = false;
+var spy_code = undefined;
 /**
  * Initialize chat:
  * - Set the room id
@@ -10,11 +11,17 @@ var initial_scroll = false;
  * @param html_el_id the id of the html element where the chat html should be placed
  * @return
  */
-function init_chat(chat_id, html_el_id) {
+function init_chat(chat_id, html_el_id, spy_hash) {
 	chat_room_id = chat_id;
+
+	spy_code = spy_hash;
 	layout_and_bind(html_el_id);
-	sync_messages();
-	get_messages();
+	if (typeof spy_code === 'undefined') {
+		sync_messages();
+		get_messages();
+	} else{
+		get_spy_messages();
+	}
 }
 
 var img_dir = "/static/img/";
@@ -48,34 +55,38 @@ function layout_and_bind(html_el_id) {
 		var html = '<div id="chat-messages-container">'+
 		'<div id="chat-messages"> </div>'+
 		'<div id="chat-last"> </div>'+
-		'</div>'+
-		'<form id="chat-form">'+
-		'<input name="message" type="text" class="message" />'+
-		'<input type="submit" value="Say!!!"/>'+
-		'</form>';
+		'</div>' ;
+		if (typeof spy_code === 'undefined') {
+			html = html + '<form id="chat-form">'+
+			'<input name="message" type="text" class="message" />'+
+			'<input type="submit" value="Say!!!"/>'+
+			'</form>';
+		}
 
 		$("#"+html_el_id).append(html);
 
 		// event stuff
-    	$("#chat-form").submit( function () {
-            var $inputs = $(this).children('input');
-            var values = {};
+		if (typeof spy_code === 'undefined') {
+	    	$("#chat-form").submit( function () {
+	            var $inputs = $(this).children('input');
+	            var values = {};
 
-            $inputs.each(function(i,el) {
-            	values[el.name] = $(el).val();
-            });
-			values['chat_room_id'] = window.chat_room_id;
+	            $inputs.each(function(i,el) {
+	            	values[el.name] = $(el).val();
+	            });
+				values['chat_room_id'] = window.chat_room_id;
 
-        	$.ajax({
-                data: values,
-                dataType: 'json',
-                type: 'post',
-                url: '/chat/send/'
-            });
-            $('#chat-form .message').val('');
-			get_messages()
-            return false;
-	});
+	        	$.ajax({
+	                data: values,
+	                dataType: 'json',
+	                type: 'post',
+	                url: '/chat/send/'
+	            });
+	            $('#chat-form .message').val('');
+				get_messages()
+	            return false;
+			});
+		}
 };
 
 /**
@@ -132,6 +143,61 @@ function get_messages() {
 }
 
 /**
+ * Gets the list of messages from the server and appends the messages to the chatbox
+ */
+function get_spy_messages() {
+    $.ajax({
+        type: 'POST',
+        data: {spycode:window.spy_code, offset: window.last_received},
+        url:'/chat/receive_spy/',
+		dataType: 'json',
+		success: function (json) {
+
+			// first check if we are at the bottom of the div, if we are, we shall scroll once the content is added
+			var $containter = $("#chat-messages-container");
+			if ($containter.scrollTop() == $containter.attr("scrollHeight") - $containter.height())
+				scroll = true;
+
+			// add messages
+			if (json == "error"){
+				$('#chat-messages').append('<div class="system"> Le code d\'espionnage est incorrecte ! N\'essaie pas de tricher ! </div>');
+			}
+			$.each(json, function(i,m){
+				var timestamp = "<i>" + m.timestamp + "</i> "
+				if(m.id != last_received){
+					if (m.type == 's')
+						$('#chat-messages').append('<div class="system">' + timestamp + replace_emoticons(m.message) + '</div>');
+					else if (m.type == 'm')
+						$('#chat-messages').append('<div class="message"><div class="author">' + timestamp +m.author+'</div>'+replace_emoticons(m.message) + '</div>');
+					else if (m.type == 'j')
+						$('#chat-messages').append('<div class="join">' + timestamp +m.author+' has joined</div>');
+					else if (m.type == 'l')
+						$('#chat-messages').append('<div class="leave">' + timestamp +m.author+' has left</div>');
+					last_received = m.id;
+					if (initial_scroll){
+						var height = 0;
+						$('#chat-messages-container div').each(function(i, value){ height += parseInt($(this).height());});
+						height += '';
+						$('#chat-messages-container').animate({scrollTop: height});
+					}
+				}
+			})
+			// scroll to bottom
+			if (initial_scroll == false){
+				var height = 0;
+				$('#chat-messages-container div').each(function(i, value){ height += parseInt($(this).height());});
+				height += '';
+				$('#chat-messages-container').animate({scrollTop: height});
+				initial_scroll = true;
+			}
+		}
+
+    });
+    // wait for next
+    setTimeout("get_spy_messages()", 2000);
+}
+
+/**
  * Tells the chat app that we are joining
  */
 function chat_join() {
@@ -156,9 +222,10 @@ function chat_leave() {
 }
 
 // attach join and leave events
-$(window).ready(function(){chat_join()});
-$(window).unload(function(){chat_leave()});
-
+if (typeof spy_code === 'undefined') {
+	$(window).ready(function(){chat_join()});
+	$(window).unload(function(){chat_leave()});
+}
 // emoticons
 var emoticons = {
 	'>:D' : 'emoticon_evilgrin.png',

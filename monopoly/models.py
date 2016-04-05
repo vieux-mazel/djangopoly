@@ -44,7 +44,9 @@ class Player(models.Model):
             money=self.money,
             square=self.square.position,
             plays=self.plays_in_turns)
-
+    def __unicode__(self):
+        return self.name
+        
     class Meta:
         verbose_name = 'Group'
         verbose_name_plural = 'Groups'

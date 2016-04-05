@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+{% block extra_body_class %} login_body {% endblock %}
+{% block content %}
+<div class="row vertical-offset-100">
+	<div class="col-md-6 col-md-offset-3">
+		<div class="panel panel-default">
+		  	<div class="panel-heading">
+		    	<h3 class="panel-title">{% block head_title %}{% trans "Sign In" %}{% endblock %}</h3>
+		 	</div>
+		  	<div class="panel-body">
+                {% get_providers as socialaccount_providers %}
+                {% if socialaccount_providers %}
+                <p>{% blocktrans with site.name as site_name %}Please sign in with one
+                of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+                for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+                <div class="socialaccount_ballot">
+                  <ul class="socialaccount_providers">
+                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                  </ul>
+                  <div class="login-or">{% trans 'or' %}</div>
+                </div>
+                {% include "socialaccount/snippets/login_extra.html" %}
+                {% else %}
+                <p>{% blocktrans %}If you have not created an account yet, then please
+                <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+                {% endif %}
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  {% if redirect_field_value %}
+                      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                  {% endif %}
+                  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+                </form>
+		    </div>
+		</div>
+	</div>
+</div>
+<script src="http://mymaplist.com/js/vendor/TweenLite.min.js"></script>
+<script>
+$(document).ready(function(){
+  $(document).mousemove(function(e){
+     TweenLite.to($('body'),
+        .5,
+        { css:
+            {
+                backgroundPosition: ""+ parseInt(event.pageX/8) + "px "+parseInt(event.pageY/'12')+"px, "+parseInt(event.pageX/'15')+"px "+parseInt(event.pageY/'15')+"px, "+parseInt(event.pageX/'30')+"px "+parseInt(event.pageY/'30')+"px"
+            }
+        });
+  });
+});
+</script>
+{% endblock %}

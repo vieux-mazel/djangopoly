@@ -2,7 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType, ContentTypeManager
 from django.contrib.contenttypes import generic
-from datetime import datetime
+from django.utils import timezone
+from django.utils.timezone import make_aware
+import datetime
+import random, string
+
+from monopoly.models import Player
+
+def my_random_key():
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 
 class RoomManager(models.Manager):
     '''Custom model manager for rooms, this is used for "table-level" operations.
@@ -34,7 +42,7 @@ class Room(models.Model):
     content_type = models.ForeignKey(ContentType) # to what kind of object is this related
     object_id = models.PositiveIntegerField() # to which instace of the aforementioned object is this related
     content_object = generic.GenericForeignKey('content_type','object_id') # use both up, USE THIS WHEN INSTANCING THE MODEL
-    created = models.DateTimeField(default=datetime.now())
+    created = models.DateTimeField(default=datetime.datetime.now())
     comment = models.TextField(blank=True, null=True)
     objects = RoomManager() # custom manager
 
@@ -83,6 +91,36 @@ MESSAGE_TYPE_CHOICES = (
     ('l','leave'),
     ('n','notification')
 )
+class Spy_code(models.Model):
+    spy_hash = models.CharField(max_length=10, default=my_random_key, unique=True)
+    linked_room = models.ForeignKey(Room, null=True, blank=True)
+    first_used = models.DateTimeField(null=True, blank=True)
+    used_by = models.ForeignKey(Player, null=True, blank=True)
+    def is_active(self):
+        if(self.first_used is None):
+             self.first_used =  timezone.now() #datetime.datetime.now()
+             self.save()
+             return True
+        else:
+            if (self.first_used + datetime.timedelta(hours=12) >=  timezone.now()):
+                return True
+            else:
+                return False
+    def is_set(self):
+        try:
+            if self.linked_room:
+                return True
+        except NameError:
+            return False
+    def is_allowed(self, user):
+        if (self.used_by is None):
+            self.used_by = user
+            self.save()
+            return True
+        elif (self.used_by == user):
+            return True
+        else:
+            return False
 
 class Message(models.Model):
     '''A message that belongs to a chat room'''

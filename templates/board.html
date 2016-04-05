@@ -3,70 +3,77 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block title %}{% trans "Board" %}{% endblock %}
+{% block title %}VMopoly - {% trans "Board" %}{% endblock %}
 
-{% block body_block %}
+{% block content_nonwrap %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-2 ">
+            <div id="playerList">
 
-{% if massive_json %}
-<div id="board"><div class="content">
-    {% for e in massive_json %}
-    {{ e }}
-    {% endfor %}
-</div></div>
-{% else %}
-<div id="board">
-</div>
-{% endif %}
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">{% trans "Djangopoly" %}</div>
 
-{% endblock %}
-
-{% block side_block %}
-
-<div id="playerList">
-
-    <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">{% trans "Djangopoly" %}</div>
-
-        <!-- Table -->
-        <table class="table" id="players-table">
-            <thead>
-                <tr>
-                    <th>{% trans "Player" %}</th>
-                    <th>{% trans "Cash" %}</th>
-                </tr>
-            </thead>
-            <tbody id="players-table-body">
-            </tbody>
-        </table>
-        <div id="dice-vis"></div>
-        <div class="panel-body">
-            <div id="button-controls">
-                <div id="dice">
-                 <span class="button-wrap"><a href="#" class="button button-pill button-primary">{% trans "Roll the dice!" %}</a></span>
+                    <!-- Table -->
+                    <table class="table" id="players-table">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Player" %}</th>
+                                <th>{% trans "Cash" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="players-table-body">
+                        </tbody>
+                    </table>
+                    <div id="dice-vis"></div>
+                    <div class="panel-body">
+                        <div id="button-controls">
+                            <div id="dice">
+                             <span class="button-wrap"><a href="#" class="button button-pill button-primary">{% trans "Roll the dice!" %}</a></span>
+                            </div>
+                         <div id="buy">
+                            <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Buy property" %}</a></span>
+                        </div>
+                        <!--<div id="mortgage">
+                            <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Mortgage" %}</a></span>
+                        </div>-->
+                        <div id="pay-jail">
+                            <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Pay jail fine" %}</a></span>
+                        </div>
+                        <div id="card">
+                            <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Draw card" %}</a></span>
+                        </div>
+                        <div id="end-turn">
+                            <span class="button-wrap"><a href="#" class="button button-pill">{% trans "End turn" %}</a></span>
+                        </div>
+                        <div id="">
+                            <span class="button-wrap"><a href="/accounts/logout" class="button button-pill">{% trans "Leave game" %}</a></span>
+                        </div>
+                    </div>
                 </div>
-             <div id="buy">
-                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Buy property" %}</a></span>
             </div>
-            <div id="mortgage">
-                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Mortgage" %}</a></span>
             </div>
-            <div id="pay-jail">
-                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Pay jail fine" %}</a></span>
+
+            <!-- Hidden context -->
+            <nav id="context-menu" class="context-menu">
+                <ul class="context-menu__items" id="menu_content">
+                </ul>
+              </nav>
+        </div>
+        <div class="col-xs-10 ">
+            {% if massive_json %}
+            <div id="board"><div class="content">
+                {% for e in massive_json %}
+                {{ e }}
+                {% endfor %}
+            </div></div>
+            {% else %}
+            <div id="board">
             </div>
-            <div id="card">
-                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Draw card" %}</a></span>
-            </div>
-            <div id="end-turn">
-                <span class="button-wrap"><a href="#" class="button button-pill">{% trans "End turn" %}</a></span>
-            </div>
-            <div id="">
-                <span class="button-wrap"><a href="/leave" class="button button-pill">{% trans "Leave game" %}</a></span>
-            </div>
+            {% endif %}
         </div>
     </div>
 </div>
-</div>
-
-
+<script src="{% static 'board.js' %}"></script>
 {% endblock %}

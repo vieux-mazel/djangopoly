@@ -4,65 +4,35 @@
 
 {% block title %}Board{% endblock %}
 
-{% block body_block %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class=" hero-feature">
+            <div class="thumbnail">
+                <a href="/"><img src="{% static 'img/logo.png' %}" alt=""></a>
+                <div class="caption">
+                    <h3>Bienvenu sur le VMopoly !</h3>
 
-    <div class=" hero-feature">
-                <div class="thumbnail">
-                    <a href="/"><img src="{% static 'img/logo.png' %}" alt=""></a>
-                    <div class="caption">
-                        <h3>Play Djangopoly using one of the options below</h3>
-                        
-                        <p>
-                        • Join a random public game with people around the world <br />
-                        • Create a public game and play with anyone<br />
-                        • Play with your friends in a private game 
-                        </p>
-                        
-                        <p>
-                            <a href="/join_random" class="btn btn-primary">Join Random game</a> <a href="/new_game/public" class="btn btn-default">Create Public game</a><a href="/new_game/private" class="btn btn-default">Create Private game</a>
-                        </p><hr>
-                        <h3><a href="/help">Help File / Documentation</a></h3>
-                        <hr><p>
-                        All material used falls within the Fair Use Copyright Act of 2014 (UK).
-                        </p>
-                        <p>
-                        2015 Web App Development / Team A1 - University of Glasgow - All rights reserved
-                        </p>
-                    </div>
+                    <p>
+                        Après une épique Bataille navale, nous revenons à la charge avec un Monopoly unique et entièrement automatisé ! Plus besoin d'attendre que l'on valide vos tirs, codes secrets et autres... A vous de jouer !
+                    </p>
+                    <h4> Sur cette page ... </h4>
+                    
+                    <p>
+                        <a href="/join_random" class="btn btn-primary">Join Random game</a> <a href="/new_game/public" class="btn btn-default">Create Public game</a><a href="/new_game/private" class="btn btn-default">Create Private game</a>
+                    </p><hr>
+                    <h3><a href="/help">Help File / Documentation</a></h3>
+                    <hr><p>
+                    All material used falls within the Fair Use Copyright Act of 2014 (UK).
+                    </p>
+                    <p>
+                    2015 Web App Development / Team A1 - University of Glasgow - All rights reserved
+                    </p>
                 </div>
             </div>
-{% endblock %}
-
-{% block side_block %}
-<div id="playerList">
-
-    <div class="panel panel-default">
-
-        <div class="panel-heading">Authors</div>
-        
-        <table class="table" id="players-table">
-            <tbody id="players-table-body">
-            <tr>
-                <td>
-                    <img class="profile-pic" src="{% static 'img/author1.jpg' %}" />
-                    <div class="profile-name">Christian Shtarkov</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <img class="profile-pic" src="{% static 'img/author2.jpg' %}" />
-                    <div class="profile-name">Atanas Penchev</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <img class="profile-pic" src="{% static 'img/author3.jpg' %}" />
-                    <div class="profile-name">Ian Denev</div>
-                </td>
-            </tr>
-            </tbody> 
-        </table>
+        </div>
+    </div>
 </div>
-</div>
-    
+
+
 {% endblock %}

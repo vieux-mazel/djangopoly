@@ -12,7 +12,40 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 
-from jchat.models import Room, Message
+from jchat.models import Room, Message, Spy_code
+from .forms import SpyForm, SpyTeamSelector
+
+@login_required
+def spy(request):
+    if request.method == 'POST':
+            p = request.POST
+            form = SpyForm(p)
+            hash = p['spycode']
+            print hash
+            try:
+                spy = Spy_code.objects.get(spy_hash = hash)
+            except Spy_code.DoesNotExist:
+                message = 'ce code n\'est pas valide - En cas de besoin n\'hésite pas à contacter cg@vieux-mazel.ch'
+                return render(request, 'spy.html' , {'message': message, 'form':form})
+            if (spy.is_active()):
+                try:
+                    if(p['spyteam']):
+                        spy.linked_room = Room.objects.get(id=p['spyteam'])
+                        spy.save()
+                except:
+                    pass
+                print spy.is_allowed(request.user.profile.groupe)
+                if (not spy.is_allowed(request.user.profile.groupe)):
+                    message = 'ce code est déjà utilisé par une autre équipe ! Soit tu essaies de tricher... c\'est bien essayé mais triche mieux la prochaine fois ;-) soit tu t\'es fait piqué ton code d\'accès SHAME ON YOU :-)'
+                    return render(request, 'spy.html' , {'message': message, 'form':form})
+                if (spy.is_set()):
+                    return render(request, 'spy.html', {'hash': hash})
+                else:
+                    form_team = SpyTeamSelector()
+                    return render(request, 'spy.html', {'hash':hash, 'form': form, 'form_teamselector':form_team})
+    else:
+        form = SpyForm()
+        return render(request, 'spy.html',{'form': form})
 
 @login_required
 @csrf_exempt
@@ -23,7 +56,8 @@ def send(request):
     message
     '''
     p = request.POST
-    r = Room.objects.get(id=1)
+    player = request.user.profile.groupe
+    r = Room.objects.get(id=player.id)
     r.say(request.user, p['message'])
     return HttpResponse('')
 
@@ -35,7 +69,9 @@ def sync(request):
     EXPECTS the following POST parameters:
     id
     '''
-    r = Room.objects.get(id=1)
+
+    player = request.user.profile.groupe
+    r = Room.objects.get(id=player.id)
 
     lmid = r.last_message_id()
 
@@ -61,9 +97,38 @@ def receive(request):
         offset = int(post['offset'])
     except:
         offset = 0
+    player = request.user.profile.groupe
+    r = Room.objects.get(id=player.id)
 
-    r = Room.objects.get(id=1)
+    m = r.messages(offset)
+    return HttpResponse(jsonify(m, ['id','author','message','type','timestamp']))
 
+@login_required
+@csrf_exempt
+def receive_spy(request):
+    '''
+    Returned serialized data
+
+    EXPECTS the following POST parameters:
+    id
+    offset
+
+    This could be useful:
+    @see: http://www.djangosnippets.org/snippets/622/
+    '''
+
+    post = request.POST
+    spy_hash = post['spycode']
+    try:
+        spy = Spy_code.objects.get(spy_hash = spy_hash)
+    except Spy_code.DoesNotExist:
+        return HttpResponse(jsonify(["error"]))
+    try:
+        offset = int(post['offset'])
+    except:
+        offset = 0
+
+    r = spy.linked_room
     m = r.messages(offset)
     return HttpResponse(jsonify(m, ['id','author','message','type','timestamp']))
 
@@ -75,7 +140,8 @@ def join(request):
     chat_room_id
     message
     '''
-    r = Room.objects.get(id=1)
+    player = request.user.profile.groupe
+    r = Room.objects.get(id=player.id)
     r.join(request.user)
     return HttpResponse('')
 
@@ -88,7 +154,8 @@ def leave(request):
     message
     '''
     p = request.POST
-    r = Room.objects.get(id=1)
+    player = request.user.profile.groupe
+    r = Room.objects.get(id=player.id)
     r.leave(request.user)
     return HttpResponse('')
 
@@ -96,10 +163,10 @@ def leave(request):
 def test(request):
     '''Test the chat application'''
 
-    u = User.objects.get(id=1) # always attach to first user id
+    u = request.user.profile.groupe # always attach to first user id
     r = Room.objects.get_or_create(u)
     #return render(request, 'simple.html')
-    return render_to_response('simple.html', {'js': ['/media/js/mg/chat.js'], 'chat_id':r.pk}, context_instance=RequestContext(request))
+    return render_to_response('simple.html', {'js': ['/media/js/mg/chat.js'], 'chat_id':r.pk})
 
 def jsonify(object, fields=None, to_dict=False):
     '''Funcion utilitaria para convertir un query set a formato JSON'''

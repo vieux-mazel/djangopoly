@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script type="text/javascript" src="/static/js/jchat.js"></script>
+<div class="container">
+    <div class="jumbotron spy">
+      <h1>Espionnage</h1>
+
+        {% if not hash %}
+            <p> Bienvenu sur la plateforme d'espionnage; rentrez le code d'espionnage ci-dessous et appuyez sur "valider"</p>
+            <form action="./" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="Valider">
+            </form>
+        {% else %}
+            {% if not form_teamselector %}
+                    <p>
+                        login OK ... Enjoy
+                    </p>
+                    <div id="chat"></div>
+                    <!-- You should try to include this at another place at your convenience :D -->
+                    <script type="text/javascript">
+                    /* chat_id is passed form the view, the init_chat function then does all the magic */
+                    $(window).ready(function(){
+                        init_chat(1, "chat", "{{hash}}");
+                    })
+                    </script>
+            {% else %}
+                <p>
+                C'est la première fois que ce code est utilisé ! BRAVO ! Tu peux maintenant choisir quelle équipe tu veux espionner. ATTENTION une fois l'équipe choisie le code sera valable durant 12 heures et uniquement pour l'équipe sélectionnée ci-dessous.
+                </p>
+                <form action="./" method="post">
+                    {% csrf_token %}
+                    {{ form_teamselector }}
+                    <input id="id_spycode" maxlength="10" name="spycode" type="hidden" value="{{hash}}">
+                    <input type="submit" value="Valider">
+                </form>
+            {% endif %}
+        {% endif %}
+        {% if message %}
+            <div class="alert alert-warning">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>ATTENTION!</strong> {{message}}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
