@@ -71,12 +71,12 @@
   /**
    * Variables.
    */
-  var contextMenuClassName = "context-menu";
+  var contextMenuClassName = "property-menu";
   var contextMenuItemClassName = "context-menu__item";
   var contextMenuLinkClassName = "context-menu__link";
   var contextMenuActive = "context-menu--active";
 
-  var taskItemClassName = "owned";
+  var taskItemClassName = "square";
   var taskItemInContext;
 
   var clickCoords;
@@ -109,13 +109,13 @@
    * Listens for contextmenu events.
    */
   function contextListener() {
-    document.addEventListener( "contextmenu", function(e) {
+    document.addEventListener( "click", function(e) {
       taskItemInContext = clickInsideElement( e, taskItemClassName );
 
       if ( taskItemInContext ) {
         e.preventDefault();
         toggleMenuOn();
-        positionMenu(e);
+        //positionMenu(e);
       } else {
         taskItemInContext = null;
         toggleMenuOff();
@@ -166,20 +166,21 @@
    * Turns the custom context menu on.
    */
   function toggleMenuOn() {
+    console.log( "Square ID - " + taskItemInContext.getAttribute("data-id"));
     if ( menuState !== 1 ) {
         $.ajax({
             type: 'POST',
-            data: {property_id: taskItemInContext.getAttribute("data-id")},
-            url:'/game/property/check',
+            data: {square_id: taskItemInContext.getAttribute("data-id")},
+            url:'/game/property/info',
     		dataType: 'json',
     		success: function (data) {
                 console.log(data.owned);
-                $('#menu_content').append('<li class="context-menu__item"> <a href="#" class="context-menu__link" data-action="Delete"><i class="fa fa-times"></i> Delete Task</a></li>');
+                $('#property-menu').append(data.html);
             },
         });
-
         menuState = 1;
         menu.classList.add( contextMenuActive );
+
     } else {
         toggleMenuOff();
         toggleMenuOn();
@@ -192,7 +193,7 @@
   function toggleMenuOff() {
     if ( menuState !== 0 ) {
         // clear the menu
-        $('#menu_content').empty();
+        $('#property-menu').empty();
         menuState = 0;
         menu.classList.remove( contextMenuActive );
     }

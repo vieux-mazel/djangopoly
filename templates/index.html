@@ -20,8 +20,11 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Chat</a></li>
-                <li role="presentation"><a href="#rules" aria-controls="profile" role="tab" data-toggle="tab">Règles du jeu</a></li>
-                <li role="presentation"><a href="#playerslist" aria-controls="messages" role="tab" data-toggle="tab">Liste des joueurs</a></li>
+                <li role="presentation"><a href="#rules" aria-controls="rules" role="tab" data-toggle="tab">Règles du jeu</a></li>
+                <li role="presentation"><a href="#playerslist" aria-controls="playerslist" role="tab" data-toggle="tab">Liste des joueurs</a></li>
+                {% if user.is_superuser %}
+                <li role="presentation"><a href="#admin" aria-controls="admin" role="tab" data-toggle="tab">Admin</a></li>
+                {% endif %}
             </ul>
 
             <!-- Tab panes -->
@@ -63,6 +66,12 @@
                         </tbody>
                     </table>
                 </div>
+                {% if user.is_superuser %}
+                <div role="tabpanel" class="tab-pane fade" id="admin">
+                    <a role="button" class="btn btn-default" href="{% url 'game' game_id %}">Voir le plateau</a>
+                    <a data-confirm="Are you sure you want to delete?" role="button" class="btn btn-default" href="{% url 'super_reset' %}">Super reset</a>
+                </div>
+                {% endif %}
             </div>
 
             </div>

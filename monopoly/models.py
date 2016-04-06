@@ -86,7 +86,7 @@ class Utility(models.Model):
 
     def __str__(self):
         return "Square: {0}\nOwned by: {1}\nIs mortgaged: {2}".format(
-            self.square.position, (self.owned_by.session_id if self.owned_by is not None else "Nobody"), self.is_mortgaged)
+            self.square.position, (self.owned_by.game.pk if self.owned_by is not None else "Nobody"), self.is_mortgaged)
 
 class Effect(models.Model):
     type = models.CharField(max_length=128, unique=True)

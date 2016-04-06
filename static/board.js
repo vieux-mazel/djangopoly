@@ -48,10 +48,10 @@
         squareStr = squareStr + playersStr;
 
         var s = document.getElementById('square' + square.position);
+        s.setAttribute('data-id', square.position);
         if (square.owned_by) {
           s.className += ' owned owned' + square.owned_by.joined;
-          s.setAttribute('data-id', square.position);
-          s.setAttribute('data-ownerid', square.position);
+          s.setAttribute('data-ownerid', square.owned_by.joined);
           if (square.is_mortgaged) s.className += ' mortgaged'
         }
         s.innerHTML = squareStr;

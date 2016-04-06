@@ -17,5 +17,6 @@ urlpatterns = patterns('',
         url(r'^game/(?P<id>[\w\-]+)/start/$', views.start_game, name='start_game'),
         url(r'^game/(?P<id>[\w\-]+)/join/$', views.join_game, name='join_game'),
         url(r'^game/(?P<id>[\w\-]+)/state/$', views.game_state, name='game_state'),
-        url(r'^game/property/check', views.property_check, name='check_property')
+        url(r'^game/property/info', views.property_info, name='info_property'),
+        url(r'^super_reset/$', views.super_reset, name="super_reset")
 )

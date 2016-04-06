@@ -1,18 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from django.template.loader import render_to_string
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 
-from .models import UserProfile
 from django.db.models import Count
 import json, random, string
 
 from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect, UserProfile
-
+from jchat.models import Message, Room
 import board
 import rules
 
@@ -364,7 +364,31 @@ def game_state(request, id):
 #### Property views
 @login_required
 @csrf_exempt
-def property_check(request):
+def property_info(request):
+    post = request.POST
+    player = request.user.profile.groupe
+    sproperty = False
+    sid = int(post['square_id']) +1
+
+    special = False
+    square = Square.objects.get(id=sid)
+    try:
+        clicked_object = Property.objects.get(square=square)
+    except Property.DoesNotExist:
+        pass
+    try:
+        clicked_object = Utility.objects.get(square=square)
+    except Utility.DoesNotExist:
+        pass
+    try:
+        clicked_object = Special.objects.get(square=square)
+    except Special.DoesNotExist:
+        pass
+        special = True
+    rendered = render_to_string('property_info.html', { 'clicked_object': clicked_object })
+    return JsonResponse({'owned' : True, 'html' : rendered})
+
+def reste_de_code(request):
     post = request.POST
     try:
         player = request.user.profile.groupe
@@ -386,3 +410,18 @@ def property_check(request):
         return JsonResponse({'owned' : True})
     else:
         return JsonResponse({'owned' : False})
+
+@staff_member_required
+def super_reset(request):
+    Game.objects.all().delete()
+    Square.objects.all().delete()
+    Property.objects.all().delete()
+    Utility.objects.all().delete()
+    Special.objects.all().delete()
+    Player.objects.all().delete()
+    Street.objects.all().delete()
+    Effect.objects.all().delete()
+    UserProfile.objects.all().delete()
+    Room.objects.all().delete()
+    Message.objects.all().delete()
+    return redirect('index')
