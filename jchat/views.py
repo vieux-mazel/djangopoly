@@ -51,7 +51,6 @@ def spy(request):
         return render(request, 'spy.html',{'form': form})
 
 @login_required
-@csrf_exempt
 def send(request):
     '''
     Expects the following POST parameters:
@@ -68,7 +67,6 @@ def send(request):
     return HttpResponse('')
 
 @login_required
-@csrf_exempt
 def sync(request):
     '''Return last message id
 
@@ -86,7 +84,6 @@ def sync(request):
     return HttpResponse(jsonify({'last_message_id':lmid}))
 
 @login_required
-@csrf_exempt
 def receive(request):
     '''
     Returned serialized data
@@ -115,7 +112,6 @@ def receive(request):
     return HttpResponse(jsonify(m, ['id','author','message','type','timestamp']))
 
 @login_required
-@csrf_exempt
 def receive_spy(request):
     '''
     Returned serialized data
@@ -144,7 +140,6 @@ def receive_spy(request):
     return HttpResponse(jsonify(m, ['id','author','message','type','timestamp']))
 
 @login_required
-@csrf_exempt
 def join(request):
     '''
     Expects the following POST parameters:
@@ -157,7 +152,6 @@ def join(request):
     return HttpResponse('')
 
 @login_required
-@csrf_exempt
 def leave(request):
     '''
     Expects the following POST parameters:

@@ -1,0 +1,66 @@
+<div class="property-menu" style="max-width:300px; min-height:300px;">
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td> Nom </td>
+                <td> {{clicked_object.square.title}} </td>
+            <tr>
+            </tr>
+                <td> Coût à l'achat </td>
+                <td> {{clicked_object.price}} $</td>
+            </tr>
+            <tr>
+                <td> Taxe de passage </td>
+                <td> {{clicked_object.tax_site}} $</td>
+            </tr>
+            <tr>
+                <td> Hypothèque </td>
+                <td> {{clicked_object.mortgage_price}} $ </td>
+            </tr>
+            {% if clicked_object.street %}
+            <tr>
+                <td> Couleur </td>
+                <td style="background-color:{{clicked_object.street.color}}; opacity:0,7 ;"> </td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td> Possédé par </td>
+                <td> {% if clicked_object.owned_by %} {{clicked_object.owned_by.name}} {% else %}Personne{% endif %} </td>
+
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="property-menu-child">
+    {% if clicked_object.tax_1house %}
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td> Prix achat maison </td>
+                <td> {{clicked_object.house_price}} $</td>
+            <tr>
+            <tr>
+                <td> 1ère maison </td>
+                <td> {{clicked_object.tax_1house}} $</td>
+            <tr>
+            </tr>
+                <td> 2ème maison </td>
+                <td> {{clicked_object.tax_2house}} $</td>
+            </tr>
+            <tr>
+                <td> 3ème maison </td>
+                <td> {{clicked_object.tax_3house}} $</td>
+            </tr>
+            <tr>
+                <td> 4ème maison </td>
+                <td> {{clicked_object.tax_4house}} $</td>
+            </tr>
+            <tr>
+                <td> Hôtel </td>
+                <td> {{clicked_object.tax_hotel}} $</td>
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+</div>

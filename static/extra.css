@@ -33,24 +33,28 @@ display: block;
 
 #property-menu {
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: 30%;
+    left: 55%;
     max-width: 500px;
     margin-top: -50px;
     margin-left: -100px;
-    background-color: rgba(255, 255, 255, 0.63);
+    background-color: rgba(255, 255, 255, 0.88);
     /* bring your own prefixes */
     /* transform: translate(-50%, -50%);*/
 }
 .property-menu, .property-menu-child{
-    background-color: rgba(255, 255, 255, 0.63);
+    background-color: rgba(255, 255, 255, 0.88);
     padding: 10px;
     min-height: 300px;
     float: left;
 }
 .property-menu{
-    max-width: 300px;
+    max-width: 350px;
 }
 .property-menu-child{
-    max-width: 200px;
+    max-width: 350px;
+}
+
+.square.watched {
+    border: rgba(110, 255, 23, 0.76) 7px solid;
 }

@@ -7,7 +7,7 @@
   var $board = $('#board');
   var $playerList = $('#players-table-body');
   var $dicevis = $('#dice-vis');
-  
+
   var $buy = $('#buy');
   var $mortgage = $('#mortgage');
   var $dice = $('#dice');
@@ -83,7 +83,7 @@
       // Buy and mortgage
       if (state.can_be_bought) $buy.addClass('active');
       else $buy.removeClass('active');
-      
+
       if (state.can_be_mortgaged) $mortgage.addClass('active');
       else $mortgage.removeClass('active');
 
@@ -106,7 +106,7 @@
       // Jail bailout
       if (state.can_pay_jail) $payJail.addClass('active');
       else $payJail.removeClass('active');
-      
+
       // Reflect new state
       lastState = state;
       isAjaxing = false;
@@ -133,7 +133,7 @@
 
   $buy.click(function() {
     if (lastState && !lastState.can_be_bought) return;
-    
+
     $.getJSON('/game/buy', function(data) {
       console.log(data);
     });
@@ -141,7 +141,7 @@
 
   $mortgage.click(function() {
     if (lastState && !lastState.can_be_mortgaged) return;
-    
+
     $.getJSON('/game/mortgage', function(data) {
       console.log(data);
     });

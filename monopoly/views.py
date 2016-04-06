@@ -15,6 +15,7 @@ from monopoly.models import Game, Square, Property, Utility, Special, Player, St
 from jchat.models import Message, Room
 import board
 import rules
+import views_property
 
 def my_random_key():
     return ''.join(random.choice(string.digits) for _ in range(4))
@@ -140,7 +141,7 @@ def start_game(request, id):
 
     if game.in_progress is True:
         return HttpResponse(FAILURE)
-    
+
     game.in_progress = True
     game.save()
     return HttpResponse(SUCCESS)
@@ -173,6 +174,7 @@ def roll_dice(request):
     rules.move_player(player, (dice1, dice2))
     player.dice_left -= 1
     player.save()
+
     return HttpResponse(json.dumps(
         {
             'success': True,
@@ -234,7 +236,7 @@ def pay_bailout(request):
 def mortgage(request):
     player = request.user.profile.groupe
     square = player.square
-    
+
     if not rules.mortgage(player, square):
         return HttpResponse(FAILURE)
 
@@ -247,7 +249,7 @@ def draw_card(request):
 
     if not rules.can_draw_card(player):
         return HttpResponse(FAILURE)
-    
+
     card = random.choice(board.cards)
     player.drew_card_this_turn = True
     player.save()
@@ -287,7 +289,7 @@ def game_state(request, id):
             'joined': player.joined
         }
         pp.append(p)
-    pp = sorted(pp, key=lambda p: p['joined']) 
+    pp = sorted(pp, key=lambda p: p['joined'])
 
     # Squares list of Python dictionaries
     # instead of a list with Django objects
@@ -331,7 +333,7 @@ def game_state(request, id):
                 }
             else:
                 s['owned_by'] = None
-        
+
         ss.append(s)
 
     state = {
@@ -344,7 +346,7 @@ def game_state(request, id):
         'can_draw_card': rules.can_draw_card(player),
         'can_pay_jail': current_player.is_in_jail() and current_player.plays_in_turns == 0
     }
-        
+
     state = json.dumps(state, indent=4, sort_keys=True)
 
     # Use Django's serializer
@@ -359,57 +361,6 @@ def game_state(request, id):
 
     # Echo the JSON as the response's body
     return HttpResponse(state)
-
-
-#### Property views
-@login_required
-@csrf_exempt
-def property_info(request):
-    post = request.POST
-    player = request.user.profile.groupe
-    sproperty = False
-    sid = int(post['square_id']) +1
-
-    special = False
-    square = Square.objects.get(id=sid)
-    try:
-        clicked_object = Property.objects.get(square=square)
-    except Property.DoesNotExist:
-        pass
-    try:
-        clicked_object = Utility.objects.get(square=square)
-    except Utility.DoesNotExist:
-        pass
-    try:
-        clicked_object = Special.objects.get(square=square)
-    except Special.DoesNotExist:
-        pass
-        special = True
-    rendered = render_to_string('property_info.html', { 'clicked_object': clicked_object })
-    return JsonResponse({'owned' : True, 'html' : rendered})
-
-def reste_de_code(request):
-    post = request.POST
-    try:
-        player = request.user.profile.groupe
-    except UserProfile.DoesNotExist:
-        return redirect('index') # Disallow joining games in progress
-    player = request.user.profile.groupe
-    game = player.game
-    square = Square.objects.filter(game=game).get(position=post['property_id'])
-    game_property = False
-
-    try:
-        game_property = Property.objects.get(square=square)
-    except:
-        try:
-            game_property = Utility.objects.get(square=square)
-        except:
-            return JsonResponse({'owned' : False})
-    if (game_property.owned_by == player):
-        return JsonResponse({'owned' : True})
-    else:
-        return JsonResponse({'owned' : False})
 
 @staff_member_required
 def super_reset(request):

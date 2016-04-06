@@ -42,7 +42,8 @@ properties = [
         'title': 'Old Kent Toad',
         'street': '#955335',
         'tax_site': 2,
-        'price': 60
+        'price': 60,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -50,7 +51,8 @@ properties = [
         'title': 'Whitechapel Road',
         'street': '#955335',
         'tax_site': 4,
-        'price': 60
+        'price': 60,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -58,7 +60,8 @@ properties = [
         'title': 'The Angel Inslington',
         'street': '#AAE0FA',
         'tax_site': 6,
-        'price': 100
+        'price': 100,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -66,7 +69,8 @@ properties = [
         'title': 'Euston Road',
         'street': '#AAE0FA',
         'tax_site': 6,
-        'price': 100
+        'price': 100,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -74,7 +78,8 @@ properties = [
         'title': 'Penton View Road',
         'street': '#AAE0FA',
         'tax_site': 8,
-        'price': 100
+        'price': 100,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -82,7 +87,8 @@ properties = [
         'title': 'Pall Mall',
         'street': '#D93A96',
         'tax_site': 10,
-        'price': 140
+        'price': 140,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -90,7 +96,8 @@ properties = [
         'title': 'White Hall',
         'street': '#D93A96',
         'tax_site': 10,
-        'price': 140
+        'price': 140,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -98,7 +105,9 @@ properties = [
         'title': 'Norton Avenue',
         'street': '#D93A96',
         'tax_site': 10,
-        'price': 160
+        'price': 160,
+        'house_price': 100,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -106,7 +115,8 @@ properties = [
         'title': 'Bow Street',
         'street': '#F7941D',
         'tax_site': 14,
-        'price': 180
+        'price': 180,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -114,7 +124,8 @@ properties = [
         'title': 'Marlboro Street',
         'street': '#F7941D',
         'tax_site': 14,
-        'price': 180
+        'price': 180,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -122,7 +133,8 @@ properties = [
         'title': 'Vine Street',
         'street': '#F7941D',
         'tax_site': 16,
-        'price': 200
+        'price': 200,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -130,7 +142,8 @@ properties = [
         'title': 'Strand',
         'street': '#ED1B24',
         'tax_site': 16,
-        'price': 220
+        'price': 220,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -138,7 +151,8 @@ properties = [
         'title': 'Fleet Street',
         'street': '#ED1B24',
         'tax_site': 18,
-        'price': 220
+        'price': 220,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -146,7 +160,8 @@ properties = [
         'title': 'Trafalgar Square',
         'street': '#ED1B24',
         'tax_site': 20,
-        'price': 240
+        'price': 240,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -154,7 +169,8 @@ properties = [
         'title': 'Lester Square',
         'street': '#FEF200',
         'tax_site': 22,
-        'price': 260
+        'price': 260,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -162,7 +178,8 @@ properties = [
         'title': 'Coventry Street',
         'street': '#FEF200',
         'tax_site': 22,
-        'price': 260
+        'price': 260,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -170,7 +187,8 @@ properties = [
         'title': 'Picadilly',
         'street': '#FEF200',
         'tax_site': 24,
-        'price': 280
+        'price': 280,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -178,7 +196,8 @@ properties = [
         'title': 'Regent Street',
         'street': '#1FB25A',
         'tax_site': 24,
-        'price': 300
+        'price': 300,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -186,7 +205,8 @@ properties = [
         'title': 'Oxford Street',
         'street': '#1FB25A',
         'tax_site': 26,
-        'price': 300
+        'price': 300,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -194,7 +214,8 @@ properties = [
         'title': 'Bond Street',
         'street': '#1FB25A',
         'tax_site': 28,
-        'price': 320
+        'price': 320,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -202,7 +223,8 @@ properties = [
         'title': 'Park Lane',
         'street': '#0072BB',
         'tax_site': 35,
-        'price': 350
+        'price': 350,
+        'house_price': 100
     },
     {
         'type': 'property',
@@ -210,7 +232,8 @@ properties = [
         'title': 'Mayfair',
         'street': '#0072BB',
         'tax_site': 50,
-        'price': 400
+        'price': 400,
+        'house_price': 100
     }
 ]
 

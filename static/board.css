@@ -1,7 +1,8 @@
 body {
     margin: 0;
     padding: 0;
-    background: url('img/bg_2.svg');
+    background: url('img/bg.jpg') top right no-repeat;
+    background-attachment:fixed;
 }
 html, body {
     height: 100%;
@@ -37,7 +38,7 @@ html, body {
     box-sizing: border-box;
 
     display: inline-block;
-    
+
     height: 13.325%;
     width: 8.15%;
 
@@ -95,14 +96,14 @@ html, body {
 #chance, #community{
     width:20%;
     height:20%;
-    
-    -webkit-transform: rotate(45deg); 
-    -moz-transform: rotate(45deg); 
+
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
     border: 1px solid black;
 }
 
 #chance{
-    
+
 }
 
 
@@ -121,7 +122,7 @@ html, body {
 }
 
 #buy {
-    
+
 }
 #buy.active {
     background: white;
@@ -184,15 +185,15 @@ span.button-wrap{
     margin-top: 10px;
 
 }
-.owned0 { background: rgba(0, 173, 167, 0.7) }
-.owned1 { background: rgba(255, 235, 121, 0.7) }
-.owned2 { background: rgba(194, 71, 4, 0.7) }
-.owned3 { background: rgba(91, 224, 108, 0.7) }
+.owned0 { background: rgba(173, 0, 0, 0.7) }
+.owned1 { background: rgba(43, 255, 53, 0.7) }
+.owned2 { background: rgba(254, 250, 13, 0.7) }
+.owned3 { background: rgba(0, 87, 255, 0.7) }
 
-.owned0.mortgaged { background: rgba(0, 173, 167, 0.3) }
-.owned1.mortgaged { background: rgba(255, 235, 121, 0.3) }
-.owned2.mortgaged { background: rgba(194, 71, 4, 0.3) }
-.owned3.mortgaged { background: rgba(91, 224, 108, 0.3) }
+.owned0.mortgaged { background: rgba(173, 0, 0, 0.3) }
+.owned1.mortgaged { background: rgba(43, 255, 53, 0.3) }
+.owned2.mortgaged { background: rgba(254, 250, 13, 0.3) }
+.owned3.mortgaged { background: rgba(0, 87, 255, 0.3) }
 
 .person {
 	width: 40px;
@@ -207,7 +208,7 @@ span.button-wrap{
 #player0 { background-image: url(img/player1.png); background-color: rgba(173, 0, 0, 0.7) }
 #player1 { background-image: url(img/player2.png); background-color: rgba(43, 255, 53, 0.7) }
 #player2 { background-image: url(img/player3.png); background-color: rgba(254, 250, 13, 0.7) }
-#player3 { background-image: url(img/player4.png); background-color: rgba(0, 87, 255, 0.69) }
+#player3 { background-image: url(img/player4.png); background-color: rgba(0, 87, 255, 0.7) }
 
 td.jailed {
 	background: rgba(0, 0, 0, 0.2);

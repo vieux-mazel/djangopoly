@@ -45,7 +45,7 @@ class Player(models.Model):
             plays=self.plays_in_turns)
     def __unicode__(self):
         return self.name
-        
+
     class Meta:
         verbose_name = 'Group'
         verbose_name_plural = 'Groups'
@@ -69,6 +69,8 @@ class Property(models.Model):
     tax_3house = models.IntegerField(default=0)
     tax_4house = models.IntegerField(default=0)
     tax_hotel = models.IntegerField(default=0)
+    build_house = models.PositiveSmallIntegerField(default=0)
+    house_price = models.PositiveSmallIntegerField(default=0)
     mortgage_price = models.IntegerField(default=0)
     is_mortgaged = models.BooleanField(default=False)
 
@@ -95,6 +97,7 @@ class Effect(models.Model):
     def __str__(self):
         return "Type: {0}\nParam: {1}".format(
             self.type, self.param)
+
 
 class Special(models.Model):
     square = models.OneToOneField(Square)

@@ -1,7 +1,35 @@
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 (function() {
 
   "use strict";
-  
+
   //////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -83,8 +111,10 @@
   var clickCoordsX;
   var clickCoordsY;
 
-  var menu = document.querySelector("#context-menu");
-  var menuItems = menu.querySelectorAll(".context-menu__item");
+  var clicked_square;
+
+  var menu = document.querySelector("#property-menu");
+  var menuItems = menu.querySelectorAll(".property-menu__item");
   var menuState = 0;
   var menuWidth;
   var menuHeight;
@@ -100,7 +130,7 @@
    */
   function init() {
     contextListener();
-    clickListener();
+    //clickListener();
     keyupListener();
     resizeListener();
   }
@@ -111,14 +141,20 @@
   function contextListener() {
     document.addEventListener( "click", function(e) {
       taskItemInContext = clickInsideElement( e, taskItemClassName );
-
       if ( taskItemInContext ) {
         e.preventDefault();
-        toggleMenuOn();
+        if ( clicked_square ){
+            if (clicked_square != taskItemInContext){
+                toggleMenuOff();
+                toggleMenuOn();
+            }
+        } else{
+            toggleMenuOn();
+        }
         //positionMenu(e);
       } else {
-        taskItemInContext = null;
         toggleMenuOff();
+        taskItemInContext = null;
       }
     });
   }
@@ -129,7 +165,6 @@
   function clickListener() {
     document.addEventListener( "click", function(e) {
       var clickeElIsLink = clickInsideElement( e, contextMenuLinkClassName );
-
       if ( clickeElIsLink ) {
         e.preventDefault();
         menuItemListener( clickeElIsLink );
@@ -168,22 +203,22 @@
   function toggleMenuOn() {
     console.log( "Square ID - " + taskItemInContext.getAttribute("data-id"));
     if ( menuState !== 1 ) {
+        clicked_square = taskItemInContext;
         $.ajax({
             type: 'POST',
             data: {square_id: taskItemInContext.getAttribute("data-id")},
             url:'/game/property/info',
     		dataType: 'json',
     		success: function (data) {
-                console.log(data.owned);
                 $('#property-menu').append(data.html);
             },
         });
+        clicked_square.classList.add('watched');
         menuState = 1;
         menu.classList.add( contextMenuActive );
 
     } else {
         toggleMenuOff();
-        toggleMenuOn();
     }
   }
 
@@ -195,6 +230,8 @@
         // clear the menu
         $('#property-menu').empty();
         menuState = 0;
+        clicked_square.classList.remove('watched');
+        clicked_square=null;
         menu.classList.remove( contextMenuActive );
     }
   }

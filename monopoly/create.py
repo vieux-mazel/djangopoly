@@ -2,6 +2,7 @@ import board
 from .models import Game, Street, Property, Utility, Special, Square, Effect, Player
 from django.conf import settings
 from jchat.models import Room
+from math import floor
 @classmethod
 def create(cls):
     newGame = cls()
@@ -23,6 +24,12 @@ def create(cls):
             identity.street = Street.objects.get(color=x['street'], game=newGame)
             identity.tax_site = x['tax_site']
             identity.price = x['price']
+            identity.tax_1house = floor(x['tax_site'] * 5)
+            identity.tax_2house = floor(x['tax_site'] * 15)
+            identity.tax_3house = floor(x['tax_site'] * 45)
+            identity.tax_4house = floor(x['tax_site'] * 62.5)
+            identity.tax_hotel = floor(x['tax_site'] * 75)
+            identity.house_price = x['house_price']
         elif x['type'] == 'utility':
             identity = Utility()
             identity.price = x['price']
@@ -31,7 +38,6 @@ def create(cls):
             identity = Special()
             identity.effect, created = Effect.objects.get_or_create(type=x['effect']['type'], param=x['effect']['param'])
         assert identity is not None, "A square MUST have an identity that is Property, Utility or Special."
-
         square.title = x['title']
         square.save()
         identity.square = square
