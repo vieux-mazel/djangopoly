@@ -45,6 +45,7 @@ class Room(models.Model):
     #created = models.DateTimeField(default=datetime.datetime.now())
     comment = models.TextField(blank=True, null=True)
     objects = RoomManager() # custom manager
+    is_commun = models.BooleanField(default=False)
 
     def __add_message(self, type, sender, message=None):
         '''Generic function for adding a message to the chat room'''

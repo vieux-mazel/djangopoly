@@ -1,7 +1,7 @@
 import board
 from .models import Game, Street, Property, Utility, Special, Square, Effect, Player
 from django.conf import settings
-
+from jchat.models import Room
 @classmethod
 def create(cls):
     newGame = cls()
@@ -45,6 +45,12 @@ def create(cls):
                          dice_left = 2,
                          )
         player.save()
+        r = Room.objects.get_or_create(player)
+        r.save()
+    r = Room.objects.get_or_create(newGame)
+    r.is_commun = True
+    r.save()
+
     return newGame
 
 Game.add_to_class("create",create)

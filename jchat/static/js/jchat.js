@@ -2,6 +2,7 @@ var chat_room_id = undefined;
 var last_received = 0;
 var initial_scroll = false;
 var spy_code = undefined;
+var is_commun = false;
 /**
  * Initialize chat:
  * - Set the room id
@@ -11,15 +12,15 @@ var spy_code = undefined;
  * @param html_el_id the id of the html element where the chat html should be placed
  * @return
  */
-function init_chat(chat_id, html_el_id, spy_hash) {
+function init_chat(chat_id, html_el_id, spy_hash, is_com=false) {
 	chat_room_id = chat_id;
-
+	is_commun = is_com;
 	spy_code = spy_hash;
 	layout_and_bind(html_el_id);
-	if (typeof spy_code === 'undefined') {
+	if (typeof spy_code === 'undefined' || spy_code == 'false') {
 		sync_messages();
 		get_messages();
-	} else{
+	} else {
 		get_spy_messages();
 	}
 }
@@ -35,7 +36,7 @@ var img_dir = "/static/img/";
 function sync_messages() {
     $.ajax({
         type: 'POST',
-        data: {id:window.chat_room_id},
+        data: {id:window.chat_room_id, is_commun:window.is_commun},
         url:'/chat/sync/',
 		dataType: 'json',
 		success: function (json) {
@@ -56,17 +57,17 @@ function layout_and_bind(html_el_id) {
 		'<div id="chat-messages"> </div>'+
 		'<div id="chat-last"> </div>'+
 		'</div>' ;
-		if (typeof spy_code === 'undefined') {
+		if (typeof spy_code === 'undefined' || spy_code == 'false') {
 			html = html + '<form id="chat-form">'+
 			'<input name="message" type="text" class="message" />'+
-			'<input type="submit" value="Say!!!"/>'+
+			'<input type="submit" value="Envoyer"/>'+
 			'</form>';
 		}
 
 		$("#"+html_el_id).append(html);
 
 		// event stuff
-		if (typeof spy_code === 'undefined') {
+		if (typeof spy_code === 'undefined' || spy_code == 'false') {
 	    	$("#chat-form").submit( function () {
 	            var $inputs = $(this).children('input');
 	            var values = {};
@@ -75,7 +76,7 @@ function layout_and_bind(html_el_id) {
 	            	values[el.name] = $(el).val();
 	            });
 				values['chat_room_id'] = window.chat_room_id;
-
+				values['is_commun'] = window.is_commun;
 	        	$.ajax({
 	                data: values,
 	                dataType: 'json',
@@ -95,7 +96,7 @@ function layout_and_bind(html_el_id) {
 function get_messages() {
     $.ajax({
         type: 'POST',
-        data: {id:window.chat_room_id, offset: window.last_received},
+        data: {id:window.chat_room_id, offset: window.last_received, is_commun: window.is_commun},
         url:'/chat/receive/',
 		dataType: 'json',
 		success: function (json) {
@@ -204,7 +205,7 @@ function chat_join() {
 	$.ajax({
 		async: false,
         type: 'POST',
-        data: {chat_room_id:window.chat_room_id},
+        data: {chat_room_id:window.chat_room_id, is_commun:window.is_commun},
         url:'/chat/join/',
     });
 }
@@ -216,13 +217,13 @@ function chat_leave() {
 	$.ajax({
 		async: false,
         type: 'POST',
-        data: {chat_room_id:window.chat_room_id},
+        data: {chat_room_id:window.chat_room_id, is_commun:window.is_commun},
         url:'/chat/leave/',
     });
 }
 
 // attach join and leave events
-if (typeof spy_code === 'undefined') {
+if (typeof spy_code === 'undefined' || spy_code == 'false') {
 	$(window).ready(function(){chat_join()});
 	$(window).unload(function(){chat_leave()});
 }

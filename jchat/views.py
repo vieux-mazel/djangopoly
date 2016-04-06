@@ -60,7 +60,10 @@ def send(request):
     '''
     p = request.POST
     player = request.user.profile.groupe
-    r = Room.objects.get(id=player.id)
+    if p['is_commun']:
+        r = Room.objects.get(is_commun=True)
+    else :
+        r = Room.objects.get(id=player.id)
     r.say(request.user, p['message'])
     return HttpResponse('')
 
@@ -72,10 +75,12 @@ def sync(request):
     EXPECTS the following POST parameters:
     id
     '''
-
+    p = request.POST
     player = request.user.profile.groupe
-    r = Room.objects.get(id=player.id)
-
+    if p['is_commun']:
+        r = Room.objects.get(is_commun=True)
+    else :
+        r = Room.objects.get(id=player.id)
     lmid = r.last_message_id()
 
     return HttpResponse(jsonify({'last_message_id':lmid}))
@@ -100,9 +105,12 @@ def receive(request):
         offset = int(post['offset'])
     except:
         offset = 0
-    player = request.user.profile.groupe
-    r = Room.objects.get(id=player.id)
 
+    player = request.user.profile.groupe
+    if post['is_commun']:
+        r = Room.objects.get(is_commun=True)
+    else :
+        r = Room.objects.get(id=player.id)
     m = r.messages(offset)
     return HttpResponse(jsonify(m, ['id','author','message','type','timestamp']))
 
@@ -169,7 +177,7 @@ def test(request):
     u = request.user.profile.groupe # always attach to first user id
     r = Room.objects.get_or_create(u)
     #return render(request, 'simple.html')
-    return render_to_response('simple.html', {'js': ['/media/js/mg/chat.js'], 'chat_id':r.pk})
+    return render_to_response('simple.html', {'js': ['/media/js/mg/chat.js'], 'chat_id':r.pk, 'is_com':'true'})
 
 def jsonify(object, fields=None, to_dict=False):
     '''Funcion utilitaria para convertir un query set a formato JSON'''

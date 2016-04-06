@@ -7,29 +7,69 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <div class=" hero-feature">
-            <div class="thumbnail">
-                <a href="/"><img src="{% static 'img/logo.png' %}" alt=""></a>
-                <div class="caption">
-                    <h3>Bienvenu sur le VMopoly !</h3>
+        <div class="jumbotron">
+            <a href="/"><img id="vmolpoly-avatar" src="{% static 'img/logo.png' %}" alt=""></a>
+            <h1>Bienvenu  </h1>
+            <p>Après l'épique Bataille navale de 2015, nous revenons à la charge avec un monopoly 100% customised for VM ! Cette page est
+            déjà accessible pour vous permettre de discuter et de lire les règles du jeux... Bonne chasse !</p>
+            <p>
+                <b> Salut {{user.username}} </b>, tu peux utiliser les menus ci-dessous
+                pour accèder à quelques fonctionnalités du jeu, le chat, les règles ainsi qu'à une liste complète des joueurs enregistrés.
+            </p>
 
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Chat</a></li>
+                <li role="presentation"><a href="#rules" aria-controls="profile" role="tab" data-toggle="tab">Règles du jeu</a></li>
+                <li role="presentation"><a href="#playerslist" aria-controls="messages" role="tab" data-toggle="tab">Liste des joueurs</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="home">
                     <p>
-                        Après une épique Bataille navale, nous revenons à la charge avec un Monopoly unique et entièrement automatisé ! Plus besoin d'attendre que l'on valide vos tirs, codes secrets et autres... A vous de jouer !
+                        Ici tout le monde peut parler ensemble, pour la suite du jeu un chat par équipe sera disponible.
                     </p>
-                    <h4> Sur cette page ... </h4>
-                    <a href="{% url 'game' game_id %}"><button class="btn btn-default orange-circle-button">Voir le <br> plateau<br /><span class="orange-circle-greater-than"></span></button>
-                    </a>
-                    <h3><a href="/help">Help File / Documentation</a></h3>
-                    <hr><p>
-                    All material used falls within the Fair Use Copyright Act of 2014 (UK).
-                    </p>
-                    <p>
-                    2015 Web App Development / Team A1 - University of Glasgow - All rights reserved
-                    </p>
+                    <div id="chat" class="chat-bigger"></div>
+                    <!-- You should try to include this at another place at your convenience :D -->
+                    <script type="text/javascript" src="/static/js/jchat.js"></script>
+                    <script type="text/javascript">
+                    /* chat_id is passed form the view, the init_chat function then does all the magic */
+                    $(window).ready(function(){
+                    	init_chat(0, "chat", 'false', true);
+                    })
+                    </script>
                 </div>
+                <div role="tabpanel" class="tab-pane fade" id="rules">
+                    {% include 'regles.html' %}
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="playerslist">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th># ID</th>
+                                <th>Username</th>
+                                <th>Équipe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in users %}
+                             <tr>
+                                <td> {{u.django_user.pk}} </td>
+                                <td> {{u.django_user.username}} </td>
+                                <td> {{u.groupe.name}} </td>
+                             </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             </div>
         </div>
     </div>
+</div>
+<div class="container">
 </div>
 
 

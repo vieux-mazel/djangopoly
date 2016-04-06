@@ -8,39 +8,24 @@
     padding-top:100px;
 }
 
-.spy #chat-messages-container{
-    height: 500px;
+.chat-bigger #chat-messages-container{
+    height: 300px;
 }
 
 .leave, .join{
     display: none;
 }
-
-
-.orange-circle-button {
-	box-shadow: 2px 4px 0 2px rgba(0,0,0,0.1);
-	border: .5em solid #E84D0E;
-	font-size: 1em;
-	line-height: 1.1em;
-	color: #ffffff;
-	background-color: #e84d0e;
-	margin: auto;
-	border-radius: 50%;
-	height: 7em;
-	width: 7em;
-	position: relative;
+#vmolpoly-avatar{
+width: 68%;
+margin: 0 auto;
+display: block;
 }
-.orange-circle-button:hover {
-	color:#ffffff;
-    background-color: #e84d0e;
-	text-decoration: none;
-	border-color: #ff7536;
 
+.jumbotron ul li{
+    font-size: 21px;
+    font-weight: 200;
 }
-.orange-circle-button:visited {
-	color:#ffffff;
-    background-color: #e84d0e;
-	text-decoration: none;
-
+.nav-tabs{
+    border-bottom: 5px solid #ddd;
+    margin-bottom: 2em;
 }
-.orange-circle-link-greater-than {

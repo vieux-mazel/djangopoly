@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from .models import UserProfile
-from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count
-import json
-import random, string
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+
+from .models import UserProfile
+from django.db.models import Count
+import json, random, string
 
 from monopoly.models import Game, Square, Property, Utility, Special, Player, Street, Effect, UserProfile
 
@@ -29,14 +30,17 @@ def index(request):
         user = request.user.profile.groupe
     except UserProfile.DoesNotExist:
         g = Player.objects.annotate(num_players=Count('userprofile')).order_by('num_players') # get the smalest group (monopoly player)
+        user = g[0] # user is a groupe...
         u = request.user # get django user
         profil = UserProfile()
         profil.django_user = u
-        profil.groupe = g[0] # assign new user to the smallest team
+        profil.groupe = user # assign new user to the smallest team
         profil.save()
-        u.username = '%s_%s' % (g[0].name[6:], my_random_key())
+        u.username = '%s_%s' % (user.name[6:], my_random_key())
         u.save()
-    return render(request, 'index.html', {'game_id':game.pk})
+    users = UserProfile.objects.all().order_by('groupe')
+    print users
+    return render(request, 'index.html', {'game_id':game.pk, 'user':request.user,'users':users})
 
 def help(request):
     return render(request, 'help.html')
