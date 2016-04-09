@@ -10,7 +10,7 @@ import random, string
 from monopoly.models import Player
 
 def my_random_key():
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+    return 'S' + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(9))
 
 class RoomManager(models.Manager):
     '''Custom model manager for rooms, this is used for "table-level" operations.
@@ -46,6 +46,7 @@ class Room(models.Model):
     comment = models.TextField(blank=True, null=True)
     objects = RoomManager() # custom manager
     is_commun = models.BooleanField(default=False)
+    groupe = models.ForeignKey(Player, null=True, blank=True)
 
     def __add_message(self, type, sender, message=None):
         '''Generic function for adding a message to the chat room'''
@@ -82,7 +83,11 @@ class Room(models.Model):
             return 0
 
     def __unicode__(self):
-        return 'Chat for %s %d' % (self.content_type, self.object_id)
+        try:
+            result = "Chat du {groupe}".format(groupe=self.groupe.name)
+            return result
+        except :
+            return "Chat commun"
 
 MESSAGE_TYPE_CHOICES = (
     ('s','system'),
@@ -123,7 +128,7 @@ class Spy_code(models.Model):
         else:
             return False
     def __unicode__(self):
-        return "ID : {pk} -- Hash : {hash}".format(pk=self.pk, hash=self.spy_hash)
+        return "Spycode, ID : {pk}, {hash}".format(pk=self.pk, hash=self.spy_hash)
 
 class Message(models.Model):
     '''A message that belongs to a chat room'''
@@ -138,9 +143,9 @@ class Message(models.Model):
         '''Each message type has a special representation, return that representation.
         This will also be translator AKA i18l friendly.'''
         if self.type == 's':
-            return u'SYSTEM: %s' % self.message
+            return 'SYSTEM: %s' % self.message
         if self.type == 'n':
-            return u'NOTIFICATION: %s' % self.message
+            return 'NOTIFICATION: %s' % self.message
         elif self.type == 'j':
             return 'JOIN: %s' % self.author
         elif self.type == 'l':

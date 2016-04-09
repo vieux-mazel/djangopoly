@@ -2,7 +2,7 @@
     <table class="table table-bordered">
         <tbody>
             <tr>
-                <td> Nom </td>
+                <td> Nom de la propriété </td>
                 <td> {{clicked_object.square.title}} </td>
             <tr>
             </tr>
@@ -26,11 +26,44 @@
             <tr>
                 <td> Possédé par </td>
                 <td> {% if clicked_object.owned_by %} {{clicked_object.owned_by.name}} {% else %}Personne{% endif %} </td>
-
             </tr>
-
         </tbody>
     </table>
+    <div class="btn-group-vertical" role="group" aria-label="...">
+        <!-- Buy house -->
+        {% if not clicked_object.build_house >= 5 %}
+        <form class="house-form" id="buy-house-form">
+            <input name="property_id" type="hidden" value="{{clicked_object.pk}}" />
+            <input name="action_type" type="hidden" value="buy-house" />
+            <input type="submit" class="btn btn-primary" {% if clicked_object.build_house == 4 %} value="Ajouter un hotel ({{clicked_object.house_price}}$)"/> {% else %} value="Ajouter une maison ({{clicked_object.house_price}}$)"/> {% endif %}
+        </form>
+        {% endif %}
+        {% if not clicked_object.is_mortgaged %}
+        <!-- Mortgage house -->
+        <form class="house-form" id="mortage-house-form">
+            <input name="property_id" type="hidden" value="{{clicked_object.pk}}" />
+            <input name="action_type" type="hidden" value="mortage-house" />
+            <input type="submit" class="btn btn-primary" value="Hypothéquer la propriété ({{clicked_object.price}}$)" />
+        </form>
+        {% endif %}
+        {% if clicked_object.is_mortgaged %}
+        <!-- Un-Mortage house -->
+        <form class="house-form" id="unmortgage-house-form">
+            <input name="property_id" type="hidden" value="{{clicked_object.pk}}" />
+            <input name="action_type" type="hidden" value="unmortgage-house" />
+            <input type="submit" class="btn btn-primary" value="Dé-hypothéquer la maison ({{clicked_object.mortgage_price}} $)" />
+        </form>
+        {% endif %}
+        <!-- Sell house -->
+        {% if clicked_object.build_house > 0 %}
+        <form class="house-form" id="sell-house-form">
+            <input name="property_id" type="hidden" value="{{clicked_object.pk}}" />
+            <input name="action_type" type="hidden" value="sell-house" />
+            <input type="submit" class="btn btn-primary" value="Vendre une maison ({{clicked_object.house_sell_price}}$)" />
+        </form>
+        {% endif %}
+    </div>
+
 </div>
 <div class="property-menu-child">
     {% if clicked_object.tax_1house %}
@@ -41,19 +74,23 @@
                 <td> {{clicked_object.house_price}} $</td>
             <tr>
             <tr>
-                <td> 1ère maison </td>
+                <td> Taxe sans maison </td>
+                <td> {{clicked_object.tax_site}} $</td>
+            <tr>
+            <tr>
+                <td> Taxe 1ère maison </td>
                 <td> {{clicked_object.tax_1house}} $</td>
             <tr>
             </tr>
-                <td> 2ème maison </td>
+                <td> Taxe 2ème maison </td>
                 <td> {{clicked_object.tax_2house}} $</td>
             </tr>
             <tr>
-                <td> 3ème maison </td>
+                <td> Taxe 3ème maison </td>
                 <td> {{clicked_object.tax_3house}} $</td>
             </tr>
             <tr>
-                <td> 4ème maison </td>
+                <td> Taxe 4ème maison </td>
                 <td> {{clicked_object.tax_4house}} $</td>
             </tr>
             <tr>

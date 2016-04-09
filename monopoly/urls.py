@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from monopoly import views, views_property
+from monopoly import views, views_property, views_code
 
 urlpatterns = patterns('',
         url(r'^$', views.index, name='index'),
@@ -18,5 +18,12 @@ urlpatterns = patterns('',
         url(r'^game/(?P<id>[\w\-]+)/join/$', views.join_game, name='join_game'),
         url(r'^game/(?P<id>[\w\-]+)/state/$', views.game_state, name='game_state'),
         url(r'^super_reset/$', views.super_reset, name="super_reset"),
-        url(r'^game/property/info', views_property.property_info, name='info_property'),
+        url(r'^game/property/info/', views_property.property_info, name='info_property'),
+        url(r'^game/property/action/$', views_property.property_action, name='property_action'),
+        
+        url(r'^game/cheat/$', views_code.validate, name='validate_code'),
+        url(r'^game/cheat/(?P<hash>[\w\-]+)/$', views_code.validate, name='validate_code'),
+        url(r'^game/cheat/validate/$', views_code.validate, name='validate_code'),
+
+
 )

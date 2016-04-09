@@ -15,6 +15,7 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading">
                         Ton groupe : <br> <b>{{groupe.name}}</b>
+                        <a style="float:right;" role="button" class="button button-error" href="/chat/"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>Chat plus grand</a>
                     </div>
 
                     <!-- Table -->
@@ -27,12 +28,20 @@
                         </thead>
                         <tbody id="players-table-body">
                         </tbody>
+                        <div id="chat"></div>
+                        <script type="text/javascript" src="/static/js/jchat.js"></script>
+                        <script type="text/javascript">
+                        /* chat_id is passed form the view, the init_chat function then does all the magic */
+                        $(window).ready(function(){
+                        	init_chat(0, "chat", 'false',false);
+                        })
+                        </script>
                     </table>
                     <div id="dice-vis"></div>
                     <div class="panel-body">
                         <div id="button-controls">
                             <div id="dice">
-                             <span class="button-wrap"><a href="#" class="button button-pill button-primary">{% trans "Roll the dice!" %}</a></span>
+                             <span class="button-wrap"><a id="dice_button" href="#" class="button button-pill button-primary">{% trans "Roll the dice!" %}</a></span>
                             </div>
                          <div id="buy">
                             <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Buy property" %}</a></span>
@@ -46,9 +55,9 @@
                         <div id="card">
                             <span class="button-wrap"><a href="#" class="button button-pill">{% trans "Draw card" %}</a></span>
                         </div>
-                        <div id="end-turn">
+                        <!--<div id="end-turn">
                             <span class="button-wrap"><a href="#" class="button button-pill">{% trans "End turn" %}</a></span>
-                        </div>
+                        </div>-->
                         <div id="">
                             <span class="button-wrap"><a href="/accounts/logout" class="button button-pill">{% trans "Leave game" %}</a></span>
                         </div>

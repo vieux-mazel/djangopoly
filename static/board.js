@@ -48,11 +48,31 @@
         squareStr = squareStr + playersStr;
 
         var s = document.getElementById('square' + square.position);
+        var sid = $('#square' + square.position)
         s.setAttribute('data-id', square.position);
         if (square.owned_by) {
-          s.className += ' owned owned' + square.owned_by.joined;
-          s.setAttribute('data-ownerid', square.owned_by.joined);
-          if (square.is_mortgaged) s.className += ' mortgaged'
+            var onehouse = '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>';
+            var twohouse = onehouse + '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>';
+            var threehouse = twohouse + '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>';
+            var fourhouse = threehouse + '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>';
+            var hotel = '<span class="glyphicon glyphicon-hotel glyphicon-home" aria-hidden="true"></span>';
+
+            s.className += ' owned owned' + square.owned_by.joined;
+            s.setAttribute('data-ownerid', square.owned_by.joined);
+            if (square.is_mortgaged) s.className += ' mortgaged'
+            if (square.type == 'property'){
+                if (square.owned_by.house_build == 1){
+                    squareStr += onehouse
+                } else if (square.owned_by.house_build == 2){
+                    squareStr += twohouse;
+                } else if (square.owned_by.house_build == 3){
+                    squareStr += threehouse;
+                } else if (square.owned_by.house_build == 4){
+                    squareStr += fourhouse;
+                } else if (square.owned_by.house_build == 5){
+                    squareStr += hotel;
+                }
+            }
         }
         s.innerHTML = squareStr;
       }
@@ -83,21 +103,22 @@
       // Buy and mortgage
       if (state.can_be_bought) $buy.addClass('active');
       else $buy.removeClass('active');
-
-      if (state.can_be_mortgaged) $mortgage.addClass('active');
-      else $mortgage.removeClass('active');
-
-      // Dice
-      if (!state.is_your_turn) {
-        $dice.removeClass('active');
-        $endTurn.removeClass('active');
-      } else if (!state.rolled_this_turn) {
-        $dice.addClass('active');
-        $endTurn.removeClass('active');
-      } else {
-        $dice.removeClass('active');
-        $endTurn.addClass('active');
+      if(state.dice_left > 0){
+          $dice.addClass('active');
+          $('#dice_left').remove();
+          $('#dice_button').append("<span id='dice_left'> (" + state.dice_left + " restants)</span>");
       }
+      // Dice
+//      if (!state.is_your_turn) {
+//        $dice.removeClass('active');
+//        $endTurn.removeClass('active');
+//      } else if (!state.rolled_this_turn) {
+//        $dice.addClass('active');
+//        $endTurn.removeClass('active');
+//      } else {
+//        $dice.removeClass('active');
+//        $endTurn.addClass('active');
+//      }
 
       // Drawing cards
       if (state.can_draw_card) $card.addClass('active');
@@ -116,10 +137,9 @@
   $dice.click(function() {
     $.getJSON('/game/roll', function(data) {
       console.log(data);
-
       if (data.success === true) {
-        $dice.removeClass('active');
-        $endTurn.addClass('active');
+        //$dice.removeClass('active');
+        //$endTurn.addClass('active');
         $dicevis.html('<div class="die">'+ data.dice1 +'</div>'+ '<div class="die">'+ data.dice2 +'</div>');
       }
     });
@@ -132,7 +152,7 @@
   });
 
   $buy.click(function() {
-    if (lastState && !lastState.can_be_bought) return;
+    //if (lastState && !lastState.can_be_bought) return;
 
     $.getJSON('/game/buy', function(data) {
       console.log(data);

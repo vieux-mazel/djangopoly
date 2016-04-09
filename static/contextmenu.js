@@ -201,16 +201,17 @@ $.ajaxSetup({
    * Turns the custom context menu on.
    */
   function toggleMenuOn() {
-    console.log( "Square ID - " + taskItemInContext.getAttribute("data-id"));
+    //console.log( "Square ID - " + taskItemInContext.getAttribute("data-id"));
     if ( menuState !== 1 ) {
         clicked_square = taskItemInContext;
         $.ajax({
             type: 'POST',
             data: {square_id: taskItemInContext.getAttribute("data-id")},
-            url:'/game/property/info',
+            url:'/game/property/info/',
     		dataType: 'json',
     		success: function (data) {
                 $('#property-menu').append(data.html);
+                bind_property_forms();
             },
         });
         clicked_square.classList.add('watched');

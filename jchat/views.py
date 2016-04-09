@@ -11,44 +11,51 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+import datetime
 
 from jchat.models import Room, Message, Spy_code
 from .forms import SpyForm, SpyTeamSelector
 
 @login_required
-def spy(request):
-    if request.method == 'POST':
-        p = request.POST
-        form = SpyForm(p)
-        hash = p['spycode']
-        print hash
-        try:
-            spy = Spy_code.objects.get(spy_hash = hash)
-        except Spy_code.DoesNotExist:
-            message = 'ce code n\'est pas valide - En cas de besoin n\'hésite pas à contacter cg@vieux-mazel.ch'
-            return render(request, 'spy.html' , {'message': message, 'form':form})
-        if (spy.is_active()):
+def spy(request,hash=False):
+    now = timezone.now() - datetime.timedelta(hours=12)
+    codes = Spy_code.objects.filter(used_by=request.user.profile.groupe, first_used__gt=now)
+    if not hash:
+        if request.method == 'POST':
+            p = request.POST
+            form = SpyForm(p)
+            hash = p['spycode']
             try:
-                if(p['spyteam']):
-                    spy.linked_room = Room.objects.get(id=p['spyteam'])
-                    spy.save()
-            except:
-                pass
-            print spy.is_allowed(request.user.profile.groupe)
-            if (not spy.is_allowed(request.user.profile.groupe)):
-                message = 'ce code est déjà utilisé par une autre équipe ! Soit tu essaies de tricher... c\'est bien essayé mais triche mieux la prochaine fois ;-) soit tu t\'es fait piqué ton code d\'accès SHAME ON YOU :-)'
-                return render(request, 'spy.html' , {'message': message, 'form':form})
-            if (spy.is_set()):
-                return render(request, 'spy.html', {'hash': hash})
+                spy = Spy_code.objects.get(spy_hash = hash)
+            except Spy_code.DoesNotExist:
+                message = 'ce code n\'est pas valide - En cas de besoin n\'hésite pas à contacter cg@vieux-mazel.ch'
+                return render(request, 'spy.html' , {'message': message, 'form':form, 'codes':codes})
+            if (spy.is_active()):
+                try:
+                    if(p['spyteam']):
+                        spy.linked_room = Room.objects.get(pk=int(p['spyteam']))
+                        spy.save()
+                except:
+                    pass
+                print spy.is_allowed(request.user.profile.groupe)
+                if (not spy.is_allowed(request.user.profile.groupe)):
+                    message = 'ce code est déjà utilisé par une autre équipe ! Soit tu essaies de tricher... c\'est bien essayé mais triche mieux la prochaine fois ;-) soit tu t\'es fait piqué ton code d\'accès SHAME ON YOU :-)'
+                    return render(request, 'spy.html' , {'message': message, 'form':form, 'codes':codes})
+                if (spy.is_set()):
+                    return render(request, 'spy.html', {'hash': spy, 'codes':codes})
+                else:
+                    form_team = SpyTeamSelector()
+                    return render(request, 'spy.html', {'hash':spy, 'form': form, 'form_teamselector':form_team, 'codes':codes})
             else:
-                form_team = SpyTeamSelector()
-                return render(request, 'spy.html', {'hash':hash, 'form': form, 'form_teamselector':form_team})
+                message = 'ce code a expiré, il n\'est plus valable. Pour rappel les codes d\'espionnage ne sont utilisables que 12h.'
+                return render(request, 'spy.html' , {'message': message, 'form':form, 'codes':codes})
         else:
-            message = 'ce code a expiré, il n\'est plus valable. Pour rappel les codes d\'espionnage ne sont utilisables que 12h.'
-            return render(request, 'spy.html' , {'message': message, 'form':form})
+            form = SpyForm()
+            return render(request, 'spy.html', {'form':form, 'codes':codes})
     else:
-        form = SpyForm()
-        return render(request, 'spy.html',{'form': form})
+        spy = Spy_code.objects.get(spy_hash = hash)
+        return render(request, 'spy.html', {'hash': spy, 'codes':codes})
 
 @login_required
 def send(request):
@@ -59,10 +66,10 @@ def send(request):
     '''
     p = request.POST
     player = request.user.profile.groupe
-    if p['is_commun']:
+    if p['is_commun'] == unicode('true'):
         r = Room.objects.get(is_commun=True)
     else :
-        r = Room.objects.get(id=player.id)
+        r =  Room.objects.get(groupe=player)
     r.say(request.user, p['message'])
     return HttpResponse('')
 
@@ -75,10 +82,10 @@ def sync(request):
     '''
     p = request.POST
     player = request.user.profile.groupe
-    if p['is_commun']:
+    if p['is_commun'] == unicode('true'):
         r = Room.objects.get(is_commun=True)
     else :
-        r = Room.objects.get(id=player.id)
+        r =  Room.objects.get(groupe=player)
     lmid = r.last_message_id()
 
     return HttpResponse(jsonify({'last_message_id':lmid}))
@@ -104,10 +111,10 @@ def receive(request):
         offset = 0
 
     player = request.user.profile.groupe
-    if post['is_commun']:
+    if post['is_commun'] == unicode('true'):
         r = Room.objects.get(is_commun=True)
     else :
-        r = Room.objects.get(id=player.id)
+        r =  Room.objects.get(groupe=player)
     m = r.messages(offset)
     return HttpResponse(jsonify(m, ['id','author','message','type','timestamp']))
 
@@ -147,7 +154,7 @@ def join(request):
     message
     '''
     player = request.user.profile.groupe
-    r = Room.objects.get(id=player.id)
+    r =  Room.objects.get(groupe=player)
     r.join(request.user)
     return HttpResponse('')
 
@@ -160,7 +167,7 @@ def leave(request):
     '''
     p = request.POST
     player = request.user.profile.groupe
-    r = Room.objects.get(id=player.id)
+    r =  Room.objects.get(groupe=player)
     r.leave(request.user)
     return HttpResponse('')
 

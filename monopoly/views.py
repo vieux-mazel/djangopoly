@@ -1,3 +1,4 @@
+# -*- encoding: UTF-8 -*-
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
@@ -162,14 +163,17 @@ def roll_dice(request):
     (dice1, dice2) = rules.roll_dice();
 
     # Can't roll more than once (except when it's a double)
-    if player.rolled_this_turn:
-        return HttpResponse(FAILURE)
+    #if player.rolled_this_turn:
+    #    return HttpResponse(FAILURE)
 
     # If it's a double, the player can roll twice.
-    if dice1 != dice2:
-        player.rolled_this_turn = True
+    if dice1 == dice2:
+        player.dice_left += 1
         player.save()
-
+        r =  Room.objects.get(groupe=player)
+        message = "--> Votre équipe a fait un double ! Vous pouvez rejouer !"
+        r.say(request.user, message)
+    player.rolled_this_turn = True
     # Handle player movement
     rules.move_player(player, (dice1, dice2))
     player.dice_left -= 1
@@ -190,23 +194,19 @@ def end_turn(request):
 
     # Make sure the player can roll the next turn
     player.rolled_this_turn = False
-    player.save()
 
     # Make sure the player can draw a card next turn
     player.drew_card_this_turn = False
     player.save()
-
     # Get all players in this game, subtract one from plays_in_turns
     # (when it gets negative it resets to the maximum)
     players = player.game.player_set.all()
     for p in players:
         p.plays_in_turns = (p.plays_in_turns - 1) % len(players)
         p.save()
-
     return HttpResponse(SUCCESS)
 
 # Buying a property or utility
-@player_can_play
 def buy(request):
     player = request.user.profile.groupe
     square = player.square
@@ -220,7 +220,6 @@ def buy(request):
 
 # Pay a bailout when the player is in jail
 # in order to become free.
-@player_can_play
 def pay_bailout(request):
     player = request.user.profile.groupe
 
@@ -243,7 +242,6 @@ def mortgage(request):
     return HttpResponse(SUCCESS)
 
 # Draw a card
-@player_can_play
 def draw_card(request):
     player = request.user.profile.groupe
 
@@ -319,7 +317,8 @@ def game_state(request, id):
             if square.property.owned_by is not None:
                 s['owned_by'] = {
                     'name': square.property.owned_by.name,
-                    'joined': square.property.owned_by.joined
+                    'joined': square.property.owned_by.joined,
+                    'house_build': square.property.build_house
                 }
             else:
                 s['owned_by'] = None
@@ -344,7 +343,8 @@ def game_state(request, id):
         'can_be_bought': current_player.rolled_this_turn and rules.can_be_bought(current_player, current_player.square),
         'can_be_mortgaged': rules.can_be_mortgaged(current_player, current_player.square),
         'can_draw_card': rules.can_draw_card(player),
-        'can_pay_jail': current_player.is_in_jail() and current_player.plays_in_turns == 0
+        'can_pay_jail': current_player.is_in_jail() and current_player.plays_in_turns == 0,
+        'dice_left': current_player.dice_left
     }
 
     state = json.dumps(state, indent=4, sort_keys=True)

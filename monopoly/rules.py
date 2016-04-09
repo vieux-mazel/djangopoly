@@ -34,7 +34,7 @@ def move_player(player, dice):
         player: Player
         dice: (int, int)
     """
-    assert len(dice) == 2, "Unexpected number of dice rolls. Should be exactly two." 
+    assert len(dice) == 2, "Unexpected number of dice rolls. Should be exactly two."
 
     if not player.is_in_jail(): # Move the player only if she's not in jail
         new_position = (player.square.position + dice[0] + dice[1]) % len(squares)
@@ -54,7 +54,7 @@ def move_player(player, dice):
 
     elif isinstance(identity, Property) or isinstance(identity, Utility):
         assert identity.owned_by is None or isinstance(identity.owned_by, Player), "The property/utility is owned by a non-Player object?"
-        assert identity.owned_by is None or Player.objects.filter(session_id=identity.owned_by.session_id, game=player.game).exists(), "The property/utility is owned by an invalid player or someone from another game."
+        #assert identity.owned_by is None or Player.objects.filter(session_id=identity.owned_by.session_id, game=player.game).exists(), "The property/utility is owned by an invalid player or someone from another game."
 
         # The identity is not owned by anyone. Nothing
         # special happens, although the player can buy it.
@@ -99,8 +99,8 @@ def can_be_bought(player, square):
         return False
 
     # The square is a property, and another property of the same street (color) is owned by another player
-    if isinstance(identity, Property) and identity.street.property_set.filter(~Q(owned_by=player) & ~Q(owned_by=None)):
-        return False
+    #if isinstance(identity, Property) and identity.street.property_set.filter(~Q(owned_by=player) & ~Q(owned_by=None)):
+    #    return False
 
     return True
 
@@ -153,9 +153,23 @@ def can_be_mortgaged(player, square):
     if identity.is_mortgaged:
         return False
 
-    if player.plays_in_turns != 0:
+    #if player.plays_in_turns != 0:
+    #    return False
+
+    return True
+def can_be_unmortgaged(player, square):
+    identity = identify_square(square)
+    if isinstance(identity, Special):
+        return False # Can't mortgage a special square.
+
+    if identity.owned_by != player:
+        return False # The square is not owned by the player.
+
+    if not identity.is_mortgaged:
         return False
-        
+
+    if player.money < identity.price :
+        return False
     return True
 
 
@@ -178,7 +192,17 @@ def mortgage(player, square):
     identity = identify_square(square)
     identity.is_mortgaged = True
     identity.save()
-    give_money(player, identity.price/2)
+    give_money(player, identity.price)
+    return True
+
+def unmortgage(player, square):
+    if not can_be_unmortgaged(player, square):
+        return False
+
+    identity = identify_square(square)
+    identity.is_mortgaged = False
+    identity.save()
+    take_money(player, identity.price)
     return True
 
 
@@ -192,7 +216,22 @@ def get_rent(identity):
         rent: int
     """
     if isinstance(identity, Property): # If it's a property, the rent is the tax site.
-        return identity.tax_site
+        if identity.build_house == 0:
+            return identity.tax_site
+        elif identity.build_house == 1:
+            return identity.tax_1house
+        elif identity.build_house == 2:
+            return identity.tax_2house
+        elif identity.build_house == 3:
+            return identity.tax_3house
+        elif identity.build_house == 4:
+            return identity.tax_4house
+        elif identity.build_house == 5:
+            return identity.tax_hotel
+        elif identity.build_house > 5:
+            return identity.tax_hotel
+        else:
+            return identity.tax_site
     elif isinstance(identity, Utility): # If it's a utitlity, the rent depends on how many other utilities are owned by the same player.
         if identity.owned_by is None:
             return identity.tax_site
@@ -345,7 +384,24 @@ def can_draw_card(player):
         return False
 
     return True
+def can_build_house(square,player):
+    identity = None
+    type = squares[square.position]['type']
+    if type == 'property':
+        property = square.property
+    else:
+        return False
+    for p in property.street.property_set.all():
+        if p.owned_by != player:
+            return False
+    if player.money >= property.house_price:
+        return True
+    return False
 
+    #if (len(street.property_set) == Property.objects.filter(street.own=street).count() and player.money > property.house_price and ):
+    #    return True
+    #else:
+    #    return False
 
 def identify_square(square):
     """Determines a square's identity.

@@ -1,7 +1,6 @@
 .login_body{
-    background: url(http://mymaplist.com/img/parallax/back.png);
-	background-color: #444;
-    background: url(http://mymaplist.com/img/parallax/pinlayer2.png),url(http://mymaplist.com/img/parallax/pinlayer1.png),url(http://mymaplist.com/img/parallax/back.png);
+    background: url(/static/img/back.png);
+    background: url(/static/img/pinlayer2.png),url(/static/img/pinlayer1.png),url(/static/img/back.png);
 }
 
 .vertical-offset-100{
@@ -57,4 +56,87 @@ display: block;
 
 .square.watched {
     border: rgba(110, 255, 23, 0.76) 7px solid;
+}
+
+
+
+/** DICE **/
+#dice-vis{
+    float: right;
+}
+.die{
+    width: 75px;
+    height: 75px;
+    font-size: 50px;
+    padding-bottom:0;
+}
+
+
+
+
+/* Context menu's CSS */
+/* context menu */
+
+.context-menu {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  padding: 12px 0;
+  width: 240px;
+  background-color: #fff;
+  border: solid 1px #dfdfdf;
+  box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu--active {
+  display: block;
+}
+
+.context-menu__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.context-menu__item {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.context-menu__item:last-child {
+  margin-bottom: 0;
+}
+
+.context-menu__link {
+  display: block;
+  padding: 4px 12px;
+  color: #0066aa;
+  text-decoration: none;
+}
+
+.context-menu__link:hover {
+  color: #fff;
+  background-color: #0066aa;
+}
+
+
+
+/** Spy css */
+.spy, .spy > p, .spy > h1 h2 h3 h4 h5{
+    font-family: "Droid Sans Mono", "Courier New", monospace;
+    color:green;
+}
+.spy > h1:after {
+    content: "...";
+    padding-left: 5px;
+}
+.spy{
+    background-color: black;
+}
+
+
+/** HOTEL */
+.glyphicon-hotel{
+    color: red;
+    font-size: 160%;
 }

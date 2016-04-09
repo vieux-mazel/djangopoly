@@ -1,3 +1,4 @@
+# -*- encoding: UTF-8 -*-
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
@@ -15,6 +16,14 @@ from monopoly.models import Game, Square, Property, Utility, Special, Player, St
 from jchat.models import Message, Room
 import rules
 from board import squares
+FAILURE = json.dumps({'success': False})
+SUCCESS = json.dumps({'success': True})
+
+
+def send_message(message,user):
+    groupe = user.profile.groupe
+    r =  Room.objects.get(groupe=groupe)
+    r.say(user, message)
 
 #### Property views
 @login_required
@@ -31,6 +40,59 @@ def property_info(request):
 
     rendered = render_to_string('property_info.html', { 'clicked_object': clicked_object })
     return JsonResponse({'html' : rendered})
+
+def property_action(request):
+    p = request.POST
+    groupe = request.user.profile.groupe
+    user = request.user
+    house = Property.objects.get(pk=int(p['property_id']))
+    if (p['action_type'] == 'buy-house'):
+        if (house.owned_by == groupe):
+            if (rules.can_build_house(house.square, groupe)):
+                if (not house.build_house == 5):
+                    house.build_house += 1 # ajoute une maison a la property
+                    house.save()
+                    message = "--> Nouvelle maison sur <b style='color:{color};'> {name} </b> - fait par {player}".format(
+                              color = house.street.color,
+                              name = house.square.title,
+                              player = request.user.username)
+                    send_message(message, user)
+                    return HttpResponse(SUCCESS)
+        return HttpResponse(FAILURE)
+
+    elif(p['action_type'] == 'mortage-house'):
+        if(rules.mortgage(groupe, house.square)):
+            message = "--> La propriete <b style='color:{color};'> {name} </b> a été hypothèquéee - fait par {player}".format(
+                      color=house.street.color,
+                      name=house.square.title,
+                      player = request.user.username)
+            send_message(message, user)
+            return HttpResponse(SUCCESS)
+        return HttpResponse(FAILURE)
+
+    elif(p['action_type'] == 'unmortgage-house'):
+        if(rules.unmortgage(groupe, house.square)):
+            message = "--> La propriete <b style='color:{color};'> {name} </b> est dé-hypothèquéee - fait par {player}".format(
+                      color=house.street.color,
+                      name=house.square.title,
+                      player = request.user.username)
+            send_message(message,user)
+            return HttpResponse(SUCCESS)
+        return HttpResponse(FAILURE)
+
+    elif(p['action_type'] == 'sell-house'):
+        if (house.owned_by == groupe):
+            if (house.build_house > 0):
+                house.build_house -= 1 # ajoute une maison a la property
+                house.save()
+                rules.give_money(groupe, house.house_sell_price)
+                message = "--> Maison vendue sur <b style='color:{color};'> {name} </b> - fait par {player}".format(
+                          color = house.street.color,
+                          name = house.square.title,
+                          player = request.user.username)
+                send_message(message, user)
+                return HttpResponse(SUCCESS)
+    return HttpResponse(FAILURE)
 
 def reste_de_code(request):
     post = request.POST

@@ -3,6 +3,7 @@ from django.conf import settings
 from pprint import pprint
 import json
 import board
+import random, string
 
 class Game(models.Model):
     private = models.BooleanField(default=False)
@@ -71,6 +72,7 @@ class Property(models.Model):
     tax_hotel = models.IntegerField(default=0)
     build_house = models.PositiveSmallIntegerField(default=0)
     house_price = models.PositiveSmallIntegerField(default=0)
+    house_sell_price = models.PositiveSmallIntegerField(default=0)
     mortgage_price = models.IntegerField(default=0)
     is_mortgaged = models.BooleanField(default=False)
 
@@ -117,3 +119,22 @@ class UserProfile(models.Model):
         return "Groupe {groupe} : {user}".format(
             groupe=self.groupe.name,
             user=self.django_user)
+
+def my_random_key():
+
+    return 'C' + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(9))
+
+EFFECTS = (
+    ('g','givemoney'),
+    ('a','adddice'),
+    ('m', 'moveanywhere'),
+    ('s','shield'),
+    ('f','freebuy'),
+)
+class Code(models.Model):
+    is_used = models.BooleanField(default=False)
+    hash = models.CharField(max_length=10, default=my_random_key, unique=True)
+    effect = models.CharField(max_length=1, choices=EFFECTS, default='g')
+
+    def __unicode__(self):
+        return "Cheat code, ID : {pk} , {hash}, {effect} ".format(pk=self.pk, hash=self.hash, effect=self.get_effect_display())
