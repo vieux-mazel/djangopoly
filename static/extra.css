@@ -140,3 +140,7 @@ display: block;
     color: red;
     font-size: 160%;
 }
+
+.property-menu-child-bold > td{
+    font-weight: bold;
+}

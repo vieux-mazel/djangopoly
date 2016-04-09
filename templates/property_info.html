@@ -72,28 +72,28 @@
             <tr>
                 <td> Prix achat maison </td>
                 <td> {{clicked_object.house_price}} $</td>
-            <tr>
-            <tr>
+            </tr>
+            <tr{% if clicked_object.build_house == 0 %} class="property-menu-child-bold" {% endif %}>
                 <td> Taxe sans maison </td>
                 <td> {{clicked_object.tax_site}} $</td>
-            <tr>
-            <tr>
+            </tr>
+            <tr{% if clicked_object.build_house == 1 %} class="property-menu-child-bold" {% endif %}>
                 <td> Taxe 1ère maison </td>
                 <td> {{clicked_object.tax_1house}} $</td>
-            <tr>
             </tr>
+            <tr{% if clicked_object.build_house == 2 %} class="property-menu-child-bold" {% endif %}>
                 <td> Taxe 2ème maison </td>
                 <td> {{clicked_object.tax_2house}} $</td>
             </tr>
-            <tr>
+            <tr{% if clicked_object.build_house == 3 %} class="property-menu-child-bold" {% endif %}>
                 <td> Taxe 3ème maison </td>
                 <td> {{clicked_object.tax_3house}} $</td>
             </tr>
-            <tr>
+            <tr{% if clicked_object.build_house == 4 %} class="property-menu-child-bold" {% endif %}>
                 <td> Taxe 4ème maison </td>
                 <td> {{clicked_object.tax_4house}} $</td>
             </tr>
-            <tr>
+            <tr{% if clicked_object.build_house == 5 %} class="property-menu-child-bold" {% endif %}>
                 <td> Hôtel </td>
                 <td> {{clicked_object.tax_hotel}} $</td>
             </tr>

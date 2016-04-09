@@ -413,7 +413,7 @@ def identify_square(square):
         identity: Property, Utility or Special
     """
     identity = None
-    
+
     type = squares[square.position]['type']
     if type == 'property':
         identity = square.property
