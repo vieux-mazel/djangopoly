@@ -26,7 +26,7 @@ class Player(models.Model):
     joined = models.IntegerField(default=0)
     game = models.ForeignKey(Game)
     name = models.CharField(default="Player", max_length=255)
-    money = models.IntegerField(default=25000)
+    money = models.IntegerField(default=15000)
     square = models.ForeignKey(Square)
     plays_in_turns = models.IntegerField(default=0)
     in_jail_for = models.IntegerField(default=0)

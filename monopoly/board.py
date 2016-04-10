@@ -1,3 +1,4 @@
+# -*- encoding: UTF-8 -*-
 """Describes the board of Monopoly."""
 
 streets = [
@@ -39,201 +40,200 @@ properties = [
     {
         'type': 'property',
         'position': 1,
-        'title': 'Old Kent Toad',
+        'title': 'Capite',
         'street': '#955335',
-        'tax_site': 2,
-        'price': 60,
-        'house_price': 100
+        'tax_site': 20,
+        'price': 600,
+        'house_price': 500
     },
     {
         'type': 'property',
         'position': 3,
-        'title': 'Whitechapel Road',
+        'title': 'Capitole',
         'street': '#955335',
-        'tax_site': 4,
-        'price': 60,
-        'house_price': 100
+        'tax_site': 40,
+        'price': 600,
+        'house_price': 500
     },
     {
         'type': 'property',
         'position': 6,
-        'title': 'The Angel Inslington',
+        'title': 'Stade de Copet 1',
         'street': '#AAE0FA',
-        'tax_site': 6,
-        'price': 100,
-        'house_price': 100
+        'tax_site': 60,
+        'price': 1000,
+        'house_price': 500
     },
     {
         'type': 'property',
         'position': 8,
-        'title': 'Euston Road',
+        'title': 'Stade de Copet 2',
         'street': '#AAE0FA',
-        'tax_site': 6,
-        'price': 100,
-        'house_price': 100
+        'tax_site': 60,
+        'price': 1000,
+        'house_price': 500
     },
     {
         'type': 'property',
         'position': 9,
-        'title': 'Penton View Road',
+        'title': 'Stade de Copet 3',
         'street': '#AAE0FA',
-        'tax_site': 8,
-        'price': 100,
-        'house_price': 100
+        'tax_site': 80,
+        'price': 1200,
+        'house_price': 500
     },
     {
         'type': 'property',
         'position': 11,
-        'title': 'Pall Mall',
+        'title': 'Parc Chaplin',
         'street': '#D93A96',
-        'tax_site': 10,
-        'price': 140,
-        'house_price': 100
+        'tax_site': 100,
+        'price': 1400,
+        'house_price': 1000
     },
     {
         'type': 'property',
         'position': 13,
-        'title': 'White Hall',
+        'title': 'Jardin Roussy',
         'street': '#D93A96',
-        'tax_site': 10,
-        'price': 140,
-        'house_price': 100
+        'tax_site': 100,
+        'price': 1400,
+        'house_price': 1000
     },
     {
         'type': 'property',
         'position': 14,
-        'title': 'Norton Avenue',
+        'title': 'Jardin Doret',
         'street': '#D93A96',
-        'tax_site': 10,
-        'price': 160,
-        'house_price': 100,
-        'house_price': 100
+        'tax_site': 120,
+        'price': 1600,
+        'house_price': 1000
     },
     {
         'type': 'property',
         'position': 16,
-        'title': 'Bow Street',
+        'title': 'Alimentarium',
         'street': '#F7941D',
-        'tax_site': 14,
-        'price': 180,
-        'house_price': 100
+        'tax_site': 140,
+        'price': 1800,
+        'house_price': 1000
     },
     {
         'type': 'property',
         'position': 18,
-        'title': 'Marlboro Street',
+        'title': 'Musée de la photo',
         'street': '#F7941D',
-        'tax_site': 14,
-        'price': 180,
-        'house_price': 100
+        'tax_site': 140,
+        'price': 1800,
+        'house_price': 1000
     },
     {
         'type': 'property',
         'position': 19,
-        'title': 'Vine Street',
+        'title': 'Place du marché',
         'street': '#F7941D',
-        'tax_site': 16,
-        'price': 200,
-        'house_price': 100
+        'tax_site': 160,
+        'price': 2000,
+        'house_price': 1000
     },
     {
         'type': 'property',
         'position': 21,
-        'title': 'Strand',
+        'title': 'Boucherie Stuby',
         'street': '#ED1B24',
-        'tax_site': 16,
-        'price': 220,
-        'house_price': 100
+        'tax_site': 180,
+        'price': 2200,
+        'house_price': 1500
     },
     {
         'type': 'property',
         'position': 23,
-        'title': 'Fleet Street',
+        'title': 'Boucherie Matthey',
         'street': '#ED1B24',
-        'tax_site': 18,
-        'price': 220,
-        'house_price': 100
+        'tax_site': 180,
+        'price': 2200,
+        'house_price': 1500
     },
     {
         'type': 'property',
         'position': 24,
-        'title': 'Trafalgar Square',
+        'title': 'Boucherie Ruchet',
         'street': '#ED1B24',
-        'tax_site': 20,
-        'price': 240,
-        'house_price': 100
+        'tax_site': 200,
+        'price': 2400,
+        'house_price': 1500
     },
     {
         'type': 'property',
         'position': 26,
-        'title': 'Lester Square',
+        'title': 'Le Vème',
         'street': '#FEF200',
-        'tax_site': 22,
-        'price': 260,
-        'house_price': 100
+        'tax_site': 220,
+        'price': 2600,
+        'house_price': 1500
     },
     {
         'type': 'property',
         'position': 27,
-        'title': 'Coventry Street',
+        'title': 'Le petit léman',
         'street': '#FEF200',
-        'tax_site': 22,
-        'price': 260,
-        'house_price': 100
+        'tax_site': 220,
+        'price': 2600,
+        'house_price': 1500
     },
     {
         'type': 'property',
         'position': 29,
-        'title': 'Picadilly',
+        'title': 'LE BOUT DU MONDE !',
         'street': '#FEF200',
-        'tax_site': 24,
-        'price': 280,
-        'house_price': 100
+        'tax_site': 240,
+        'price': 2800,
+        'house_price': 1500
     },
     {
         'type': 'property',
         'position': 31,
-        'title': 'Regent Street',
+        'title': 'St-Martin',
         'street': '#1FB25A',
-        'tax_site': 24,
-        'price': 300,
-        'house_price': 100
+        'tax_site': 260,
+        'price': 3000,
+        'house_price': 2000
     },
     {
         'type': 'property',
         'position': 32,
-        'title': 'Oxford Street',
+        'title': 'Le Samaritain',
         'street': '#1FB25A',
-        'tax_site': 26,
-        'price': 300,
-        'house_price': 100
+        'tax_site': 260,
+        'price': 3000,
+        'house_price': 2000
     },
     {
         'type': 'property',
         'position': 34,
-        'title': 'Bond Street',
+        'title': 'La nouvelle Villa-Gérard',
         'street': '#1FB25A',
-        'tax_site': 28,
-        'price': 320,
-        'house_price': 100
+        'tax_site': 280,
+        'price': 3200,
+        'house_price': 2000
     },
     {
         'type': 'property',
         'position': 37,
-        'title': 'Park Lane',
+        'title': 'Manor',
         'street': '#0072BB',
-        'tax_site': 35,
-        'price': 350,
-        'house_price': 100
+        'tax_site': 350,
+        'price': 3500,
+        'house_price': 2000
     },
     {
         'type': 'property',
         'position': 39,
-        'title': 'Mayfair',
+        'title': 'Nestlé',
         'street': '#0072BB',
-        'tax_site': 50,
-        'price': 400,
-        'house_price': 100
+        'tax_site': 500,
+        'price': 4000,
+        'house_price': 2000
     }
 ]
 
@@ -241,44 +241,44 @@ utilities = [
     {
         'type': 'utility',
         'position': 5,
-        'title': 'Kings Cross Station',
-        'price': 200,
-        'tax_site': 25
+        'title': 'Gare de Vevey',
+        'price': 2000,
+        'tax_site': 250
     },
     {
         'type': 'utility',
         'position': 12,
-        'title': 'Electric Company',
-        'price': 150,
-        'tax_site': 25
+        'title': 'Les ateliers mécaniques',
+        'price': 1500,
+        'tax_site': 250
     },
     {
         'type': 'utility',
         'position': 15,
-        'title': 'Maryleboan Station',
-        'price': 200,
-        'tax_site': 25
+        'title': 'La Tour de Peilz Gare',
+        'price': 2000,
+        'tax_site': 250
     },
     {
         'type': 'utility',
         'position': 25,
-        'title': 'Fenchurchstreet Station',
-        'price': 150,
-        'tax_site': 25
+        'title': 'Vevey-Funi',
+        'price': 2000,
+        'tax_site': 250
     },
     {
         'type': 'utility',
         'position': 28,
-        'title': 'Waterworks',
-        'price': 150,
-        'tax_site': 25
+        'title': 'STEP de Vevey',
+        'price': 1500,
+        'tax_site': 250
     },
     {
         'type': 'utility',
         'position': 35,
-        'title': 'Liverpoolstreet Station',
-        'price': 200,
-        'tax_site': 25
+        'title': 'Blonay Gare',
+        'price': 2000,
+        'tax_site': 250
     }
 ]
 
@@ -290,7 +290,7 @@ specials = [
         'effect':
             {
                 'type': 'give_money',
-                'param': 200
+                'param': 2000
             }
     },
     {
@@ -408,7 +408,7 @@ specials = [
 cards = [
     {
         'name': 'Advance to Go',
-        'description': 'Mr. M strides in 7-league boots.',
+        'description': 'Dossier de camp terminé ! Vas immédiatement sur la case START',
         'effect':
             {
                 'type': 'move',
@@ -425,17 +425,17 @@ cards = [
             }
     },
     {
-        'name': 'Bank pays you dividend of $50',
-        'description': 'With his feet up on a telephone-bearing desk, Mr. M leans back in an overstuffed chair, blowing cigar smoke rings.',
+        'name': 'Vent au marché',
+        'description': 'Ton unité a fait une magnifique vente au marché ! En plus de faire plein de pub, tu gagnes 500$ .',
         'effect':
             {
                 'type': 'give_money',
-                'param': 50,
+                'param': 500,
             }
     },
     {
-        'name': 'Go to Jail!',
-        'description': 'A truncheon-carrying policeman in a dark-colored uniform hauls a surprised Mr M along by the feet.',
+        'name': 'ALTERTE A LA DIARÉE !',
+        'description': 'Tu attrape la diarée en plein camp ! Va immédiatement en quarantaine (prison)',
         'effect':
             {
                 'type': 'go_to_jail',
@@ -443,12 +443,12 @@ cards = [
             }
     },
     {
-        'name': 'Pay poor tax of $15',
-        'description': 'His trouser pockets pulled out to show them empty, Mr. M spreads his hands.',
+        'name': 'OUPS !',
+        'description': 'Tu as oublié de payer ta cotisation annuelle ',
         'effect':
             {
                 'type': 'take_money',
-                'param': 15
+                'param': 150
             }
     }
 ]

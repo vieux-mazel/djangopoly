@@ -19,16 +19,25 @@ def create(cls):
 
         # Create square identity
         identity = None # Identity of the square (property/utility/special)
+        multiplicator = [5,15,45,62.5,75]
         if x['type'] == 'property':
             identity = Property()
             identity.street = Street.objects.get(color=x['street'], game=newGame)
             identity.tax_site = x['tax_site']
             identity.price = x['price']
-            identity.tax_1house = floor(x['tax_site'] * 5)
-            identity.tax_2house = floor(x['tax_site'] * 15)
-            identity.tax_3house = floor(x['tax_site'] * 45)
-            identity.tax_4house = floor(x['tax_site'] * 62.5)
-            identity.tax_hotel = floor(x['tax_site'] * 75)
+            if x['position'] > 15:
+                multiplicator = [5,15,40,50,65]
+            if x['position'] > 20:
+                multiplicator = [5,15,37.5,46.25,55]
+            if x['position'] > 30:
+                multiplicator = [5,15,34,42.3,50]
+            if x['position'] > 34:
+                multiplicator = [4,12,28,34,40]
+            identity.tax_1house = floor(x['tax_site'] * multiplicator[0])
+            identity.tax_2house = floor(x['tax_site'] * multiplicator[1])
+            identity.tax_3house = floor(x['tax_site'] * multiplicator[2])
+            identity.tax_4house = floor(x['tax_site'] * multiplicator[3])
+            identity.tax_hotel = floor(x['tax_site'] * multiplicator[4])
             identity.house_price = x['house_price']
             identity.house_sell_price = x['house_price']/2 # prix de vente d'une maison
             identity.mortgage_price = x['price'] * 1.1 # prix pour dehypothequer
