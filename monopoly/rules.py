@@ -1,3 +1,4 @@
+# -*- encoding: UTF-8 -*-
 """Models the rules of the board game Monopoly.
 
 Consists mainly of functions that model the game flow
@@ -13,6 +14,12 @@ import random
 
 from monopoly.models import Game, Player, Square, Property, Utility, Special
 from board import squares, streets
+from jchat.models import Room,Message
+
+def send_message(message,user):
+    groupe = user.profile.groupe
+    r =  Room.objects.get(groupe=groupe)
+    r.say(user, message)
 
 def roll_dice():
     """Roll two dice randomly
@@ -42,7 +49,16 @@ def move_player(player, dice):
         new_position = player.square.position
         handle_jail(player, dice)
 
-    player.square = Square.objects.get(game=player.game, position=new_position)
+    newsquare = Square.objects.get(game=player.game, position=new_position)
+    if newsquare.position < player.square.position:
+        # Cela signifie que le joueur est passé par "Start"
+        player.money += 2000
+        player.save()
+        r =  Room.objects.get(groupe=player)
+        m = "Votre équipe est passée par la case 'START' vous gagnez 2000$"
+        message = Message(room=r, type='s', author=None, message=m)
+        message.save()
+    player.square = newsquare
     player.save()
 
     identity = identify_square(player.square)
@@ -53,7 +69,7 @@ def move_player(player, dice):
         apply_effect(player, identity.effect)
 
     elif isinstance(identity, Property) or isinstance(identity, Utility):
-        assert identity.owned_by is None or isinstance(identity.owned_by, Player), "The property/utility is owned by a non-Player object?"
+        #assert identity.owned_by is None or isinstance(identity.owned_by, Player), "The property/utility is owned by a non-Player object?"
         #assert identity.owned_by is None or Player.objects.filter(session_id=identity.owned_by.session_id, game=player.game).exists(), "The property/utility is owned by an invalid player or someone from another game."
 
         # The identity is not owned by anyone. Nothing
@@ -71,7 +87,16 @@ def move_player(player, dice):
         # The player has landed on another player's
         # unmortgaged property/utility, and should pay rent.
         elif identity.owned_by != player and not identity.is_mortgaged:
-            pay_rent(player, identity.owned_by, get_rent(identity))
+            if player.is_protected():
+                player.free_protection -= 1;
+                player.save()
+                m = "Vous {player} n\'avez pas payé de rente car vous êtes protégé, il vous reste {n} protections.".format(player=player.name,n=player.free_protection)
+                r =  Room.objects.get(groupe=player)
+                message = Message(room=r, type='s', author=None, message=m)
+                message.save()
+                assert False, "Ce Joueur est protege"
+            else:
+                pay_rent(player, identity.owned_by, get_rent(identity))
 
     else:
         assert False, "Identity of a square is not Special, Property or Utility."
@@ -104,7 +129,7 @@ def can_be_bought(player, square):
 
     return True
 
-def buy(player, square):
+def buy(player, square, free=False):
     """Buys a square on behalf of a player.
 
     Buying can fail if:
@@ -124,7 +149,8 @@ def buy(player, square):
         return False
     # Do the transaction
     identity = identify_square(square)
-    take_money(player, identity.price)
+    if not free:
+        take_money(player, identity.price)
     identity.owned_by = player
     identity.save()
     # It has succeeded

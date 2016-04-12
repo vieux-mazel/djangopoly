@@ -1,5 +1,4 @@
 from django import forms
-from .models import Spy_code
 from monopoly.models import Player
 class BuildHouseForm(forms.Form):
     def __init__(self,*args,**kwargs):
@@ -9,5 +8,9 @@ class BuildHouseForm(forms.Form):
 
 class BuildOtherForm(forms.Form):
     spyteam = forms.ModelChoiceField(label='Equipe', queryset=Player.objects.all(), empty_label=None)
+
+class CheatCodeForm(forms.Form):
+    cheatcode = forms.CharField(label='Code bonus', max_length=10)
+
 
 # place form definition here

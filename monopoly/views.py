@@ -217,6 +217,19 @@ def buy(request):
 
     # Buying has succeeded
     return HttpResponse(SUCCESS)
+def freebuy(request):
+    player = request.user.profile.groupe
+    square = player.square
+    if player.can_free_buy:
+        if rules.buy(player, square, True):
+            player.free_buy -= 1
+            player.save()
+            r =  Room.objects.get(groupe=player)
+            message = "--> Votre équipe a acheté <span style='color:grey;'> {name} </span> gratuitement, il vous reste {n} achat(s) gratuit(s) !".format(name=rules.identify_square(square).square.title, n=player.free_buy)
+            r.say(request.user, message)
+            return HttpResponse(SUCCESS)
+    return HttpResponse(FAILURE)
+
 
 # Pay a bailout when the player is in jail
 # in order to become free.
@@ -344,8 +357,10 @@ def game_state(request, id):
         'can_be_mortgaged': rules.can_be_mortgaged(current_player, current_player.square),
         'can_draw_card': rules.can_draw_card(player),
         'can_pay_jail': current_player.is_in_jail() and current_player.plays_in_turns == 0,
-        'dice_left': current_player.dice_left
+        'dice_left': current_player.dice_left,
+        'freebuy': current_player.can_free_buy()
     }
+
 
     state = json.dumps(state, indent=4, sort_keys=True)
 

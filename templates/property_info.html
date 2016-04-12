@@ -62,6 +62,13 @@
             <input type="submit" class="btn btn-primary" value="Vendre une maison ({{clicked_object.house_sell_price}}$)" />
         </form>
         {% endif %}
+        {% if free_move %}
+        <form class="house-form" id="free-move-form">
+            <input name="property_id" type="hidden" value="{{clicked_object.pk}}" />
+            <input name="action_type" type="hidden" value="free-move" />
+            <input type="submit" class="btn btn-primary" value="Se déplacer gratuitement ici (coûte 1 déplacement gratuit)" />
+        </form>
+        {% endif %}
     </div>
 
 </div>

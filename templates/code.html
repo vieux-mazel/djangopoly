@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-10">
+            <div class="jumbotron spy">
+                <h1>Code de Bonus </h1>
+                <p> Bienvenu sur la plateforme de gestion des codes bonus, tu peux entrer ton code ci-dessous, un message notifiera ton équipe de l'activation du code </p>
+                    <form action="./" method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <input id="id_spycode" maxlength="10" name="spycode" type="hidden" value="{{hash}}">
+                        <input type="submit" value="Valider">
+                    </form>
+            {% if message %}
+                <div class="alert alert-warning">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>ATTENTION!</strong> {{message}}
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

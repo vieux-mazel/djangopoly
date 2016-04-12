@@ -121,7 +121,7 @@ properties = [
     {
         'type': 'property',
         'position': 18,
-        'title': 'Musée de la photo',
+        'title': 'Musee de la photo',
         'street': '#F7941D',
         'tax_site': 140,
         'price': 1800,
@@ -130,7 +130,7 @@ properties = [
     {
         'type': 'property',
         'position': 19,
-        'title': 'Place du marché',
+        'title': 'Place du marche',
         'street': '#F7941D',
         'tax_site': 160,
         'price': 2000,
@@ -166,7 +166,7 @@ properties = [
     {
         'type': 'property',
         'position': 26,
-        'title': 'Le Vème',
+        'title': 'Le Veme',
         'street': '#FEF200',
         'tax_site': 220,
         'price': 2600,
@@ -175,7 +175,7 @@ properties = [
     {
         'type': 'property',
         'position': 27,
-        'title': 'Le petit léman',
+        'title': 'Le petit leman',
         'street': '#FEF200',
         'tax_site': 220,
         'price': 2600,
@@ -184,7 +184,7 @@ properties = [
     {
         'type': 'property',
         'position': 29,
-        'title': 'LE BOUT DU MONDE !',
+        'title': 'LE BOUT DU MONDE',
         'street': '#FEF200',
         'tax_site': 240,
         'price': 2800,
@@ -211,7 +211,7 @@ properties = [
     {
         'type': 'property',
         'position': 34,
-        'title': 'La nouvelle Villa-Gérard',
+        'title': 'La nouvelle Villa-Gerard',
         'street': '#1FB25A',
         'tax_site': 280,
         'price': 3200,
@@ -229,7 +229,7 @@ properties = [
     {
         'type': 'property',
         'position': 39,
-        'title': 'Nestlé',
+        'title': 'Nestle',
         'street': '#0072BB',
         'tax_site': 500,
         'price': 4000,
@@ -248,7 +248,7 @@ utilities = [
     {
         'type': 'utility',
         'position': 12,
-        'title': 'Les ateliers mécaniques',
+        'title': 'Les ateliers mecaniques',
         'price': 1500,
         'tax_site': 250
     },
@@ -408,7 +408,7 @@ specials = [
 cards = [
     {
         'name': 'Advance to Go',
-        'description': 'Dossier de camp terminé ! Vas immédiatement sur la case START',
+        'description': 'Dossier de camp termine ! Vas immediatement sur la case START',
         'effect':
             {
                 'type': 'move',
@@ -426,7 +426,7 @@ cards = [
     },
     {
         'name': 'Vent au marché',
-        'description': 'Ton unité a fait une magnifique vente au marché ! En plus de faire plein de pub, tu gagnes 500$ .',
+        'description': 'Ton unite a fait une magnifique vente au marche ! En plus de faire plein de pub, tu gagnes 500$ .',
         'effect':
             {
                 'type': 'give_money',
@@ -435,7 +435,7 @@ cards = [
     },
     {
         'name': 'ALTERTE A LA DIARÉE !',
-        'description': 'Tu attrape la diarée en plein camp ! Va immédiatement en quarantaine (prison)',
+        'description': 'Tu attrape la diaree en plein camp ! Va immediatement en quarantaine (prison)',
         'effect':
             {
                 'type': 'go_to_jail',
@@ -444,11 +444,11 @@ cards = [
     },
     {
         'name': 'OUPS !',
-        'description': 'Tu as oublié de payer ta cotisation annuelle ',
+        'description': 'Tu as oublie de payer ta cotisation annuelle ',
         'effect':
             {
                 'type': 'take_money',
-                'param': 150
+                'param': 250
             }
     }
 ]

@@ -9,6 +9,8 @@
   var $dicevis = $('#dice-vis');
 
   var $buy = $('#buy');
+
+  var $freebuy = $('#freebuy');
   var $mortgage = $('#mortgage');
   var $dice = $('#dice');
   var $endTurn = $('#end-turn');
@@ -101,7 +103,12 @@
       }
 
       // Buy and mortgage
-      if (state.can_be_bought) $buy.addClass('active');
+      if (state.can_be_bought){
+          if (state.freebuy){
+              $freebuy.addClass('active');
+          }
+          $buy.addClass('active');
+      }
       else $buy.removeClass('active');
       if(state.dice_left > 0){
           $dice.addClass('active');
@@ -155,6 +162,13 @@
     //if (lastState && !lastState.can_be_bought) return;
 
     $.getJSON('/game/buy', function(data) {
+      console.log(data);
+    });
+  });
+  $freebuy.click(function() {
+    //if (lastState && !lastState.can_be_bought) return;
+
+    $.getJSON('/game/freebuy', function(data) {
       console.log(data);
     });
   });

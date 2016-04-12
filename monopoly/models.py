@@ -1,3 +1,4 @@
+# -*- encoding: UTF-8 -*-
 from django.db import models
 from django.conf import settings
 from pprint import pprint
@@ -33,6 +34,10 @@ class Player(models.Model):
     rolled_this_turn = models.BooleanField(default=False)
     drew_card_this_turn = models.BooleanField(default=False)
     dice_left = models.IntegerField(default=1)
+    free_move = models.IntegerField(default=0)
+    free_buy = models.IntegerField(default=0)
+    free_protection = models.IntegerField(default=0)
+    has_moved_today = models.BooleanField(default=False)
     def is_in_jail(self):
         assert self.in_jail_for >=0 and self.in_jail_for <= 3, "Unexpected number of jail turns: {0}.".format(self.in_jail_for)
         return self.in_jail_for > 0
@@ -46,7 +51,18 @@ class Player(models.Model):
             plays=self.plays_in_turns)
     def __unicode__(self):
         return self.name
-
+    def can_free_buy(self):
+        if self.free_buy > 0:
+            return True
+        return False
+    def can_free_move(self):
+        if self.free_move > 0:
+            return True
+        return False
+    def is_protected(self):
+        if self.free_protection > 0:
+            return True
+        return False
     class Meta:
         verbose_name = 'Group'
         verbose_name_plural = 'Groups'

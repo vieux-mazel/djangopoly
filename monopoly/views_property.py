@@ -37,15 +37,20 @@ def property_info(request):
         return HttpResponse(FAILURE)
     clicked_object = rules.identify_square(square)
     forms = []
-
-    rendered = render_to_string('property_info.html', { 'clicked_object': clicked_object })
+    rendered = render_to_string('property_info.html', { 'clicked_object': clicked_object, 'free_move':player.can_free_move})
     return JsonResponse({'html' : rendered})
 
 def property_action(request):
     p = request.POST
     groupe = request.user.profile.groupe
     user = request.user
-    house = Property.objects.get(pk=int(p['property_id']))
+    try:
+        house = Property.objects.get(pk=int(p['property_id']))
+    except:
+        try:
+            house = Utility.objects.get(pk=int(p['property_id']))
+        except:
+            return HttpResponse(FAILURE)
     if (p['action_type'] == 'buy-house'):
         if (house.owned_by == groupe):
             if (rules.can_build_house(house.square, groupe)):
@@ -59,7 +64,6 @@ def property_action(request):
                     send_message(message, user)
                     return HttpResponse(SUCCESS)
         return HttpResponse(FAILURE)
-
     elif(p['action_type'] == 'mortage-house'):
         if(rules.mortgage(groupe, house.square)):
             message = "--> La propriete <b style='color:{color};'> {name} </b> a été hypothèquéee - fait par {player}".format(
@@ -92,6 +96,15 @@ def property_action(request):
                           player = request.user.username)
                 send_message(message, user)
                 return HttpResponse(SUCCESS)
+    elif(p['action_type'] == 'free-move'):
+        if groupe.can_free_move():
+            groupe.free_move -= 1
+            groupe.save()
+            dice = house.square.position - groupe.square.position
+            if dice < 1:
+                dice = 40 + dice
+            fake_dice = [dice-1,1]
+            rules.move_player(groupe, fake_dice)
     return HttpResponse(FAILURE)
 
 def reste_de_code(request):
