@@ -2,26 +2,31 @@
 
 {% load staticfiles %}
 
-{% block title %}Board{% endblock %}
+{% block title %}VMOpoly - Accueil{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
         <div class="jumbotron">
             <a href="/"><img id="vmolpoly-avatar" src="{% static 'img/logo.png' %}" alt=""></a>
-            <h1>Bienvenu  </h1>
+            <h1>Bienvenu </h1>
             <p>Après l'épique Bataille navale de 2015, nous revenons à la charge avec un monopoly 100% customised for VM ! Cette page est
             déjà accessible pour vous permettre de discuter et de lire les règles du jeux... Bonne chasse !</p>
             <p>
                 <b> Salut {{user.username}} </b>, tu peux utiliser les menus ci-dessous
                 pour accèder à quelques fonctionnalités du jeu, le chat, les règles ainsi qu'à une liste complète des joueurs enregistrés.
             </p>
+            <a role="button" name="button" class="btn btn-info" href="{% url 'code_index' %}">Aller à l'activation des codes</a>
+            <a role="button" name="button" class="btn btn-info"  href="{% url 'spy_index' %}">Aller à l'espionnage</a>
+            <br><br>
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Chat</a></li>
                 <li role="presentation"><a href="#rules" aria-controls="rules" role="tab" data-toggle="tab">Règles du jeu</a></li>
                 <li role="presentation"><a href="#playerslist" aria-controls="playerslist" role="tab" data-toggle="tab">Liste des joueurs</a></li>
+
+                <li role="presentation"><a href="{% url 'game' game_id %}">Voir le plateau</a></li>
                 {% if user.is_superuser %}
                 <li role="presentation"><a href="#admin" aria-controls="admin" role="tab" data-toggle="tab">Admin</a></li>
                 {% endif %}

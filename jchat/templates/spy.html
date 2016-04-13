@@ -54,8 +54,12 @@
                 {% for code in codes %}
                 <li> <a href="/chat/spy/{{code.spy_hash}}">{{code.linked_room.groupe.name}} - code {{code.spy_hash}} </a></li>
                 {% endfor %}
-
             </ul>
+            <h2>Commandes rapides</h2>
+            <a role="button" name="button" class="btn btn-info" href="{% url 'code_index' %}">Aller à l'activation des codes</a>
+            <br>
+            <br>
+            <a role="button" name="button" class="btn btn-info"  href="{% url 'index' %}">Retourner à l'accueil</a>
         </div>
     </div>
 </div>
