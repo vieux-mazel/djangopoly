@@ -434,8 +434,8 @@ cards = [
             }
     },
     {
-        'name': 'ALTERTE A LA DIARÉE !',
-        'description': 'Tu attrape la diaree en plein camp ! Va immediatement en quarantaine (prison)',
+        'name': 'ALERTE A LA DIARÉE !',
+        'description': 'Tu attrapes la diaree en plein camp ! Va immediatement en quarantaine (prison)',
         'effect':
             {
                 'type': 'go_to_jail',
