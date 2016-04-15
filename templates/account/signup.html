@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+{% block extra_body_class %} login_body {% endblock %}
+{% block content %}
+<div class="row vertical-offset-100">
+	<div class="col-md-6 col-md-offset-3">
+		<div class="panel panel-default">
+		  	<div class="panel-heading">
+		    	<h3 class="panel-title">{% block head_title %} Désactivé {% endblock %}</h3>
+		 	</div>
+		  	<div class="panel-body">
+                La création de nouveaux comptes est désactivée.
+		    </div>
+		</div>
+	</div>
+</div>
+<script>
+$(document).ready(function(){
+  $(document).mousemove(function(e){
+     TweenLite.to($('body'),
+        .5,
+        { css:
+            {
+                backgroundPosition: ""+ parseInt(event.pageX/8) + "px "+parseInt(event.pageY/'12')+"px, "+parseInt(event.pageX/'15')+"px "+parseInt(event.pageY/'15')+"px, "+parseInt(event.pageX/'30')+"px "+parseInt(event.pageY/'30')+"px"
+            }
+        });
+  });
+});
+</script>
+{% endblock %}
