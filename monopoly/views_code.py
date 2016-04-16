@@ -46,8 +46,8 @@ def code(request):
         u = request.user
         g = u.profile.groupe
         if (hash.effect == 'g'): #give money
-            effet = 'de gagner 1000$'
-            rules.give_money(u,1000)
+            effet = 'de gagner 2000$'
+            rules.give_money(g,2000)
         elif (hash.effect == 'a'): # adddice
             effect = 'd\'ajouter un jet de dé gratuitement'
             g.dice_left += 1
