@@ -105,6 +105,11 @@ def property_action(request):
                 dice = 40 + dice
             fake_dice = [dice-1,1]
             rules.move_player(groupe, fake_dice)
+    elif(p['action_type'] == 'sell-property'):
+        if (house.owned_by == groupe):
+            house.owned_by = None
+            rules.give_money(groupe,house.price)
+            house.save()
     return HttpResponse(FAILURE)
 
 def reste_de_code(request):
