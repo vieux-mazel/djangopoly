@@ -58,7 +58,8 @@ def code(request):
             g.save()
         elif (hash.effect == 's'): # shield
             effect = 'de se protéger des 2 prochaines taxes de passage'
-            g.is_protected += 2
+            g.is_protected += 1
+            g.is_protected += 1
             g.save()
         elif (hash.effect == 'f'): # freebuy
             effect = 'd\'acheter une propriété gratuitement'

@@ -15,7 +15,7 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading">
                         Ton groupe : <br> <b>{{groupe.name}}</b>
-                        <a style="float:right;" role="button" class="button button-error" href="/chat/"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>Chat plus grand</a>
+                        <a style="float:right;" role="button" class="button button-error" href="/chat/"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>Aller au chat par équipe</a>
                     </div>
 
                     <!-- Table -->
@@ -28,14 +28,6 @@
                         </thead>
                         <tbody id="players-table-body">
                         </tbody>
-                        <div id="chat"></div>
-                        <script type="text/javascript" src="/static/js/jchat.js"></script>
-                        <script type="text/javascript">
-                        /* chat_id is passed form the view, the init_chat function then does all the magic */
-                        $(window).ready(function(){
-                        	init_chat(0, "chat", 'false',false);
-                        })
-                        </script>
                     </table>
                     <div id="dice-vis"></div>
                     <div class="panel-body">
